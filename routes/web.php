@@ -138,11 +138,13 @@ Route::prefix('admin')->middleware('auth')->group(function(){
 
 use App\Http\Controllers\Admin\ASliderController;
 
-Route::prefix('admin')->middleware('auth')->group(function(){
-    Route::get('sliders', [ASliderController::class,'index'])->name('admin.sliders');
-    Route::post('sliders/store', [ASliderController::class,'store'])->name('admin.sliders.store');
-    Route::post('sliders/update', [ASliderController::class,'update'])->name('admin.sliders.update');
-    Route::get('sliders/delete/{id}', [ASliderController::class,'delete'])->name('admin.sliders.delete');
+Route::prefix('admin')->middleware(['auth'])->group(function(){
+    Route::get('sliders', [ASliderController::class, 'index'])->name('admin.sliders');
+    Route::post('sliders/store', [ASliderController::class, 'store'])->name('admin.sliders.store');
+    Route::put('sliders/update', [ASliderController::class, 'update'])->name('admin.sliders.update');
+    
+    // Change this to DELETE method
+    Route::delete('sliders/delete/{id}', [ASliderController::class, 'delete'])->name('admin.sliders.delete');
 });
 
 
