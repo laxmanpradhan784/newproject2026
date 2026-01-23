@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserSide\HomeController;
 use App\Http\Controllers\UserSide\ContactController;
-use App\Http\Controllers\UserSide\CategoryController;
 use App\Http\Controllers\UserSide\ProductController;
 use App\Http\Controllers\UserSide\UserController;
 
@@ -14,8 +13,12 @@ Route::middleware('auth')->group(function () {
 });
 
 
-// Show all categories
-Route::get('/categories', [CategoryController::class, 'allCategories'])->name('categories');
+
+Route::get('/search', [ProductController::class, 'search'])->name('product.search');
+
+// Product details
+Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
+
 
 // Show products by category slug
 Route::get('/category/{slug}', [ProductController::class, 'byCategory'])->name('category.products');
@@ -73,10 +76,7 @@ Route::get('/about', function () {
 })->name('about');
 
 
-// Search Page
-Route::get('/search', function () {
-    return view('search');
-})->name('product.search');
+
 
 // Cart Page
 Route::get('/cart', function () {

@@ -67,12 +67,19 @@
                 <!-- Search Form -->
                 <form class="d-flex me-3" action="{{ route('product.search') }}" method="GET">
                     <div class="input-group">
-                        <input type="text" class="form-control" name="q" placeholder="Search products..." value="{{ request('q') }}" style="border-radius: 20px 0 0 20px;">
+                        <input type="text" 
+                            class="form-control" 
+                            name="q" 
+                            placeholder="Search products or categories..." 
+                            value="{{ request('q') }}" 
+                            style="border-radius: 20px 0 0 20px;">
+
                         <button class="btn btn-primary" type="submit" style="border-radius: 0 20px 20px 0;">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
                 </form>
+
                 
                 <!-- Static Cart Button -->
                     <a href="#" class="btn btn-primary position-relative me-3">

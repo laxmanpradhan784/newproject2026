@@ -311,6 +311,13 @@
             
             <div class="login-footer">
                 <p>Don't have an account? <a href="{{ route('register') }}">Create an account</a></p>
+                <p class="mt-3 text-muted">
+                    Want to explore our store?  
+                    <a href="{{ route('home') }}" class="fw-semibold text-primary text-decoration-none">
+                        Continue Shopping →
+                    </a>
+                </p>
+
                 <p class="mt-2" style="font-size: 0.8rem; color: #888;">
                     By signing in, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>
                 </p>

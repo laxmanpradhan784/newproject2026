@@ -244,6 +244,12 @@
 
                 <div class="register-footer">
                     <p>Already have an account? <a href="{{ route('login') }}">Login</a></p>
+                    <p class="mt-3 text-muted">
+                    Want to explore our store?  
+                    <a href="{{ route('home') }}" class="fw-semibold text-primary text-decoration-none">
+                        Continue Shopping →
+                    </a>
+                </p>
                 </div>
             </form>
         </div>

@@ -5,47 +5,74 @@
 @section('content')
     <!-- Hero Slider -->
     <section class="hero-slider mt-5 pt-4">
-        <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+            <div id="heroCarousel" class="carousel slide"
+     data-bs-ride="carousel"
+     data-bs-interval="4000"
+     data-bs-pause="false">
+
+
+                <!-- Indicators -->
+                <div class="carousel-indicators">
+                    @foreach($sliders as $key => $slider)
+                        <button type="button"
+                                data-bs-target="#heroCarousel"
+                                data-bs-slide-to="{{ $key }}"
+                                class="{{ $key == 0 ? 'active' : '' }}">
+                        </button>
+                    @endforeach
+                </div>
+
+                <!-- Slides -->
+                <div class="carousel-inner rounded-3">
+
+                    @foreach($sliders as $key => $slider)
+                        <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+
+                            <a href="{{ route('products') }}" class="text-decoration-none">
+
+                            <div class="hero-slide position-relative"
+                                style="background-image:url('{{ asset('storage/'.$slider->image) }}');
+                                        background-size:cover;
+                                        background-position:center;
+                                        height:450px;">
+
+
+                                <div class="container h-100 d-flex align-items-center">
+                                    <div class="carousel-content text-white bg-dark bg-opacity-50 p-4 rounded">
+
+                                        {{-- <h1 class="display-5 fw-bold mb-3">
+                                            {{ $slider->title }}
+                                        </h1> --}}
+
+                                        <p class="lead mb-4">
+                                            {{ $slider->subtitle }}
+                                        </p>
+
+                                        
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            </a>
+
+                        </div>
+                    @endforeach
+
+                </div>
+
+                <!-- Controls -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+
             </div>
-            
-            <div class="carousel-inner rounded-3">
-                <div class="carousel-item active">
-                    <div class="carousel-content">
-                        <h1 class="display-4 fw-bold mb-3">Summer Sale is Live!</h1>
-                        <p class="lead mb-4">Get up to 50% off on all fashion items. Limited time offer.</p>
-                        <a href="#" class="btn btn-primary btn-lg px-5 py-3">Shop Now</a>
-                    </div>
-                </div>
-                
-                <div class="carousel-item">
-                    <div class="carousel-content">
-                        <h1 class="display-4 fw-bold mb-3">New Tech Collection</h1>
-                        <p class="lead mb-4">Latest smartphones, laptops, and gadgets at amazing prices.</p>
-                        <a href="#" class="btn btn-primary btn-lg px-5 py-3">Explore Tech</a>
-                    </div>
-                </div>
-                
-                <div class="carousel-item">
-                    <div class="carousel-content">
-                        <h1 class="display-4 fw-bold mb-3">Free Shipping Worldwide</h1>
-                        <p class="lead mb-4">On all orders above $50. Shop without worries.</p>
-                        <a href="#" class="btn btn-primary btn-lg px-5 py-3">Start Shopping</a>
-                    </div>
-                </div>
-            </div>
-            
-            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
-        </div>
-    </section>
+        </section>
+
 
     <!-- Featured Products -->
     <section class="featured-products py-5">
@@ -56,47 +83,85 @@
             </div>
             
             <div class="row">
-                @for($i = 1; $i <= 6; $i++)
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="product-card">
-                        <div class="product-image position-relative">
-                            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
-                                 class="img-fluid" alt="Product {{ $i }}">
-                            <div class="product-actions position-absolute top-0 end-0 p-3">
-                                <button class="btn btn-light btn-sm rounded-circle mb-2">
-                                    <i class="fas fa-heart"></i>
-                                </button>
-                                <button class="btn btn-light btn-sm rounded-circle">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="product-body p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="mb-0">Wireless Headphones {{ $i }}</h5>
-                                <span class="badge bg-success">New</span>
-                            </div>
-                            <p class="text-muted small mb-3">Premium quality wireless headphones with noise cancellation</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <span class="h5 text-primary">${{ rand(50, 200) }}.99</span>
-                                    @if(rand(0, 1))
-                                    <span class="text-muted text-decoration-line-through ms-2">${{ rand(250, 400) }}.99</span>
-                                    @endif
+                    @forelse($products as $product)
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="product-card">
+                                <div class="product-image position-relative">
+                                    <a href="{{ route('product.show', $product->id) }}">
+                                        @if($product->image)
+                                            <img src="{{ asset('storage/'.$product->image) }}" 
+                                                class="img-fluid" alt="{{ $product->name }}">
+                                        @else
+                                            <img src="https://via.placeholder.com/400x300?text=No+Image" 
+                                                class="img-fluid" alt="{{ $product->name }}">
+                                        @endif
+                                    </a>
+
+                                    <div class="product-actions position-absolute top-0 end-0 p-3">
+                                        <button class="btn btn-light btn-sm rounded-circle mb-2">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
+                                        <button class="btn btn-light btn-sm rounded-circle">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                <button class="btn btn-primary btn-sm">
-                                    <i class="fas fa-cart-plus me-1"></i> Add to Cart
-                                </button>
+
+                                <div class="product-body p-4">
+                                    <!-- Title and badge -->
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="mb-0">{{ $product->name }}</h5>
+                                        @if($product->is_new ?? true)
+                                            <span class="badge bg-success">New</span>
+                                        @endif
+                                    </div>
+
+                                    <!-- Category name -->
+                                    @if($product->category)
+                                        <p class="text-muted small mb-2">
+                                            Category: 
+                                            <a href="{{ route('category.products', $product->category->slug) }}" class="text-decoration-none">
+                                                {{ $product->category->name }}
+                                            </a>
+                                        </p>
+                                    @endif
+
+                                    <!-- Short description -->
+                                    <p class="text-muted small mb-3">
+                                        {{ $product->short_description ?? Str::limit($product->description, 50, '...') }}
+                                    </p>
+
+                                    <!-- Price and Add to Cart -->
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="h5 text-primary">₹{{ $product->price }}</span>
+                                            @if($product->old_price)
+                                                <span class="text-muted text-decoration-line-through ms-2">₹{{ $product->old_price }}</span>
+                                            @endif
+                                        </div>
+                                        <button class="btn btn-primary btn-sm">
+                                            <i class="fas fa-cart-plus me-1"></i> Add to Cart
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @empty
+                        <div class="col-12 text-center">
+                            <p class="text-muted">No products found.</p>
+                        </div>
+                    @endforelse
                 </div>
-                @endfor
+
+               
             </div>
             
-            <div class="text-center mt-4">
-                <a href="#" class="btn btn-outline-primary px-5">View All Products</a>
+           <div class="text-center mt-4">
+                <a href="{{ route('products') }}" class="btn btn-outline-primary px-5">
+                    View All Products
+                </a>
             </div>
+
         </div>
     </section>
 
@@ -118,33 +183,51 @@
 
     <!-- Popular Categories -->
     <section class="categories py-5">
-        <div class="container">
-            <div class="section-title">
-                <h2>Popular Categories</h2>
-                <p class="text-muted">Browse through our top categories</p>
-            </div>
-            
-            <div class="row">
-                @foreach(['Electronics', 'Fashion', 'Home & Kitchen', 'Books', 'Sports', 'Beauty'] as $category)
+    <div class="container">
+        <div class="section-title text-center mb-4">
+            <h2>Popular Categories</h2>
+            <p class="text-muted">Browse through our top categories</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            @php
+                // Fetch only 6 active categories
+                $allCategories = \App\Models\Category::where('status', 'active')->take(6)->get();
+            @endphp
+
+            @forelse($allCategories as $category)
                 <div class="col-md-4 col-lg-2 mb-4">
-                    <div class="category-card text-center">
-                        <div class="category-icon bg-light rounded-circle p-4 mb-3 mx-auto" style="width: 100px; height: 100px;">
-                            <i class="fas fa-{{ 
-                                $category == 'Electronics' ? 'tv' : 
-                                ($category == 'Fashion' ? 'tshirt' : 
-                                ($category == 'Home & Kitchen' ? 'home' : 
-                                ($category == 'Books' ? 'book' : 
-                                ($category == 'Sports' ? 'futbol' : 'spa')))) 
-                            }} fa-2x text-primary"></i>
+                    <a href="{{ route('category.products', $category->slug) }}" class="text-decoration-none text-dark">
+                        <div class="category-card text-center border rounded p-3 h-100 shadow-sm">
+                            <div class="category-icon bg-light rounded-circle p-4 mb-3 mx-auto" style="width: 100px; height: 100px;">
+                                @php
+                                    // Choose icon based on category name
+                                    $icon = match($category->name) {
+                                        'Electronics' => 'tv',
+                                        'Fashion' => 'tshirt',
+                                        'Home & Kitchen' => 'home',
+                                        'Books' => 'book',
+                                        'Sports' => 'futbol',
+                                        'Beauty' => 'spa',
+                                        default => 'layer-group'
+                                    };
+                                @endphp
+                                <i class="fas fa-{{ $icon }} fa-2x text-primary"></i>
+                            </div>
+                            <h5 class="mb-1">{{ $category->name }}</h5>
+                            <p class="text-muted small mb-0">{{ $category->products()->count() }} Products</p>
                         </div>
-                        <h5>{{ $category }}</h5>
-                        <p class="text-muted small mb-0">{{ rand(100, 500) }} Products</p>
+                    </a>
                     </div>
-                </div>
-                @endforeach
+                @empty
+                    <div class="col-12 text-center">
+                        <p class="text-muted">No categories found.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
     </section>
+
 @endsection
 
 @push('styles')
