@@ -3,39 +3,28 @@
 namespace App\Http\Controllers\UserSide;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Product;
+use App\Models\Category;
 
 class ProductController extends Controller
 {
-    // Show all active categories
-    public function categories()
+    // Show ALL products
+    // Show all products
+    public function allProducts()
     {
-        $categories = Category::where('status', 'active')->get();
-        return view('categories', compact('categories'));
+        $products = Product::where('status', 'active')->get();
+        return view('products', compact('products'));
     }
 
-    // Show products by category id
-    public function productsByCategory($id)
+    // Show products by category slug
+    public function byCategory($slug)
     {
-        $category = Category::where('id', $id)
-                            ->where('status', 'active')
-                            ->firstOrFail();
+        $category = Category::where('slug', $slug)->firstOrFail();
 
-        $products = Product::where('category_id', $id)
-                           ->where('status', 'active')
-                           ->get();
+        $products = Product::where('category_id', $category->id)
+            ->where('status', 'active')
+            ->get();
 
         return view('products', compact('category', 'products'));
-    }
-
-    // Show single product by id
-    public function productDetail($id)
-    {
-        $product = Product::where('id', $id)
-                          ->where('status', 'active')
-                          ->firstOrFail();
-
-        return view('product_detail', compact('product'));
     }
 }

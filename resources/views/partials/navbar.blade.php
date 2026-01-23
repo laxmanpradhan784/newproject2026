@@ -18,49 +18,43 @@
                         <i class="fas fa-home me-1"></i> Home
                     </a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {{ request()->routeIs('categories') || request()->routeIs('products.by.category') ? 'active fw-bold' : '' }}" 
-                       href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown">
+                
+                 <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">
                         <i class="fas fa-list me-1"></i> Categories
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('categories') }}"><i class="fas fa-th-large me-2"></i> All Categories</a></li>
-                        <li><hr class="dropdown-divider"></li>
                         @php
-                            // Get active categories
-                            $categories = App\Models\Category::where('status', 'active')->limit(8)->get();
+                            $allCategories = \App\Models\Category::where('status', 'active')->get();
                         @endphp
-                        @foreach($categories as $category)
+
+                        @forelse($allCategories as $category)
                             <li>
-                                <a class="dropdown-item" href="{{ route('products.by.category', $category->id) }}">
-                                    @if($category->image)
-                                        <img src="{{ asset('storage/' . $category->image) }}" 
-                                             alt="{{ $category->name }}" 
-                                             class="rounded me-2" 
-                                             style="width: 20px; height: 20px; object-fit: cover;">
-                                    @else
-                                        <i class="fas fa-box text-primary me-2"></i>
-                                    @endif
+                                <a class="dropdown-item" href="{{ route('category.products', $category->slug) }}">
                                     {{ $category->name }}
                                 </a>
                             </li>
-                        @endforeach
-                        @if($categories->count() > 8)
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-primary" href="{{ route('categories') }}"><i class="fas fa-ellipsis-h me-2"></i> View All</a></li>
-                        @endif
+                        @empty
+                            <li><span class="dropdown-item text-muted">No categories found</span></li>
+                        @endforelse
                     </ul>
                 </li>
+
+
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-fire me-1"></i> Deals
+                    <a class="nav-link fw-bold {{ request()->routeIs('products') ? 'active' : '' }}" 
+                    href="{{ route('products') }}">
+                        <i class="fas fa-box me-1"></i> Products
                     </a>
                 </li>
+
+                
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('about') ? 'active fw-bold' : '' }}" href="{{ route('about') }}">
                         <i class="fas fa-info-circle me-1"></i> About
                     </a>
                 </li>
+                
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('contact') ? 'active fw-bold' : '' }}" href="{{ route('contact') }}">
                         <i class="fas fa-phone me-1"></i> Contact
@@ -73,32 +67,21 @@
                 <!-- Search Form -->
                 <form class="d-flex me-3" action="{{ route('product.search') }}" method="GET">
                     <div class="input-group">
-                        <input type="text" 
-                               class="form-control" 
-                               name="q" 
-                               placeholder="Search products..." 
-                               value="{{ request('q') }}"
-                               style="border-radius: 20px 0 0 20px;">
+                        <input type="text" class="form-control" name="q" placeholder="Search products..." value="{{ request('q') }}" style="border-radius: 20px 0 0 20px;">
                         <button class="btn btn-primary" type="submit" style="border-radius: 0 20px 20px 0;">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
                 </form>
                 
-                <!-- Cart -->
-                <a href="{{ route('cart') }}" class="btn btn-outline-primary position-relative me-3">
-                    <i class="fas fa-shopping-cart"></i>
-                    @auth
-                        @php
-                            $cartCount = App\Models\Cart::where('user_id', Auth::id())->count();
-                        @endphp
-                        @if($cartCount > 0)
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ $cartCount }}
-                            </span>
-                        @endif
-                    @endauth
-                </a>
+                <!-- Static Cart Button -->
+                    <a href="#" class="btn btn-primary position-relative me-3">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            0
+                        </span>
+                    </a>
+
                 
                 <!-- User Dropdown -->
                 @auth
@@ -111,7 +94,12 @@
                             <span class="ms-2">{{ Auth::user()->first_name }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ route('profile') }}"><i class="fas fa-user me-2"></i> Profile</a></li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('user.profile') }}">
+                                    <i class="fas fa-user me-2"></i> Profile
+                                </a>
+                            </li>
+
                             <li><a class="dropdown-item" href="{{ route('orders') }}"><i class="fas fa-shopping-bag me-2"></i> Orders</a></li>
                             <li><a class="dropdown-item" href="{{ route('wishlist') }}"><i class="fas fa-heart me-2"></i> Wishlist</a></li>
                             <li><hr class="dropdown-divider"></li>
@@ -142,11 +130,7 @@
 <div class="d-lg-none container mt-2">
     <form action="{{ route('product.search') }}" method="GET">
         <div class="input-group">
-            <input type="text" 
-                   class="form-control" 
-                   name="q" 
-                   placeholder="Search products..."
-                   value="{{ request('q') }}">
+            <input type="text" class="form-control" name="q" placeholder="Search products..." value="{{ request('q') }}">
             <button class="btn btn-primary" type="submit">
                 <i class="fas fa-search"></i>
             </button>

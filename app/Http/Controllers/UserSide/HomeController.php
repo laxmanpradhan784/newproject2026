@@ -5,6 +5,9 @@ namespace App\Http\Controllers\UserSide;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Cart;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth; // <-- import Auth
 
 class HomeController extends Controller
 {
@@ -18,6 +21,10 @@ class HomeController extends Controller
                            ->limit(8)
                            ->get();
 
-        return view('home', compact('categories', 'products'));
+        // Get logged-in user, if any
+       $user = Auth::user();
+
+        // Pass all data to the view
+        return view('home', compact('categories', 'products', 'user'));
     }
 }
