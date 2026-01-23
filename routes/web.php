@@ -7,9 +7,14 @@ use App\Http\Controllers\UserSide\ContactController;
 use App\Http\Controllers\UserSide\ProductController;
 use App\Http\Controllers\UserSide\UserController;
 
-// User profile route (only for authenticated users)
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
+Route::middleware(['auth'])->prefix('profile')->group(function () {
+    Route::get('/', [UserController::class, 'profile'])->name('profile');
+    Route::post('/update', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/avatar/update', [UserController::class, 'updateAvatar'])->name('profile.avatar.update');
+    Route::delete('/avatar/remove', [UserController::class, 'removeAvatar'])->name('profile.avatar.remove');
+    Route::post('/password/update', [UserController::class, 'updatePassword'])->name('profile.password.update');
+    Route::post('/resend-verification', [UserController::class, 'resendVerificationEmail'])->name('verification.resend');
+    Route::delete('/delete', [UserController::class, 'deleteAccount'])->name('profile.delete');
 });
 
 
@@ -60,16 +65,6 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-/*
-|--------------------------------------------------------------------------
-| Admin Routes
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-})->name('admin.dashboard');
-
 
 Route::get('/about', function () {
     return view('about');
@@ -98,4 +93,28 @@ Route::get('/wishlist', function () {
 Route::get('/deals', function () {
     return view('deals');
 })->name('deals');
+
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/admin/dashboard', function () {
+    return view('admin.dashboard');
+})->name('admin.dashboard');
+
+
+use App\Http\Controllers\Admin\AdminController;
+
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    Route::get('/profile', [AdminController::class, 'profile'])->name('profile');
+    Route::get('/all-admins', [AdminController::class, 'allAdmins'])->name('all_admins'); // optional
+});
+
 

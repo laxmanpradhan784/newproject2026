@@ -32,7 +32,7 @@
     </main>
     
     <!-- Footer -->
-    @include('partials.footer')
+    @include('admin.partials.footer')
 
 
 

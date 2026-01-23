@@ -70,7 +70,7 @@
                         <input type="text" 
                             class="form-control" 
                             name="q" 
-                            placeholder="Search products or categories..." 
+                            placeholder="Search products..." 
                             value="{{ request('q') }}" 
                             style="border-radius: 20px 0 0 20px;">
 
@@ -102,7 +102,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                                <a class="dropdown-item" href="{{ route('user.profile') }}">
+                                <a class="dropdown-item" href="{{ route('profile') }}">
                                     <i class="fas fa-user me-2"></i> Profile
                                 </a>
                             </li>
