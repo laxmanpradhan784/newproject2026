@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 22, 2026 at 01:52 PM
+-- Generation Time: Jan 23, 2026 at 12:48 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -66,10 +66,16 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`, `slug`, `image`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Mobiles', 'mobiles', 'mobiles.jpg', 'active', '2026-01-22 11:53:43', '2026-01-22 11:53:43'),
-(3, 'Headphones', 'headphones', 'headphones.jpg', 'active', '2026-01-22 11:53:43', '2026-01-22 11:53:43'),
-(4, 'Smart Watches', 'smart-watches', 'watches.jpg', 'active', '2026-01-22 11:53:43', '2026-01-22 11:53:43'),
-(5, 'Accessories', 'accessories', 'accessories.jpg', 'inactive', '2026-01-22 11:53:43', '2026-01-22 11:53:43');
+(1, 'Electronics', 'electronics', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
+(2, 'Fashion', 'fashion', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
+(3, 'Home & Kitchen', 'home-kitchen', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
+(4, 'Sports & Outdoors', 'sports-outdoors', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
+(5, 'Books', 'books', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
+(6, 'Beauty & Personal Care', 'beauty-personal-care', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
+(7, 'Toys & Games', 'toys-games', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
+(8, 'Automotive', 'automotive', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
+(9, 'Health & Fitness', 'health-fitness', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
+(10, 'Groceries', 'groceries', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33');
 
 -- --------------------------------------------------------
 
@@ -92,7 +98,8 @@ CREATE TABLE `contacts` (
 --
 
 INSERT INTO `contacts` (`id`, `name`, `email`, `subject`, `message`, `created_at`, `updated_at`) VALUES
-(1, 'Litu Nayak', 'Litu@gmail.com', 'General Inquiry', 'hi bro', '2026-01-22 06:20:34', '2026-01-22 06:20:34');
+(1, 'Litu Nayak', 'Litu@gmail.com', 'General Inquiry', 'hi bro', '2026-01-22 06:20:34', '2026-01-22 06:20:34'),
+(2, 'Litu Nayak', 'Litu@gmail.com', 'General Inquiry', 'hello bro', '2026-01-23 03:07:14', '2026-01-23 03:07:14');
 
 -- --------------------------------------------------------
 
@@ -203,14 +210,26 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `image`, `description`, `price`, `stock`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'iPhone 15', 'iphone-15', 'iphone15.jpg', 'Latest Apple smartphone', 79999.00, 10, 'active', '2026-01-22 11:54:53', '2026-01-22 11:54:53'),
-(2, 1, 'Samsung Galaxy S23', 'samsung-s23', 's23.jpg', 'Samsung flagship phone', 69999.00, 15, 'active', '2026-01-22 11:54:53', '2026-01-22 11:54:53'),
-(5, 3, 'Sony WH-1000XM5', 'sony-xm5', 'sony.jpg', 'Noise cancelling headphones', 29999.00, 20, 'active', '2026-01-22 11:54:53', '2026-01-22 11:54:53'),
-(6, 3, 'Boat Rockerz 450', 'boat-450', 'boat.jpg', 'Wireless headphones', 1999.00, 30, 'active', '2026-01-22 11:54:53', '2026-01-22 11:54:53'),
-(7, 4, 'Apple Watch Series 9', 'apple-watch-9', 'applewatch.jpg', 'Latest Apple smartwatch', 41999.00, 10, 'active', '2026-01-22 11:54:53', '2026-01-22 11:54:53'),
-(8, 4, 'Noise ColorFit Pro', 'noise-colorfit', 'noise.jpg', 'Budget smart watch', 3999.00, 25, 'active', '2026-01-22 11:54:53', '2026-01-22 11:54:53'),
-(9, 5, 'USB-C Cable', 'usb-c-cable', 'cable.jpg', 'Fast charging cable', 499.00, 100, 'inactive', '2026-01-22 11:54:53', '2026-01-22 11:54:53'),
-(10, 5, 'Wireless Charger', 'wireless-charger', 'charger.jpg', 'Qi wireless charger', 1999.00, 40, 'inactive', '2026-01-22 11:54:53', '2026-01-22 11:54:53');
+(1, 1, 'Smartphone X1', 'smartphone-x1', 'image-1.jpg', 'Latest smartphone with high-resolution camera.', 299.99, 50, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(2, 1, 'Wireless Headphones', 'wireless-headphones', 'image-1.jpg', 'Noise-cancelling over-ear headphones.', 89.99, 100, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(3, 2, 'Men T-Shirt', 'men-tshirt', 'image-1.jpg', '100% cotton casual t-shirt for men.', 19.99, 200, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(4, 2, 'Women Dress', 'women-dress', 'image-1.jpg', 'Elegant summer dress for women.', 49.99, 150, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(5, 3, 'Blender 3000', 'blender-3000', 'image-1.jpg', 'High-speed kitchen blender.', 59.99, 80, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(6, 3, 'Non-stick Pan', 'non-stick-pan', 'image-1.jpg', 'Durable non-stick frying pan.', 24.99, 120, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(7, 4, 'Football', 'football', 'image-1.jpg', 'Professional quality football.', 29.99, 70, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(8, 4, 'Yoga Mat', 'yoga-mat', 'image-1.jpg', 'Eco-friendly yoga mat.', 25.99, 90, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(9, 5, 'Novel: The Great Adventure', 'novel-great-adventure', 'image-1.jpg', 'Exciting adventure novel for readers.', 14.99, 120, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(10, 5, 'Science Encyclopedia', 'science-encyclopedia', 'image-1.jpg', 'Comprehensive encyclopedia for students.', 39.99, 60, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(11, 6, 'Lipstick Set', 'lipstick-set', 'image-1.jpg', 'Long-lasting matte lipstick set.', 29.99, 200, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(12, 6, 'Face Cream', 'face-cream', 'image-1.jpg', 'Hydrating and nourishing face cream.', 19.99, 150, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(13, 7, 'Puzzle Game', 'puzzle-game', 'image-1.jpg', 'Fun and challenging puzzle for kids.', 9.99, 100, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(14, 7, 'Action Figure', 'action-figure', 'image-1.jpg', 'Collectible superhero action figure.', 14.99, 80, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(15, 8, 'Car Vacuum Cleaner', 'car-vacuum-cleaner', 'image-1.jpg', 'Portable vacuum cleaner for cars.', 49.99, 60, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(16, 8, 'Car Seat Cover', 'car-seat-cover', 'image-1.jpg', 'Durable seat cover for comfort.', 35.99, 70, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(17, 9, 'Treadmill', 'treadmill', 'image-1.jpg', 'Electric treadmill for home workouts.', 499.99, 30, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(18, 9, 'Dumbbell Set', 'dumbbell-set', 'image-1.jpg', 'Adjustable dumbbells for strength training.', 89.99, 50, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(19, 10, 'Organic Rice', 'organic-rice', 'image-1.jpg', 'Premium quality organic rice 5kg.', 25.99, 100, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
+(20, 10, 'Olive Oil', 'olive-oil', 'image-1.jpg', 'Extra virgin olive oil 1L.', 15.99, 80, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47');
 
 -- --------------------------------------------------------
 
@@ -232,7 +251,36 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('kTY9ylrHG8YcNDgeThKjfUqIlgNShjUuIpAzFs3g', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoicXJsMTFRQnZkWDJJSTJGalVoVzZnQkZKQjd0NkJ4VXdWbDZPeHpnUSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDY6Imh0dHA6Ly9sb2NhbGhvc3QvZS1jb21tbWVyY2UvcHVibGljL2NhdGVnb3JpZXMiO3M6NToicm91dGUiO3M6MTA6ImNhdGVnb3JpZXMiO319', 1769086265);
+('JVv5mY3JlPlfFkKvOmMngElAH7QU9cKaugsm503N', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiM0FBU1JLMzlOZVFBZ1AzQVZhRHhwOWVRbnpRMXg5RkFoOTNoYmlncCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NTA6Imh0dHA6Ly9sb2NhbGhvc3QvZS1jb21tbWVyY2UvcHVibGljL2FkbWluL3Byb2R1Y3RzIjtzOjU6InJvdXRlIjtzOjE0OiJhZG1pbi5wcm9kdWN0cyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1769168822);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sliders`
+--
+
+CREATE TABLE `sliders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `subtitle` varchar(255) DEFAULT NULL,
+  `image` varchar(255) NOT NULL,
+  `button_text` varchar(100) DEFAULT NULL,
+  `button_link` varchar(255) DEFAULT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sliders`
+--
+
+INSERT INTO `sliders` (`id`, `title`, `subtitle`, `image`, `button_text`, `button_link`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Big Sale 50% Off', 'Best deals on electronics', 'image-1.jpg', 'Shop Now', '/products', 'active', '2026-01-23 08:27:42', '2026-01-23 08:27:42'),
+(2, 'New Fashion Arrivals', 'Latest trends available now', 'image-1.jpg', 'Explore', '/category/fashion', 'active', '2026-01-23 08:27:42', '2026-01-23 08:27:42'),
+(3, 'Home & Kitchen', 'Make your home beautiful', 'image-1.jpg', 'Buy Now', '/category/home-kitchen', 'active', '2026-01-23 08:27:42', '2026-01-23 08:27:42'),
+(4, 'Books Collection', 'Knowledge is power', 'image-1.jpg', 'Read More', '/category/books', 'active', '2026-01-23 08:27:42', '2026-01-23 08:27:42'),
+(5, 'Sports & Fitness', 'Stay healthy and fit', 'image-1.jpg', 'Shop Now', '/category/sports', 'active', '2026-01-23 08:27:42', '2026-01-23 08:27:42');
 
 -- --------------------------------------------------------
 
@@ -259,7 +307,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `phone`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'Admin User', 'admin@example.com', '1234567890', NULL, '$2y$12$r4EOdHojsEaSS4y6EYqtBu3QYRk2BBoV6S0i.rGriYNxJx8kYQqQW', 'admin', NULL, '2026-01-22 10:56:12', '2026-01-22 10:57:31'),
-(2, 'Regular User', 'user@example.com', '0987654321', NULL, '$2y$12$r4EOdHojsEaSS4y6EYqtBu3QYRk2BBoV6S0i.rGriYNxJx8kYQqQW', 'user', NULL, '2026-01-22 10:56:12', '2026-01-22 10:57:38'),
+(2, 'Regular Users', 'user@example.com', '0987654321', NULL, '$2y$12$r4EOdHojsEaSS4y6EYqtBu3QYRk2BBoV6S0i.rGriYNxJx8kYQqQW', 'user', NULL, '2026-01-22 10:56:12', '2026-01-23 03:51:41'),
 (5, 'Litu Nayak', 'Litu@gmail.com', '09978767202', NULL, '$2y$12$4R0GWU7cWbOClyYc6ENKGeFk9F3YUsap1nD9jUSRjmaEaMIq3NW1G', 'user', NULL, '2026-01-22 05:47:42', '2026-01-22 05:47:42');
 
 --
@@ -342,6 +390,12 @@ ALTER TABLE `sessions`
   ADD KEY `sessions_last_activity_index` (`last_activity`);
 
 --
+-- Indexes for table `sliders`
+--
+ALTER TABLE `sliders`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -356,13 +410,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `contacts`
 --
 ALTER TABLE `contacts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -386,7 +440,13 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+
+--
+-- AUTO_INCREMENT for table `sliders`
+--
+ALTER TABLE `sliders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`

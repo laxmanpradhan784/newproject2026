@@ -31,7 +31,7 @@
         <ul class="nav flex-column">
             <!-- Dashboard -->
             <li class="nav-item mb-2">
-                <a href="/" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3 active">
+                <a href="{{ route('admin.dashboard')}}" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3 active">
                     <div class="nav-icon me-3">
                         <i class="bi bi-speedometer2"></i>
                     </div>
@@ -42,9 +42,37 @@
                 </a>
             </li>
 
+            <!-- Sliders -->
+            <li class="nav-item mb-2">
+                <a href="{{ route('admin.sliders')}}" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
+                    <div class="nav-icon me-3">
+                        <i class="bi bi-laptop"></i>
+                    </div>
+                    <div class="nav-text">SLIDER</div>
+                    <div class="ms-auto">
+                        <span class="badge police-badge-count">152</span>
+                    </div>
+                </a>
+            </li>
+
+            <!-- categories -->
+            <li class="nav-item mb-2">
+                <a href="{{ route('admin.categories')}}" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
+                    <div class="nav-icon me-3">
+                        <i class="bi bi-laptop"></i>
+                    </div>
+                    <div class="nav-text">CATEGORIES</div>
+                    <div class="ms-auto">
+                        <span class="badge police-badge-count">152</span>
+                    </div>
+                </a>
+            </li>
+
+            
+
             <!-- Products -->
             <li class="nav-item mb-2">
-                <a href="#" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
+                <a href="{{ route('admin.products')}}" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
                     <div class="nav-icon me-3">
                         <i class="bi bi-laptop"></i>
                     </div>
@@ -55,13 +83,13 @@
                 </a>
             </li>
 
-            <!-- Orders -->
+            <!-- Contacts -->
             <li class="nav-item mb-2">
-                <a href="#" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
+                <a href="{{ route('admin.contacts')}}" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
                     <div class="nav-icon me-3">
                         <i class="bi bi-cart-check"></i>
                     </div>
-                    <div class="nav-text">ORDERS</div>
+                    <div class="nav-text">CONTACTS</div>
                     <div class="ms-auto">
                         <span class="badge police-badge-alert">15</span>
                     </div>
@@ -70,7 +98,7 @@
 
             <!-- Users -->
             <li class="nav-item mb-2">
-                <a href="#" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
+                <a href="{{ route('admin.users') }}" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
                     <div class="nav-icon me-3">
                         <i class="bi bi-people-fill"></i>
                     </div>

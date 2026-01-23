@@ -118,3 +118,49 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 });
 
 
+use App\Http\Controllers\Admin\CategoryController;
+
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
+});
+
+use App\Http\Controllers\Admin\aProductController;
+
+Route::prefix('admin')->middleware('auth')->group(function(){
+    Route::get('products', [AProductController::class,'index'])->name('admin.products');
+    Route::post('products/store', [AProductController::class,'store'])->name('admin.products.store');
+    Route::post('products/update', [AProductController::class,'update'])->name('admin.products.update');
+    Route::get('products/delete/{id}', [AProductController::class,'delete'])->name('admin.products.delete');
+});
+
+use App\Http\Controllers\Admin\ASliderController;
+
+Route::prefix('admin')->middleware('auth')->group(function(){
+    Route::get('sliders', [ASliderController::class,'index'])->name('admin.sliders');
+    Route::post('sliders/store', [ASliderController::class,'store'])->name('admin.sliders.store');
+    Route::post('sliders/update', [ASliderController::class,'update'])->name('admin.sliders.update');
+    Route::get('sliders/delete/{id}', [ASliderController::class,'delete'])->name('admin.sliders.delete');
+});
+
+
+use App\Http\Controllers\Admin\AContactController;
+
+
+Route::prefix('admin')->middleware('auth')->group(function(){
+    Route::get('contacts', [AContactController::class,'index'])->name('admin.contacts');
+    Route::get('contacts/delete/{id}', [AContactController::class,'delete'])->name('admin.contacts.delete');
+});
+
+use App\Http\Controllers\Admin\AUserController;
+
+Route::prefix('admin')->middleware('auth')->group(function(){
+    Route::get('users', [AUserController::class,'index'])->name('admin.users');
+    Route::get('users/delete/{id}', [AUserController::class,'delete'])->name('admin.users.delete');
+});
+
+
+
+
+
+
+
