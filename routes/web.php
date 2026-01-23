@@ -105,9 +105,12 @@ Route::get('/deals', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-})->name('admin.dashboard');
+use App\Http\Controllers\Admin\DashboardController;
+
+Route::prefix('admin')->middleware('auth')->group(function() {
+    Route::get('dashboard', [DashboardController::class,'index'])->name('admin.dashboard');
+});
+
 
 
 use App\Http\Controllers\Admin\AdminController;

@@ -10,7 +10,7 @@
             </button>
             
             <!-- Quick Stats -->
-            <div class="quick-stats d-none d-lg-flex">
+            {{-- <div class="quick-stats d-none d-lg-flex">
                 <div class="stat-item">
                     <div class="stat-label">ALERTS</div>
                     <div class="stat-value text-danger">3</div>
@@ -19,7 +19,7 @@
                     <div class="stat-label">ONLINE</div>
                     <div class="stat-value text-success">42</div>
                 </div>
-            </div>
+            </div> --}}
         </div>
         
         <!-- Center: Police Shield Brand -->
@@ -42,22 +42,22 @@
         <!-- Right: Control Panel -->
         <div class="police-controls">
             <!-- Notifications -->
-            <div class="notification-badge">
+            {{-- <div class="notification-badge">
                 <button class="btn police-btn-icon" title="Notifications">
                     <i class="bi bi-bell"></i>
                     <span class="notification-count">5</span>
                 </button>
-            </div>
+            </div> --}}
             
             <!-- Search -->
-            <div class="search-box d-none d-md-block">
+            {{-- <div class="search-box d-none d-md-block">
                 <div class="input-group input-group-sm">
                     <span class="input-group-text police-input-icon">
                         <i class="bi bi-search"></i>
                     </span>
                     <input type="text" class="form-control police-input" placeholder="Search...">
                 </div>
-            </div>
+            </div> --}}
             
             <!-- User Dropdown -->
             <div class="dropdown police-dropdown ms-3">
