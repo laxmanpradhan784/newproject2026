@@ -115,16 +115,30 @@ Route::prefix('admin')->middleware('auth')->group(function() {
 
 use App\Http\Controllers\Admin\AdminController;
 
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    Route::get('/profile', [AdminController::class, 'profile'])->name('profile');
-    Route::get('/all-admins', [AdminController::class, 'allAdmins'])->name('all_admins'); // optional
+Route::prefix('admin')->middleware(['auth'])->group(function(){
+    Route::get('profile', [AdminController::class, 'profile'])->name('admin.profile');
+    Route::post('profile/update', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
+    Route::post('profile/change-password', [AdminController::class, 'changePassword'])->name('admin.profile.change-password');
+    Route::get('admins', [AdminController::class, 'allAdmins'])->name('admin.all-admins');
+});
+
+
+// routes/web.php
+use App\Http\Controllers\Admin\SiteController;
+
+Route::prefix('admin')->middleware(['auth'])->group(function(){
+    Route::get('site-settings', [SiteController::class, 'index'])->name('admin.site-settings');
+    Route::put('site-settings', [SiteController::class, 'update'])->name('admin.site.update');
 });
 
 
 use App\Http\Controllers\Admin\CategoryController;
 
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
+Route::prefix('admin')->middleware(['auth'])->group(function(){
+    Route::get('categories', [CategoryController::class, 'index'])->name('admin.categories');
+    Route::post('categories/store', [CategoryController::class, 'store'])->name('admin.categories.store');
+    Route::put('categories/update', [CategoryController::class, 'update'])->name('admin.categories.update');
+    Route::delete('categories/delete/{id}', [CategoryController::class, 'delete'])->name('admin.categories.delete');
 });
 
 use App\Http\Controllers\Admin\aProductController;
@@ -132,8 +146,8 @@ use App\Http\Controllers\Admin\aProductController;
 Route::prefix('admin')->middleware('auth')->group(function(){
     Route::get('products', [AProductController::class,'index'])->name('admin.products');
     Route::post('products/store', [AProductController::class,'store'])->name('admin.products.store');
-    Route::post('products/update', [AProductController::class,'update'])->name('admin.products.update');
-    Route::get('products/delete/{id}', [AProductController::class,'delete'])->name('admin.products.delete');
+    Route::put('products/update', [AProductController::class,'update'])->name('admin.products.update');
+    Route::delete('products/delete/{id}', [AProductController::class,'delete'])->name('admin.products.delete');
 });
 
 use App\Http\Controllers\Admin\ASliderController;
@@ -158,10 +172,12 @@ Route::prefix('admin')->middleware('auth')->group(function(){
 
 use App\Http\Controllers\Admin\AUserController;
 
-Route::prefix('admin')->middleware('auth')->group(function(){
-    Route::get('users', [AUserController::class,'index'])->name('admin.users');
-    Route::get('users/delete/{id}', [AUserController::class,'delete'])->name('admin.users.delete');
+Route::prefix('admin')->middleware(['auth'])->group(function(){
+    Route::get('users', [AUserController::class, 'index'])->name('admin.users');
+    Route::post('users/update-role', [AUserController::class, 'updateRole'])->name('admin.users.update-role');
+    Route::get('users/delete/{id}', [AUserController::class, 'delete'])->name('admin.users.delete');
 });
+
 
 
 

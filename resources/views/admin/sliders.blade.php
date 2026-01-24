@@ -1,4 +1,5 @@
 @extends('admin.layouts.app')
+
 @section('title', 'Home Sliders')
 
 @section('content')
@@ -33,12 +34,12 @@
     </div>
     @endif
 
-    <!-- Sliders Table -->
+   <!-- Sliders Table -->
     <div class="card border-0 shadow-sm">
         <div class="card-body p-0">
-            <div class="table-responsive">
+            <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="bg-light">
+                    <thead class="bg-light" style="position: sticky; top: 0; z-index: 1;">
                         <tr>
                             <th class="border-0 ps-4" style="width: 100px;">Preview</th>
                             <th class="border-0">Title</th>
@@ -51,8 +52,8 @@
                     <tbody>
                         @forelse($sliders as $slider)
                         <tr class="hover-row">
-                            <td class="ps-4">
-                                <div class="position-relative" style="width: 80px; height: 60px;">
+                            <td class="ps-4 pt-3">
+                                <div class="position-relative" style="width: 80px; height: 60%;">
                                     @if(file_exists(public_path('uploads/sliders/'.$slider->image)))
                                     <img src="{{ asset('uploads/sliders/'.$slider->image) }}" 
                                          class="rounded border" 
@@ -317,6 +318,26 @@
     .btn-sm i {
         font-size: 14px;
     }
+</style>
+<style>
+.table-responsive::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
 </style>
 
 <script>

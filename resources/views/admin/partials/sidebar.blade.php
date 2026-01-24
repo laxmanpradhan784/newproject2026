@@ -1,4 +1,4 @@
-<aside class="admin-sidebar police-sidebar" style="width: 250px; min-height: 85vh;">
+<aside class="admin-sidebar police-sidebar" style="width: 250px; min-height: 87vh;">
     
     <!-- User Badge with Police Rank -->
     <div class="user-badge-section p-3 border-bottom border-secondary" style="background: rgba(0, 0, 0, 0.2);">
@@ -89,7 +89,7 @@
                     <div class="nav-icon me-3">
                         <i class="bi bi-cart-check"></i>
                     </div>
-                    <div class="nav-text">CONTACTS</div>
+                    <div class="nav-text">ENQUIRIES</div>
                     <div class="ms-auto">
                         <span class="badge police-badge-alert">15</span>
                     </div>
@@ -111,11 +111,11 @@
 
             <!-- Settings -->
             <li class="nav-item mb-2">
-                <a href="#" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
+                <a href="{{ route('admin.site-settings')}}" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
                     <div class="nav-icon me-3">
                         <i class="bi bi-shield-lock"></i>
                     </div>
-                    <div class="nav-text">SECURITY</div>
+                    <div class="nav-text">INFORMATION</div>
                     <div class="ms-auto">
                         <i class="bi bi-chevron-right small"></i>
                     </div>

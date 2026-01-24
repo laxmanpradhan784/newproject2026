@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Home - E-Shop')
+@section('title', 'Home')
 
 @section('content')
     <!-- Hero Slider -->

@@ -91,7 +91,7 @@
                         </a>
                     </li>
 
-                    <li>
+                    {{-- <li>
                         <a class="dropdown-item police-dropdown-item" href="#">
                             <i class="bi bi-gear me-2"></i>
                             <span>Settings</span>
@@ -102,7 +102,7 @@
                             <i class="bi bi-shield-lock me-2"></i>
                             <span>Security</span>
                         </a>
-                    </li>
+                    </li> --}}
                     <li><hr class="dropdown-divider police-divider"></li>
                     <li>
                         <form id="admin-logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

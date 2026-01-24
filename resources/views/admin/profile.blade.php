@@ -11,18 +11,36 @@
                 <h1 class="h3 mb-0">
                     <i class="bi bi-person-badge me-2"></i>Admin Profile
                 </h1>
-                <div class="btn-group">
+                {{-- <div class="btn-group">
                     <a href="#" class="btn btn-outline-primary">
                         <i class="bi bi-pencil-square me-1"></i> Edit Profile
                     </a>
                     <a href="#" class="btn btn-outline-secondary">
                         <i class="bi bi-shield-lock me-1"></i> Security
                     </a>
-                </div>
+                </div> --}}
             </div>
             <p class="text-muted mb-0">View and manage your administrator account details</p>
         </div>
     </div>
+
+
+            @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
+
+            @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
+            
 
     <div class="row">
         <!-- Left Column: Profile Card -->
@@ -82,15 +100,17 @@
                 </div>
                 <div class="card-body p-3">
                     <div class="d-grid gap-2">
-                        <a href="#" class="btn btn-outline-primary btn-sm">
+                        <button type="button" class="btn btn-outline-primary btn-sm" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#changePasswordModal">
                             <i class="bi bi-key me-1"></i> Change Password
-                        </a>
-                        <a href="#" class="btn btn-outline-secondary btn-sm">
+                        </button>
+                        {{-- <a href="#" class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-bell me-1"></i> Notification Settings
-                        </a>
-                        <a href="#" class="btn btn-outline-info btn-sm">
+                        </a> --}}
+                        {{-- <a href="#" class="btn btn-outline-info btn-sm">
                             <i class="bi bi-gear me-1"></i> Account Settings
-                        </a>
+                        </a> --}}
                     </div>
                 </div>
             </div>
@@ -180,10 +200,10 @@
                 </div>
 
                 <!-- Footer Actions -->
-                <div class="card-footer bg-white border-top">
+                {{-- <div class="card-footer bg-white border-top">
                     <div class="d-flex justify-content-between">
-                        <button class="btn btn-outline-danger">
-                            <i class="bi bi-trash me-1"></i> Delete Account
+                        <button class="btn btn-outline-primary">
+                            <i class="bi bi-person-gear me-1"></i> Admin Account Details
                         </button>
                         <div class="btn-group">
                             <button class="btn btn-outline-secondary">
@@ -194,8 +214,57 @@
                             </button>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('admin.profile.change-password') }}">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordModalLabel">
+                        <i class="bi bi-key me-2"></i>
+                        Change Password
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Current Password *</label>
+                        <input type="password" name="current_password" class="form-control" required>
+                        @error('current_password')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">New Password *</label>
+                        <input type="password" name="new_password" class="form-control" required>
+                        <small class="text-muted">Minimum 6 characters with letters and numbers</small>
+                        @error('new_password')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirm New Password *</label>
+                        <input type="password" name="new_password_confirmation" class="form-control" required>
+                        @error('new_password_confirmation')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-1"></i>
+                        Update Password
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
