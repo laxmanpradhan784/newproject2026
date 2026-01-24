@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 23, 2026 at 12:48 PM
+-- Generation Time: Jan 24, 2026 at 11:18 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -66,16 +66,16 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`, `slug`, `image`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Electronics', 'electronics', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
-(2, 'Fashion', 'fashion', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
-(3, 'Home & Kitchen', 'home-kitchen', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
-(4, 'Sports & Outdoors', 'sports-outdoors', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
-(5, 'Books', 'books', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
-(6, 'Beauty & Personal Care', 'beauty-personal-care', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
-(7, 'Toys & Games', 'toys-games', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
-(8, 'Automotive', 'automotive', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
-(9, 'Health & Fitness', 'health-fitness', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33'),
-(10, 'Groceries', 'groceries', 'image-1.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 07:03:33');
+(1, 'Electronics', 'electronics', 'category_1769234541_jPDJlo1bcx.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:32:21'),
+(2, 'Fashion', 'fashion', 'category_1769234549_0ZrptCkUWx.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:32:29'),
+(3, 'Home & Kitchen', 'home-kitchen', 'category_1769234556_arJUdvFV8a.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:32:36'),
+(4, 'Sports & Outdoors', 'sports-outdoors', 'category_1769234565_o9XSHkawm7.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:32:45'),
+(5, 'Books', 'books', 'category_1769234572_9qrTHCoVJB.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:32:52'),
+(6, 'Beauty & Personal Care', 'beauty-personal-care', 'category_1769234579_gW7wDm1xRd.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:32:59'),
+(7, 'Toys & Games', 'toys-games', 'category_1769234586_hLs4iriGUO.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:33:06'),
+(8, 'Automotive', 'automotive', 'category_1769234531_tTr2qrKfxi.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:32:11'),
+(9, 'Health & Fitness', 'health-fitness', 'category_1769231545_RfyN6xVrcJ.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 23:42:25'),
+(10, 'Groceries', 'groceries', 'category_1769231536_i8WoZxF4dL.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 23:42:16');
 
 -- --------------------------------------------------------
 
@@ -98,7 +98,6 @@ CREATE TABLE `contacts` (
 --
 
 INSERT INTO `contacts` (`id`, `name`, `email`, `subject`, `message`, `created_at`, `updated_at`) VALUES
-(1, 'Litu Nayak', 'Litu@gmail.com', 'General Inquiry', 'hi bro', '2026-01-22 06:20:34', '2026-01-22 06:20:34'),
 (2, 'Litu Nayak', 'Litu@gmail.com', 'General Inquiry', 'hello bro', '2026-01-23 03:07:14', '2026-01-23 03:07:14');
 
 -- --------------------------------------------------------
@@ -227,9 +226,9 @@ INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `image`, `descripti
 (15, 8, 'Car Vacuum Cleaner', 'car-vacuum-cleaner', 'image-1.jpg', 'Portable vacuum cleaner for cars.', 49.99, 60, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
 (16, 8, 'Car Seat Cover', 'car-seat-cover', 'image-1.jpg', 'Durable seat cover for comfort.', 35.99, 70, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
 (17, 9, 'Treadmill', 'treadmill', 'image-1.jpg', 'Electric treadmill for home workouts.', 499.99, 30, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(18, 9, 'Dumbbell Set', 'dumbbell-set', 'image-1.jpg', 'Adjustable dumbbells for strength training.', 89.99, 50, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(19, 10, 'Organic Rice', 'organic-rice', 'image-1.jpg', 'Premium quality organic rice 5kg.', 25.99, 100, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(20, 10, 'Olive Oil', 'olive-oil', 'image-1.jpg', 'Extra virgin olive oil 1L.', 15.99, 80, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47');
+(18, 9, 'Dumbbell Set', 'dumbbell-set', 'product_1769234627_rkscOMJLxr.jpg', 'Adjustable dumbbells for strength training.', 89.99, 50, 'active', '2026-01-23 07:04:47', '2026-01-24 00:33:47'),
+(19, 10, 'Organic Rice', 'organic-rice', 'product_1769234611_NB9xN6cELW.jpg', 'Premium quality organic rice 5kg.', 25.99, 100, 'active', '2026-01-23 07:04:47', '2026-01-24 00:33:31'),
+(20, 10, 'Olive Oil', 'olive-oil', 'product_1769234603_Nb4pjAqd9m.jpg', 'Extra virgin olive oil 1L.', 15.99, 80, 'active', '2026-01-23 07:04:47', '2026-01-24 00:33:23');
 
 -- --------------------------------------------------------
 
@@ -251,7 +250,39 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('JVv5mY3JlPlfFkKvOmMngElAH7QU9cKaugsm503N', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiM0FBU1JLMzlOZVFBZ1AzQVZhRHhwOWVRbnpRMXg5RkFoOTNoYmlncCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NTA6Imh0dHA6Ly9sb2NhbGhvc3QvZS1jb21tbWVyY2UvcHVibGljL2FkbWluL3Byb2R1Y3RzIjtzOjU6InJvdXRlIjtzOjE0OiJhZG1pbi5wcm9kdWN0cyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1769168822);
+('MPTLGjw8GBgJsyXLoNbhaS4wf9OZ6fX7GNpxKMv7', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZHhBdW9QbTlFdjdyb0RsY05PZERqNkpsS3RGTkFqN3o0QlFzT2tueCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NTA6Imh0dHA6Ly9sb2NhbGhvc3QvZS1jb21tbWVyY2UvcHVibGljL2FkbWluL2NvbnRhY3RzIjtzOjU6InJvdXRlIjtzOjE0OiJhZG1pbi5jb250YWN0cyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1769249841);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `site_settings`
+--
+
+CREATE TABLE `site_settings` (
+  `id` int(11) NOT NULL,
+  `phone_1` varchar(20) DEFAULT NULL,
+  `phone_2` varchar(20) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `map_location` varchar(255) DEFAULT NULL,
+  `facebook` varchar(255) DEFAULT NULL,
+  `twitter` varchar(255) DEFAULT NULL,
+  `instagram` varchar(255) DEFAULT NULL,
+  `linkedin` varchar(255) DEFAULT NULL,
+  `youtube` varchar(255) DEFAULT NULL,
+  `pinterest` varchar(255) DEFAULT NULL,
+  `email_support` varchar(100) DEFAULT NULL,
+  `email_business` varchar(100) DEFAULT NULL,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `site_settings`
+--
+
+INSERT INTO `site_settings` (`id`, `phone_1`, `phone_2`, `address`, `map_location`, `facebook`, `twitter`, `instagram`, `linkedin`, `youtube`, `pinterest`, `email_support`, `email_business`, `status`, `created_at`, `updated_at`) VALUES
+(1, '9913817411', '7735105645', '123 Commerce Street, San Francisco, CA 94107, USA', 'https://maps.google.com/?q=123+Commerce+Street+San+Francisco', 'https://facebook.com/yourpage', 'https://twitter.com/yourpage', 'https://instagram.com/yourpage', 'https://linkedin.com/company/yourpage', 'https://youtube.com/yourchannel', 'https://pinterest.com/yourpage', 'support@eshop.com', 'business@eshop.com', 'active', '2026-01-24 09:31:54', '2026-01-24 04:46:21');
 
 -- --------------------------------------------------------
 
@@ -276,11 +307,14 @@ CREATE TABLE `sliders` (
 --
 
 INSERT INTO `sliders` (`id`, `title`, `subtitle`, `image`, `button_text`, `button_link`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Big Sale 50% Off', 'Best deals on electronics', 'image-1.jpg', 'Shop Now', '/products', 'active', '2026-01-23 08:27:42', '2026-01-23 08:27:42'),
-(2, 'New Fashion Arrivals', 'Latest trends available now', 'image-1.jpg', 'Explore', '/category/fashion', 'active', '2026-01-23 08:27:42', '2026-01-23 08:27:42'),
-(3, 'Home & Kitchen', 'Make your home beautiful', 'image-1.jpg', 'Buy Now', '/category/home-kitchen', 'active', '2026-01-23 08:27:42', '2026-01-23 08:27:42'),
-(4, 'Books Collection', 'Knowledge is power', 'image-1.jpg', 'Read More', '/category/books', 'active', '2026-01-23 08:27:42', '2026-01-23 08:27:42'),
-(5, 'Sports & Fitness', 'Stay healthy and fit', 'image-1.jpg', 'Shop Now', '/category/sports', 'active', '2026-01-23 08:27:42', '2026-01-23 08:27:42');
+(4, 'Books Collection', 'Knowledge is power', 'slider_1769230409_QXNwapLerg.jpg', 'Read More', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2026-01-23 08:27:42', '2026-01-23 23:23:29'),
+(5, 'Sports & Fitness', 'Stay healthy', 'slider_1769230395_TaJrxzBJNq.jpg', 'Shop Nowdv', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2026-01-23 08:27:42', '2026-01-23 23:23:46'),
+(7, 'Wireless Headphones', 'Stay healthy and fit', 'slider_1769230375_a9kB8wNbn1.jpg', 'Shop Now', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2026-01-23 23:22:55', '2026-01-23 23:24:19'),
+(9, 'ffb', 'Stay healthy and fit', 'slider_1769241902_ovrCiYLEKw.jpg', 'Shop Now', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2026-01-24 02:35:02', '2026-01-24 02:35:02'),
+(10, 'dfbb', 'fd', 'slider_1769241915_G4KwChS8L4.jpg', 'Shop Nowdv', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2026-01-24 02:35:15', '2026-01-24 02:35:15'),
+(11, 'dfbfg', 'Stay healthy and fit', 'slider_1769241932_53rJTi2TP1.jpg', 'Shop Now', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2026-01-24 02:35:32', '2026-01-24 02:35:32'),
+(12, 'bhdfbg', 'Stay healthy and fit', 'slider_1769241957_tTzQ6Tfihp.jpg', 'sgvd', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2026-01-24 02:35:57', '2026-01-24 02:35:57'),
+(13, 'efedr', 'Stay healthy and fit', 'slider_1769242063_7HZ3U16oKS.jpg', 'Shop Now', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2026-01-24 02:37:43', '2026-01-24 02:37:43');
 
 -- --------------------------------------------------------
 
@@ -306,9 +340,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `phone`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Admin User', 'admin@example.com', '1234567890', NULL, '$2y$12$r4EOdHojsEaSS4y6EYqtBu3QYRk2BBoV6S0i.rGriYNxJx8kYQqQW', 'admin', NULL, '2026-01-22 10:56:12', '2026-01-22 10:57:31'),
+(1, 'Admin User', 'admin@example.com', '1234567890', NULL, '$2y$12$aGSDTCEDK7do1Rk5lxH74uL6B7auOqExL.anLNbXvzxwD8k3jqAC2', 'admin', NULL, '2026-01-22 10:56:12', '2026-01-24 03:31:44'),
 (2, 'Regular Users', 'user@example.com', '0987654321', NULL, '$2y$12$r4EOdHojsEaSS4y6EYqtBu3QYRk2BBoV6S0i.rGriYNxJx8kYQqQW', 'user', NULL, '2026-01-22 10:56:12', '2026-01-23 03:51:41'),
-(5, 'Litu Nayak', 'Litu@gmail.com', '09978767202', NULL, '$2y$12$4R0GWU7cWbOClyYc6ENKGeFk9F3YUsap1nD9jUSRjmaEaMIq3NW1G', 'user', NULL, '2026-01-22 05:47:42', '2026-01-22 05:47:42');
+(6, 'laxman pradhan', 'pradhan@gmail.com', '09978767202', NULL, '$2y$12$7G.OQM.Pys5zubz0iEoFeuFXK2DNj4smQcilqdyqJLT8.jSOGK.xm', 'user', NULL, '2026-01-24 01:58:12', '2026-01-24 01:58:12');
 
 --
 -- Indexes for dumped tables
@@ -390,6 +424,12 @@ ALTER TABLE `sessions`
   ADD KEY `sessions_last_activity_index` (`last_activity`);
 
 --
+-- Indexes for table `site_settings`
+--
+ALTER TABLE `site_settings`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `sliders`
 --
 ALTER TABLE `sliders`
@@ -410,7 +450,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `contacts`
@@ -440,19 +480,25 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+
+--
+-- AUTO_INCREMENT for table `site_settings`
+--
+ALTER TABLE `site_settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `sliders`
 --
 ALTER TABLE `sliders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
