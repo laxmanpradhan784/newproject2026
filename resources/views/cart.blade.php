@@ -112,7 +112,7 @@
                                                     <form action="{{ route('cart.update', $item->id) }}" method="POST" class="update-quantity-form">
                                                         @csrf
                                                         @method('PUT')
-                                                        <div class="input-group" style="width: 120px;">
+                                                        <div class="input-group" style="width: 140px;">
                                                             <button type="button" class="btn btn-outline-secondary border-end-0 decrement px-3">
                                                                 <i class="fas fa-minus"></i>
                                                             </button>
