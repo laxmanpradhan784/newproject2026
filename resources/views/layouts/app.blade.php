@@ -50,5 +50,7 @@
     <script src="{{ asset('js/script.js') }}"></script>
     
     @stack('scripts')
+    <!-- In your layouts/app.blade.php before closing body -->
+<div id="toastContainer" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055;"></div>
 </body>
 </html>

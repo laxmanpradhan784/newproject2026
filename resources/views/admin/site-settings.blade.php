@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Site Settings')
+@section('title', 'Site-informations')
 
 @section('content')
 

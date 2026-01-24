@@ -98,6 +98,33 @@ Route::get('/deals', function () {
 
 
 
+// Quick add to cart (AJAX)
+Route::post('/product/quick-add/{id}', [ProductController::class, 'quickAdd'])->name('product.quick-add');
+
+
+// routes/web.php
+
+use App\Http\Controllers\UserSide\CheckoutController;
+use App\Http\Controllers\UserSide\CartController;
+
+// Cart Routes
+Route::middleware(['auth'])->group(function() {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+    Route::put('/cart/update/{cart}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/remove/{cart}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+    Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
+    Route::post('/cart/increase/{product}', [CartController::class, 'increase'])->name('cart.increase');
+    Route::post('/cart/decrease/{product}', [CartController::class, 'decrease'])->name('cart.decrease');
+    
+    // Add checkout route
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+});
+
+
+
 
 /*
 |--------------------------------------------------------------------------

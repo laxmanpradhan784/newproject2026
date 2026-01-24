@@ -38,4 +38,26 @@ class User extends Authenticatable
     {
         return $this->role === 'admin';
     }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    public function cartItems()
+    {
+        return $this->hasMany(Cart::class)->with('product');
+    }
+
+    public function cartCount()
+    {
+        return $this->carts()->sum('quantity');
+    }
+
+    public function cartTotal()
+    {
+        return $this->carts()->get()->sum(function ($cart) {
+            return $cart->price * $cart->quantity;
+        });
+    }
 }

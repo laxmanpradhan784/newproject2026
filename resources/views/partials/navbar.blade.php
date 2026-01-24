@@ -118,16 +118,18 @@
                     </div>
                 </form>
 
-                <!-- Cart Button -->
-                <a href="#" class="btn btn-outline-primary position-relative me-3 rounded-circle p-2"
-                   style="width: 40px; height: 40px; transition: all 0.3s ease;"
-                   onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(67, 97, 238, 0.2)';"
-                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                <!-- In your navbar.blade.php -->
+                <a href="{{ route('cart') }}" class="btn btn-outline-primary position-relative me-3 rounded-circle p-2"
+                style="width: 40px; height: 40px;">
                     <i class="fas fa-shopping-cart"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
-                          style="font-size: 10px; padding: 3px 6px;">
-                        0
-                    </span>
+                    @auth
+                        @if(auth()->user()->cartCount() > 0)
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count-badge" 
+                            style="font-size: 10px; padding: 3px 6px;">
+                            {{ auth()->user()->cartCount() }}
+                        </span>
+                        @endif
+                    @endauth
                 </a>
 
                 <!-- User Dropdown -->

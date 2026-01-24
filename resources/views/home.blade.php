@@ -31,7 +31,7 @@
                             <a href="{{ route('products') }}" class="text-decoration-none">
 
                             <div class="hero-slide position-relative"
-                                style="background-image:url('{{ asset('storage/'.$slider->image) }}');
+                                style="background-image:url('{{ asset('uploads/sliders/' . $slider->image) }}');
                                         background-size:cover;
                                         background-position:center;
                                         height:450px;">
@@ -83,78 +83,260 @@
             </div>
             
             <div class="row">
-                    @forelse($products as $product)
-                        <div class="col-lg-4 col-md-6 mb-4">
-                            <div class="product-card">
-                                <div class="product-image position-relative">
-                                    <a href="{{ route('product.show', $product->id) }}">
-                                        @if($product->image)
-                                            <img src="{{ asset('storage/'.$product->image) }}" 
-                                                class="img-fluid" alt="{{ $product->name }}">
-                                        @else
-                                            <img src="https://via.placeholder.com/400x300?text=No+Image" 
-                                                class="img-fluid" alt="{{ $product->name }}">
-                                        @endif
-                                    </a>
+    @forelse($products as $product)
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="product-card">
+                <div class="product-image position-relative">
+                    <a href="{{ route('product.show', $product->id) }}">
+                        @if($product->image)
+                            <img src="{{ asset('uploads/products/' . $product->image) }}" 
+                                class="img-fluid" alt="{{ $product->name }}">
+                        @else
+                            <img src="https://via.placeholder.com/400x300?text=No+Image" 
+                                class="img-fluid" alt="{{ $product->name }}">
+                        @endif
+                    </a>
 
-                                    <div class="product-actions position-absolute top-0 end-0 p-3">
-                                        <button class="btn btn-light btn-sm rounded-circle mb-2">
-                                            <i class="fas fa-heart"></i>
-                                        </button>
-                                        <button class="btn btn-light btn-sm rounded-circle">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
+                    <div class="product-actions position-absolute top-0 end-0 p-3">
+                        <button class="btn btn-light btn-sm rounded-circle mb-2">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <button class="btn btn-light btn-sm rounded-circle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
 
-                                <div class="product-body p-4">
-                                    <!-- Title and badge -->
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <h5 class="mb-0">{{ $product->name }}</h5>
-                                        @if($product->is_new ?? true)
-                                            <span class="badge bg-success">New</span>
-                                        @endif
-                                    </div>
-
-                                    <!-- Category name -->
-                                    @if($product->category)
-                                        <p class="text-muted small mb-2">
-                                            Category: 
-                                            <a href="{{ route('category.products', $product->category->slug) }}" class="text-decoration-none">
-                                                {{ $product->category->name }}
-                                            </a>
-                                        </p>
-                                    @endif
-
-                                    <!-- Short description -->
-                                    <p class="text-muted small mb-3">
-                                        {{ $product->short_description ?? Str::limit($product->description, 50, '...') }}
-                                    </p>
-
-                                    <!-- Price and Add to Cart -->
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <span class="h5 text-primary">₹{{ $product->price }}</span>
-                                            @if($product->old_price)
-                                                <span class="text-muted text-decoration-line-through ms-2">₹{{ $product->old_price }}</span>
-                                            @endif
-                                        </div>
-                                        <button class="btn btn-primary btn-sm">
-                                            <i class="fas fa-cart-plus me-1"></i> Add to Cart
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                    <!-- Stock Badge -->
+                    @if($product->stock <= 0)
+                        <div class="position-absolute top-0 start-0 m-3">
+                            <span class="badge bg-danger">Out of Stock</span>
                         </div>
-                    @empty
-                        <div class="col-12 text-center">
-                            <p class="text-muted">No products found.</p>
-                        </div>
-                    @endforelse
+                    @endif
                 </div>
 
-               
+                <div class="product-body p-4">
+                    <!-- Title and badge -->
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="mb-0">
+                            <a href="{{ route('product.show', $product->id) }}" class="text-decoration-none text-dark">
+                                {{ $product->name }}
+                            </a>
+                        </h5>
+                        @if($product->is_new ?? true)
+                            <span class="badge bg-success">New</span>
+                        @endif
+                    </div>
+
+                    <!-- Category name -->
+                    @if($product->category)
+                        <p class="text-muted small mb-2">
+                            Category: 
+                            <a href="{{ route('category.products', $product->category->slug) }}" class="text-decoration-none">
+                                {{ $product->category->name }}
+                            </a>
+                        </p>
+                    @endif
+
+                    <!-- Short description -->
+                    <p class="text-muted small mb-3">
+                        {{ $product->short_description ?? Str::limit($product->description, 50, '...') }}
+                    </p>
+
+                    <!-- Price -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <span class="h5 text-primary">₹{{ number_format($product->price, 2) }}</span>
+                            @if($product->old_price)
+                                <span class="text-muted text-decoration-line-through ms-2">₹{{ number_format($product->old_price, 2) }}</span>
+                            @endif
+                        </div>
+                        @if($product->stock <= 0)
+                            <span class="badge bg-danger">Out of Stock</span>
+                        @endif
+                    </div>
+
+                    <!-- Quantity Selector and Add to Cart -->
+                    @if($product->stock > 0)
+                        @if($product->inCart())
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="btn-group" role="group">
+                                    <form action="{{ route('cart.decrease', $product->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </form>
+                                    
+                                    <span class="px-3 fw-bold">{{ $product->cartQuantity() }}</span>
+                                    
+                                    <form action="{{ route('cart.increase', $product->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm" 
+                                            {{ $product->cartQuantity() >= $product->stock ? 'disabled' : '' }}>
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                
+                                <a href="{{ route('cart') }}" class="btn btn-success btn-sm">
+                                    <i class="fas fa-check me-1"></i> In Cart
+                                </a>
+                            </div>
+                        @else
+                            <form action="{{ route('cart.add', $product->id) }}" method="POST" class="d-inline w-100">
+                                @csrf
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button type="button" class="btn btn-outline-secondary quantity-minus" data-id="{{ $product->id }}">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <input type="number" 
+                                           name="quantity" 
+                                           class="form-control text-center quantity-input" 
+                                           value="1" 
+                                           min="1" 
+                                           max="{{ $product->stock }}"
+                                           data-id="{{ $product->id }}"
+                                           style="max-width: 60px;">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-secondary quantity-plus" data-id="{{ $product->id }}">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary" style="margin-left: 160px;>
+                                            <i class="fas fa-cart-plus me-1"></i> Add
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        @endif
+                        
+                        <!-- Stock Information -->
+                        <small class="text-muted d-block mt-2">
+                            <i class="fas fa-box me-1"></i> 
+                            {{ $product->stock }} in stock
+                        </small>
+                    @else
+                        <button class="btn btn-secondary btn-block" disabled>
+                            <i class="fas fa-times-circle me-1"></i> Out of Stock
+                        </button>
+                    @endif
+                </div>
             </div>
+        </div>
+    @empty
+        <div class="col-12 text-center">
+            <p class="text-muted">No products found.</p>
+        </div>
+    @endforelse
+</div>
+
+<!-- Add this JavaScript section to your home page or layout -->
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Quantity plus button
+    document.querySelectorAll('.quantity-plus').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-id');
+            const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
+            const max = parseInt(input.getAttribute('max'));
+            let value = parseInt(input.value) || 1;
+            
+            if (value < max) {
+                input.value = value + 1;
+            }
+        });
+    });
+
+    // Quantity minus button
+    document.querySelectorAll('.quantity-minus').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-id');
+            const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
+            const min = parseInt(input.getAttribute('min'));
+            let value = parseInt(input.value) || 1;
+            
+            if (value > min) {
+                input.value = value - 1;
+            }
+        });
+    });
+
+    // Input validation
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('change', function() {
+            const min = parseInt(this.getAttribute('min'));
+            const max = parseInt(this.getAttribute('max'));
+            let value = parseInt(this.value) || min;
+            
+            if (value < min) this.value = min;
+            if (value > max) this.value = max;
+        });
+    });
+});
+</script>
+<style>
+.quantity-input {
+    width: 60px;
+    text-align: center;
+    border-left: 0;
+    border-right: 0;
+}
+
+.btn-group .btn {
+    border-radius: 50% !important;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.input-group .btn {
+    border-radius: 0.375rem !important;
+}
+
+.input-group .btn-outline-secondary {
+    border-color: #dee2e6;
+}
+
+.input-group .btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+}
+
+.product-card {
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.product-card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transform: translateY(-5px);
+}
+
+.product-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.product-actions .btn {
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+.product-actions .btn:hover {
+    opacity: 1;
+}
+</style>
+@endpush
             
            <div class="text-center mt-4">
                 <a href="{{ route('products') }}" class="btn btn-outline-primary px-5">

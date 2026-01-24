@@ -152,9 +152,9 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), [
             'current_password' => ['required', 'string'],
-            'new_password' => ['required', 'string', 'min:8', 'confirmed', 'different:current_password'],
+            'new_password' => ['required', 'string', 'min:6', 'confirmed', 'different:current_password'],
         ], [
-            'new_password.min' => 'Password must be at least 8 characters.',
+            'new_password.min' => 'Password must be at least 6 characters.',
             'new_password.different' => 'New password must be different from current password.',
         ]);
 

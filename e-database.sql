@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 24, 2026 at 11:18 AM
+-- Generation Time: Jan 24, 2026 at 12:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -48,6 +48,22 @@ CREATE TABLE `cache_locks` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `carts`
+--
+
+CREATE TABLE `carts` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `price` decimal(10,2) NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `categories`
 --
 
@@ -60,22 +76,6 @@ CREATE TABLE `categories` (
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `categories`
---
-
-INSERT INTO `categories` (`id`, `name`, `slug`, `image`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Electronics', 'electronics', 'category_1769234541_jPDJlo1bcx.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:32:21'),
-(2, 'Fashion', 'fashion', 'category_1769234549_0ZrptCkUWx.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:32:29'),
-(3, 'Home & Kitchen', 'home-kitchen', 'category_1769234556_arJUdvFV8a.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:32:36'),
-(4, 'Sports & Outdoors', 'sports-outdoors', 'category_1769234565_o9XSHkawm7.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:32:45'),
-(5, 'Books', 'books', 'category_1769234572_9qrTHCoVJB.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:32:52'),
-(6, 'Beauty & Personal Care', 'beauty-personal-care', 'category_1769234579_gW7wDm1xRd.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:32:59'),
-(7, 'Toys & Games', 'toys-games', 'category_1769234586_hLs4iriGUO.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:33:06'),
-(8, 'Automotive', 'automotive', 'category_1769234531_tTr2qrKfxi.jpg', 'active', '2026-01-23 07:03:33', '2026-01-24 00:32:11'),
-(9, 'Health & Fitness', 'health-fitness', 'category_1769231545_RfyN6xVrcJ.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 23:42:25'),
-(10, 'Groceries', 'groceries', 'category_1769231536_i8WoZxF4dL.jpg', 'active', '2026-01-23 07:03:33', '2026-01-23 23:42:16');
 
 -- --------------------------------------------------------
 
@@ -204,32 +204,6 @@ CREATE TABLE `products` (
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `products`
---
-
-INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `image`, `description`, `price`, `stock`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Smartphone X1', 'smartphone-x1', 'image-1.jpg', 'Latest smartphone with high-resolution camera.', 299.99, 50, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(2, 1, 'Wireless Headphones', 'wireless-headphones', 'image-1.jpg', 'Noise-cancelling over-ear headphones.', 89.99, 100, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(3, 2, 'Men T-Shirt', 'men-tshirt', 'image-1.jpg', '100% cotton casual t-shirt for men.', 19.99, 200, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(4, 2, 'Women Dress', 'women-dress', 'image-1.jpg', 'Elegant summer dress for women.', 49.99, 150, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(5, 3, 'Blender 3000', 'blender-3000', 'image-1.jpg', 'High-speed kitchen blender.', 59.99, 80, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(6, 3, 'Non-stick Pan', 'non-stick-pan', 'image-1.jpg', 'Durable non-stick frying pan.', 24.99, 120, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(7, 4, 'Football', 'football', 'image-1.jpg', 'Professional quality football.', 29.99, 70, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(8, 4, 'Yoga Mat', 'yoga-mat', 'image-1.jpg', 'Eco-friendly yoga mat.', 25.99, 90, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(9, 5, 'Novel: The Great Adventure', 'novel-great-adventure', 'image-1.jpg', 'Exciting adventure novel for readers.', 14.99, 120, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(10, 5, 'Science Encyclopedia', 'science-encyclopedia', 'image-1.jpg', 'Comprehensive encyclopedia for students.', 39.99, 60, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(11, 6, 'Lipstick Set', 'lipstick-set', 'image-1.jpg', 'Long-lasting matte lipstick set.', 29.99, 200, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(12, 6, 'Face Cream', 'face-cream', 'image-1.jpg', 'Hydrating and nourishing face cream.', 19.99, 150, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(13, 7, 'Puzzle Game', 'puzzle-game', 'image-1.jpg', 'Fun and challenging puzzle for kids.', 9.99, 100, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(14, 7, 'Action Figure', 'action-figure', 'image-1.jpg', 'Collectible superhero action figure.', 14.99, 80, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(15, 8, 'Car Vacuum Cleaner', 'car-vacuum-cleaner', 'image-1.jpg', 'Portable vacuum cleaner for cars.', 49.99, 60, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(16, 8, 'Car Seat Cover', 'car-seat-cover', 'image-1.jpg', 'Durable seat cover for comfort.', 35.99, 70, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(17, 9, 'Treadmill', 'treadmill', 'image-1.jpg', 'Electric treadmill for home workouts.', 499.99, 30, 'active', '2026-01-23 07:04:47', '2026-01-23 07:04:47'),
-(18, 9, 'Dumbbell Set', 'dumbbell-set', 'product_1769234627_rkscOMJLxr.jpg', 'Adjustable dumbbells for strength training.', 89.99, 50, 'active', '2026-01-23 07:04:47', '2026-01-24 00:33:47'),
-(19, 10, 'Organic Rice', 'organic-rice', 'product_1769234611_NB9xN6cELW.jpg', 'Premium quality organic rice 5kg.', 25.99, 100, 'active', '2026-01-23 07:04:47', '2026-01-24 00:33:31'),
-(20, 10, 'Olive Oil', 'olive-oil', 'product_1769234603_Nb4pjAqd9m.jpg', 'Extra virgin olive oil 1L.', 15.99, 80, 'active', '2026-01-23 07:04:47', '2026-01-24 00:33:23');
-
 -- --------------------------------------------------------
 
 --
@@ -250,7 +224,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('MPTLGjw8GBgJsyXLoNbhaS4wf9OZ6fX7GNpxKMv7', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZHhBdW9QbTlFdjdyb0RsY05PZERqNkpsS3RGTkFqN3o0QlFzT2tueCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NTA6Imh0dHA6Ly9sb2NhbGhvc3QvZS1jb21tbWVyY2UvcHVibGljL2FkbWluL2NvbnRhY3RzIjtzOjU6InJvdXRlIjtzOjE0OiJhZG1pbi5jb250YWN0cyI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1769249841);
+('XwQET5fC1jimRgOrAU6xHmttMQEdPmUba5ZvUGi6', 7, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoibW5pQm1jSWhjaHJjeVI0QWhqdHpWYnozU0FMemVHbjJwbldPU2JJdiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NTE6Imh0dHA6Ly9sb2NhbGhvc3QvZS1jb21tbWVyY2UvcHVibGljL2FkbWluL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoxNToiYWRtaW4uZGFzaGJvYXJkIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Nzt9', 1769254457);
 
 -- --------------------------------------------------------
 
@@ -263,7 +237,7 @@ CREATE TABLE `site_settings` (
   `phone_1` varchar(20) DEFAULT NULL,
   `phone_2` varchar(20) DEFAULT NULL,
   `address` text DEFAULT NULL,
-  `map_location` varchar(255) DEFAULT NULL,
+  `map_location` text DEFAULT NULL,
   `facebook` varchar(255) DEFAULT NULL,
   `twitter` varchar(255) DEFAULT NULL,
   `instagram` varchar(255) DEFAULT NULL,
@@ -282,7 +256,7 @@ CREATE TABLE `site_settings` (
 --
 
 INSERT INTO `site_settings` (`id`, `phone_1`, `phone_2`, `address`, `map_location`, `facebook`, `twitter`, `instagram`, `linkedin`, `youtube`, `pinterest`, `email_support`, `email_business`, `status`, `created_at`, `updated_at`) VALUES
-(1, '9913817411', '7735105645', '123 Commerce Street, San Francisco, CA 94107, USA', 'https://maps.google.com/?q=123+Commerce+Street+San+Francisco', 'https://facebook.com/yourpage', 'https://twitter.com/yourpage', 'https://instagram.com/yourpage', 'https://linkedin.com/company/yourpage', 'https://youtube.com/yourchannel', 'https://pinterest.com/yourpage', 'support@eshop.com', 'business@eshop.com', 'active', '2026-01-24 09:31:54', '2026-01-24 04:46:21');
+(1, '9913817411', '7735105645', '123 Commerce Street, San Francisco, CA 94107, USA', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3721.240088208355!2d72.8044065!3d21.142841600000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be04e4b45d3ca2b%3A0xaf9ae5ffda2095d3!2sWebmasters%20InfoTech!5e0!3m2!1sen!2sin!4v1737200381429!5m2!1sen!2sin', 'https://facebook.com/yourpage', 'https://twitter.com/yourpage', 'https://instagram.com/yourpage', 'https://linkedin.com/company/yourpage', 'https://youtube.com/yourchannel', 'https://pinterest.com/yourpage', 'support@eshop.com', 'business@eshop.com', 'active', '2026-01-24 09:31:54', '2026-01-24 05:28:39');
 
 -- --------------------------------------------------------
 
@@ -342,7 +316,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `name`, `email`, `phone`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'Admin User', 'admin@example.com', '1234567890', NULL, '$2y$12$aGSDTCEDK7do1Rk5lxH74uL6B7auOqExL.anLNbXvzxwD8k3jqAC2', 'admin', NULL, '2026-01-22 10:56:12', '2026-01-24 03:31:44'),
 (2, 'Regular Users', 'user@example.com', '0987654321', NULL, '$2y$12$r4EOdHojsEaSS4y6EYqtBu3QYRk2BBoV6S0i.rGriYNxJx8kYQqQW', 'user', NULL, '2026-01-22 10:56:12', '2026-01-23 03:51:41'),
-(6, 'laxman pradhan', 'pradhan@gmail.com', '09978767202', NULL, '$2y$12$7G.OQM.Pys5zubz0iEoFeuFXK2DNj4smQcilqdyqJLT8.jSOGK.xm', 'user', NULL, '2026-01-24 01:58:12', '2026-01-24 01:58:12');
+(6, 'pradhan', 'pradhan@gmail.com', '09978767202', NULL, '$2y$12$Mz2M/wJGrefnTTyKeZa5sePEP4zZ4OQsPncQLpfYx4znXGN7Hdei2', 'user', NULL, '2026-01-24 01:58:12', '2026-01-24 05:03:22'),
+(7, 'Laxman Pradhan', 'Laxman784@gmail.com', '9913817411', NULL, '$2y$12$CBHMk4fbfQ8DSTGiNYcdt.GDzzY5ZQEjC9vJ9nfU0ES/uRNJSMjQy', 'admin', NULL, '2026-01-24 04:56:17', '2026-01-24 04:56:33');
 
 --
 -- Indexes for dumped tables
@@ -361,6 +336,14 @@ ALTER TABLE `cache`
 ALTER TABLE `cache_locks`
   ADD PRIMARY KEY (`key`),
   ADD KEY `cache_locks_expiration_index` (`expiration`);
+
+--
+-- Indexes for table `carts`
+--
+ALTER TABLE `carts`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_user_product` (`user_id`,`product_id`),
+  ADD KEY `carts_product_id_foreign` (`product_id`);
 
 --
 -- Indexes for table `categories`
@@ -447,6 +430,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `carts`
+--
+ALTER TABLE `carts`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
@@ -480,7 +469,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `site_settings`
@@ -498,11 +487,18 @@ ALTER TABLE `sliders`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `carts`
+--
+ALTER TABLE `carts`
+  ADD CONSTRAINT `carts_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `carts_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `products`

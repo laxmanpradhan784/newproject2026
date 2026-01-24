@@ -1,24 +1,103 @@
 <aside class="admin-sidebar police-sidebar" style="width: 250px; min-height: 87vh;">
     
-    <!-- User Badge with Police Rank -->
-    <div class="user-badge-section p-3 border-bottom border-secondary" style="background: rgba(0, 0, 0, 0.2);">
-        <div class="d-flex align-items-center">
-            <div class="police-badge me-3">
-                <div class="badge-icon" style="width: 45px; height: 45px;">
-                    <i class="bi bi-person-badge fs-4"></i>
-                </div>
-                <div class="badge-rank">CHIEF</div>
+<!-- Glowing User Badge -->
+<div class="user-badge-section p-3 border-bottom border-secondary" style="background: linear-gradient(90deg, rgba(0,0,0,0.3) 0%, rgba(67,97,238,0.1) 100%);">
+    <div class="d-flex align-items-center">
+        <div class="user-avatar-glow position-relative me-3">
+            <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                 style="width: 40px; height: 40px; background: linear-gradient(135deg, #4361ee, #7209b7); 
+                        animation: pulse-glow 2s infinite;">
+                <i class="bi bi-person-fill text-white"></i>
             </div>
-            <div class="flex-grow-1">
-                <div class="text-white fw-semibold">ADMIN OFFICER</div>
-                <div class="user-id">ID: ADMIN-001</div>
-                <div class="connection-status">
-                    <span class="dot connected"></span>
-                    <small class="text-success">CONNECTED</small>
-                </div>
+            <div class="avatar-ring"></div>
+        </div>
+        <div>
+            <div class="text-white fw-semibold" style="text-shadow: 0 1px 2px rgba(0,0,0,0.3);">
+                {{ auth()->user()->name }}
             </div>
+            <span class="badge bg-gradient-danger px-2 py-1 mt-1" 
+                  style="background: linear-gradient(45deg, #ff6b6b, #ee5a52); 
+                         animation: badge-shine 3s infinite;
+                         box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);">
+                <i class="bi bi-shield-check me-1"></i>{{ strtoupper(auth()->user()->role) }}
+            </span>
         </div>
     </div>
+</div>
+
+<style>
+    /* Glowing pulse animation for avatar */
+    @keyframes pulse-glow {
+        0%, 100% {
+            box-shadow: 0 0 5px rgba(67, 97, 238, 0.5),
+                        0 0 10px rgba(67, 97, 238, 0.3),
+                        0 0 15px rgba(67, 97, 238, 0.1);
+        }
+        50% {
+            box-shadow: 0 0 10px rgba(67, 97, 238, 0.8),
+                        0 0 20px rgba(67, 97, 238, 0.5),
+                        0 0 30px rgba(67, 97, 238, 0.2);
+        }
+    }
+    
+    /* Shine effect for badge */
+    @keyframes badge-shine {
+        0%, 100% {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            transform: scale(1);
+        }
+        50% {
+            background: linear-gradient(45deg, #ff8787, #ff6b6b);
+            transform: scale(1.02);
+        }
+    }
+    
+    /* Avatar ring animation */
+    .avatar-ring {
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        right: -3px;
+        bottom: -3px;
+        border: 2px solid rgba(67, 97, 238, 0.3);
+        border-radius: 50%;
+        animation: ring-rotate 4s linear infinite;
+    }
+    
+    @keyframes ring-rotate {
+        0% {
+            transform: rotate(0deg);
+            border-color: rgba(67, 97, 238, 0.3);
+        }
+        25% {
+            border-color: rgba(114, 9, 183, 0.3);
+        }
+        50% {
+            border-color: rgba(67, 97, 238, 0.5);
+        }
+        75% {
+            border-color: rgba(114, 9, 183, 0.5);
+        }
+        100% {
+            transform: rotate(360deg);
+            border-color: rgba(67, 97, 238, 0.3);
+        }
+    }
+    
+    /* Smooth hover effects */
+    .user-avatar-glow:hover .rounded-circle {
+        animation: pulse-glow 0.5s infinite;
+    }
+    
+    .user-badge-section {
+        transition: all 0.3s ease;
+    }
+    
+    .user-badge-section:hover {
+        background: linear-gradient(90deg, rgba(0,0,0,0.4) 0%, rgba(67,97,238,0.2) 100%);
+        transform: translateX(5px);
+    }
+</style>
 
 
     <!-- Navigation Links - Police Style -->

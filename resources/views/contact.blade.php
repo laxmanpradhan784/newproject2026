@@ -33,57 +33,75 @@
         </div>
         
         <div class="row g-4">
+            @php
+                $site = \App\Models\SiteSetting::first();
+                $address = $site->address ?? "123 Commerce Street\nSan Francisco, CA 94107\nUnited States";
+                $mapLink = $site->map_location ?? 'https://maps.google.com/?q=' . urlencode($address);
+            @endphp
+
             <div class="col-md-4">
                 <div class="contact-card text-center p-4 h-100">
                     <div class="contact-icon mb-4">
                         <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
-                             style="width: 80px; height: 80px;">
+                            style="width: 80px; height: 80px;">
                             <i class="fas fa-map-marker-alt fa-2x text-primary"></i>
                         </div>
                     </div>
                     <h4 class="fw-bold mb-3">Visit Us</h4>
-                    <p class="text-muted mb-0">
-                        123 Commerce Street<br>
-                        San Francisco, CA 94107<br>
-                        United States
-                    </p>
-                    <a href="#" class="btn btn-link text-primary mt-3">
+                    <p class="text-muted mb-0" style="white-space: pre-line;">{{ $address }}</p>
+                    <a href="#" target="_blank" class="btn btn-link text-primary mt-3">
                         Get Directions <i class="fas fa-arrow-right ms-1"></i>
                     </a>
                 </div>
             </div>
             
+            @php
+                $site = \App\Models\SiteSetting::first();
+                $phone1 = $site->phone_1 ?? '+1 (555) 123-4567';
+                $phone2 = $site->phone_2 ?? '+1 (555) 987-6543';
+            @endphp
+
             <div class="col-md-4">
                 <div class="contact-card text-center p-4 h-100">
                     <div class="contact-icon mb-4">
                         <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
-                             style="width: 80px; height: 80px;">
+                            style="width: 80px; height: 80px;">
                             <i class="fas fa-phone fa-2x text-primary"></i>
                         </div>
                     </div>
                     <h4 class="fw-bold mb-3">Call Us</h4>
                     <p class="text-muted mb-2">Available Monday to Friday, 9AM to 6PM</p>
-                    <h5 class="text-primary">+1 (555) 123-4567</h5>
-                    <p class="text-muted small mt-2">International: +1 (555) 987-6543</p>
-                    <a href="tel:+15551234567" class="btn btn-primary mt-3">
+                    <h5 class="text-primary"> Primary Number:- {{ $phone1 }}</h5>
+                    @if($phone2)
+                    <p class="text-muted small mt-2"> {{ $phone2 }}</p>
+                    @endif
+                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', $phone1) }}" class="btn btn-primary mt-3">
                         <i class="fas fa-phone-alt me-2"></i> Call Now
                     </a>
                 </div>
             </div>
             
+            @php
+                $site = \App\Models\SiteSetting::first();
+                $supportEmail = $site->email_support ?? 'support@eshop.com';
+                $businessEmail = $site->email_business ?? 'business@eshop.com';
+            @endphp
+
             <div class="col-md-4">
                 <div class="contact-card text-center p-4 h-100">
                     <div class="contact-icon mb-4">
                         <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
-                             style="width: 80px; height: 80px;">
+                            style="width: 80px; height: 80px;">
                             <i class="fas fa-envelope fa-2x text-primary"></i>
                         </div>
                     </div>
                     <h4 class="fw-bold mb-3">Email Us</h4>
                     <p class="text-muted mb-2">We typically respond within 24 hours</p>
-                    <h5 class="text-primary">support@eshop.com</h5>
-                    <p class="text-muted small mt-2">For business: business@eshop.com</p>
-                    <a href="mailto:support@eshop.com" class="btn btn-primary mt-3">
+                    <h5 class="text-primary">{{ $supportEmail }}</h5>
+                    @if($businessEmail)
+                    <p class="text-muted small mt-2">For business: {{ $businessEmail }}</p>
+                    @endif
+                    <a href="mailto:{{ $supportEmail }}" class="btn btn-primary mt-3">
                         <i class="fas fa-envelope me-2"></i> Send Email
                     </a>
                 </div>
@@ -304,28 +322,29 @@
             <p class="text-muted">Visit us at our headquarters</p>
         </div>
         
-        <div class="row">
-            <div class="col-12">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body p-0">
-                        <div class="map-container" style="height: 400px;">
-                            <!-- Map Placeholder -->
-                            <div class="bg-primary bg-opacity-10 h-100 d-flex align-items-center justify-content-center">
-                                <div class="text-center">
-                                    <i class="fas fa-map-marked-alt fa-4x text-primary mb-4"></i>
-                                    <h4 class="fw-bold mb-2">123 Commerce Street</h4>
-                                    <p class="text-muted">San Francisco, CA 94107</p>
-                                    <a href="https://maps.google.com/?q=123+Commerce+Street+San+Francisco+CA" 
-                                       target="_blank" class="btn btn-primary">
-                                        <i class="fas fa-external-link-alt me-2"></i> Open in Google Maps
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Map Section -->
+        <section class="map-section">
+            @php
+                $site = \App\Models\SiteSetting::first();
+                
+                // Default coordinates if not set (you can change these)
+                $defaultMap = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3721.240088208355!2d72.8044065!3d21.142841600000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be04e4b45d3ca2b%3A0xaf9ae5ffda2095d3!2sWebmasters%20InfoTech!5e0!3m2!1sen!2sin!4v1737200381429!5m2!1sen!2sin';
+                
+                // Use stored map_location or default
+                $mapEmbed = $site->map_location ?? $defaultMap;
+            @endphp
+            
+            <iframe frameborder="0" class="w-100 h-100"
+                src="{{ $mapEmbed }}" 
+                width="600" 
+                height="450" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </section>
+        <!-- End Map Section -->
         
         <div class="row mt-5">
             <div class="col-md-4">
@@ -382,30 +401,51 @@
             <p class="text-muted">Follow us on social media for updates and promotions</p>
         </div>
         
-        <div class="row justify-content-center">
-            <div class="col-auto">
-                <div class="social-icons d-flex flex-wrap justify-content-center gap-4">
-                    <a href="#" class="social-icon facebook rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="fab fa-facebook-f fa-lg"></i>
-                    </a>
-                    <a href="#" class="social-icon twitter rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="fab fa-twitter fa-lg"></i>
-                    </a>
-                    <a href="#" class="social-icon instagram rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="fab fa-instagram fa-lg"></i>
-                    </a>
-                    <a href="#" class="social-icon linkedin rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="fab fa-linkedin-in fa-lg"></i>
-                    </a>
-                    <a href="#" class="social-icon youtube rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="fab fa-youtube fa-lg"></i>
-                    </a>
-                    <a href="#" class="social-icon pinterest rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="fab fa-pinterest-p fa-lg"></i>
-                    </a>
+             @php
+                $site = \App\Models\SiteSetting::first();
+            @endphp
+
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <div class="social-icons d-flex flex-wrap justify-content-center gap-4">
+                        @if($site && $site->facebook)
+                        <a href="{{ $site->facebook }}" target="_blank" class="social-icon facebook rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="fab fa-facebook-f fa-lg"></i>
+                        </a>
+                        @endif
+                        
+                        @if($site && $site->twitter)
+                        <a href="{{ $site->twitter }}" target="_blank" class="social-icon twitter rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="fab fa-twitter fa-lg"></i>
+                        </a>
+                        @endif
+                        
+                        @if($site && $site->instagram)
+                        <a href="{{ $site->instagram }}" target="_blank" class="social-icon instagram rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="fab fa-instagram fa-lg"></i>
+                        </a>
+                        @endif
+                        
+                        @if($site && $site->linkedin)
+                        <a href="{{ $site->linkedin }}" target="_blank" class="social-icon linkedin rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="fab fa-linkedin-in fa-lg"></i>
+                        </a>
+                        @endif
+                        
+                        @if($site && $site->youtube)
+                        <a href="{{ $site->youtube }}" target="_blank" class="social-icon youtube rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="fab fa-youtube fa-lg"></i>
+                        </a>
+                        @endif
+                        
+                        @if($site && $site->pinterest)
+                        <a href="{{ $site->pinterest }}" target="_blank" class="social-icon pinterest rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="fab fa-pinterest-p fa-lg"></i>
+                        </a>
+                        @endif
+                    </div>
                 </div>
             </div>
-        </div>
     </div>
 </section>
 @endsection

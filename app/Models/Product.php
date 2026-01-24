@@ -25,4 +25,35 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    // Check if product is in user's cart
+    public function inCart($userId = null)
+    {
+        if (!$userId && auth()->check()) {
+            $userId = auth()->id();
+        }
+
+        if (!$userId) return false;
+
+        return $this->carts()->where('user_id', $userId)->exists();
+    }
+
+    // Get cart quantity for current user
+    public function cartQuantity($userId = null)
+    {
+        if (!$userId && auth()->check()) {
+            $userId = auth()->id();
+        }
+
+        if (!$userId) return 0;
+
+        $cart = $this->carts()->where('user_id', $userId)->first();
+
+        return $cart ? $cart->quantity : 0;
+    }
 }

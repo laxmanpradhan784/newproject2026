@@ -331,7 +331,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                         <div class="form-text small">
-                            Password must be at least 8 characters long.
+                            Password must be at least 6 characters long.
                         </div>
                     </div>
                     <div class="mb-3">
@@ -578,9 +578,9 @@
                     alert('New password and confirmation do not match.');
                 }
                 
-                if (newPassword.length < 8) {
+                if (newPassword.length < 6) {
                     e.preventDefault();
-                    alert('Password must be at least 8 characters long.');
+                    alert('Password must be at least 6 characters long.');
                 }
             });
         }
