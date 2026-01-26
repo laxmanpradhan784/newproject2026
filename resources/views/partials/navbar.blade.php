@@ -119,17 +119,32 @@
                 </form>
 
                 <!-- In your navbar.blade.php -->
+                <!-- Cart Icon with Count -->
                 <a href="{{ route('cart') }}" class="btn btn-outline-primary position-relative me-3 rounded-circle p-2"
-                style="width: 40px; height: 40px;">
+                style="width: 40px; height: 40px; text-decoration: none;">
                     <i class="fas fa-shopping-cart"></i>
-                    @auth
-                        @if(auth()->user()->cartCount() > 0)
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count-badge" 
-                            style="font-size: 10px; padding: 3px 6px;">
-                            {{ auth()->user()->cartCount() }}
-                        </span>
-                        @endif
-                    @endauth
+                    
+                    <!-- Cart Count Badge -->
+                    @php
+                        // Use the Cart model method to get count for both guest and logged-in users
+                        use App\Models\Cart;
+                        $cartCount = Cart::getCartCount();
+                    @endphp
+                    
+                    @if($cartCount > 0)
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count-badge" 
+                        style="font-size: 10px; padding: 3px 6px;"
+                        id="navbarCartCount">
+                        {{ $cartCount }}
+                    </span>
+                    @else
+                    <!-- Hidden badge for JavaScript updates -->
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count-badge" 
+                        style="font-size: 10px; padding: 3px 6px; display: none;"
+                        id="navbarCartCount">
+                        0
+                    </span>
+                    @endif
                 </a>
 
                 <!-- User Dropdown -->

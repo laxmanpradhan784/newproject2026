@@ -15,42 +15,52 @@
                         <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-decoration-none">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
                     </ol>
-                    <h2 class="fw-bold mb-0">My Cart</h2>
+                    <h2 class="fw-bold mb-0">My Cart @if($cartCount > 0)<span class="text-muted fs-6">({{ $cartCount }} items)</span>@endif</h2>
                 </nav>
             </div>
         </div>
+
+        <!-- Guest User Notification -->
+        @if(!auth()->check() && $cartCount > 0)
+        <div class="alert alert-info alert-dismissible fade show rounded-3 mb-4" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-info-circle fa-2x me-3"></i>
+                <div>
+                    <h6 class="alert-heading mb-1">Shopping as Guest</h6>
+                    <p class="mb-0">
+                        Your cart is saved in this browser only. 
+                        <a href="{{ route('login') }}" class="alert-link fw-bold">Login</a> to save your cart across devices and access checkout!
+                    </p>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
+
+        <!-- Cart Merge Success Message -->
+        @if(session('cart_merged_message'))
+        <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-check-circle fa-2x me-3"></i>
+                <div>
+                    <h6 class="alert-heading mb-1">Cart Merged Successfully!</h6>
+                    <p class="mb-0">{{ session('cart_merged_message') }}</p>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
 
         <div class="row g-4">
             <!-- Left Column: Cart Items -->
             <div class="col-lg-8">
                 @if($cartItems->count() > 0)
-                {{-- <!-- Cart Header -->
-                <div class="card rounded-3 shadow-sm border-0 mb-3">
-                    <div class="card-body p-4">
-                        <div class="row align-items-center">
-                            <div class="col-md-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="selectAll" checked>
-                                    <label class="form-check-label fw-medium ms-2" for="selectAll">
-                                        Select all items
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
-
                 <!-- Cart Items -->
                 <div class="card rounded-3 shadow-sm border-0">
                     <div class="card-body p-0">
                         @foreach($cartItems as $item)
                         <div class="cart-item p-4 border-bottom">
                             <div class="row align-items-center">
-                                <div class="col-1">
-                                    <div class="form-check">
-                                        <input class="form-check-input item-checkbox" type="checkbox" checked data-item-id="{{ $item->id }}">
-                                    </div>
-                                </div>
                                 <div class="col-3 col-md-2">
                                     <div class="position-relative">
                                         @if($item->product->image)
@@ -69,9 +79,14 @@
                                             Only {{ $item->product->stock }} left
                                         </span>
                                         @endif
+                                        @if($item->product->stock == 0)
+                                        <span class="badge bg-danger position-absolute top-0 start-0 m-1">
+                                            Out of Stock
+                                        </span>
+                                        @endif
                                     </div>
                                 </div>
-                                <div class="col-8 col-md-9">
+                                <div class="col-9 col-md-10">
                                     <div class="row">
                                         <div class="col-md-8">
                                             <h6 class="fw-bold mb-1">{{ $item->product->name }}</h6>
@@ -94,10 +109,9 @@
                                             <p class="text-success small mt-1 mb-0">
                                                 <i class="fas fa-check-circle me-1"></i>Free delivery
                                             </p>
-                                            @if($item->product->stock == 0)
-                                            <div class="alert alert-warning p-2 mt-2 mb-0 small">
-                                                <i class="fas fa-exclamation-triangle me-1"></i>Out of stock
-                                            </div>
+                                            <!-- Show if this was a guest item now merged -->
+                                            @if($item->is_guest && auth()->check())
+                                            <span class="badge bg-info mt-1">Merged from Guest Cart</span>
                                             @endif
                                         </div>
                                         <div class="col-md-4 mt-3 mt-md-0">
@@ -117,16 +131,17 @@
                                                                    min="1" 
                                                                    max="{{ min(10, $item->product->stock) }}"
                                                                    class="form-control text-center border-start-0 border-end-0 quantity-input px-1"
-                                                                   style="height: 45px;">
+                                                                   style="height: 45px;"
+                                                                   data-item-id="{{ $item->id }}">
                                                             <button type="button" class="btn btn-outline-secondary border-start-0 increment px-3">
                                                                 <i class="fas fa-plus"></i>
                                                             </button>
                                                         </div>
                                                     </form>
                                                 </div>
-                                               <form action="{{ route('cart.remove', $item->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
+                                                <form action="{{ route('cart.remove', $item->id) }}" method="POST" class="remove-item-form ms-3">
+                                                    @csrf
+                                                    @method('DELETE')
                                                     <button type="submit" class="btn btn-link text-danger p-0" title="Remove item">
                                                         <i class="fas fa-trash-alt fa-lg"></i>
                                                     </button>
@@ -152,44 +167,23 @@
                             <a href="{{ route('products') }}" class="btn btn-outline-dark rounded-pill px-4">
                                 <i class="fas fa-arrow-left me-2"></i> Continue Shopping
                             </a>
-                            <div class="text-end">
-                                <p class="mb-1 text-muted">Total ({{ $cartCount }} items)</p>
-                                <h4 class="text-dark fw-bold mb-0">₹{{ number_format($subtotal, 2) }}</h4>
+                            <div class="d-flex align-items-center gap-3">
+                                {{-- <form action="{{ route('cart.clear') }}" method="POST" id="clearCartForm">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-outline-danger rounded-pill px-3" id="clearCartBtn">
+                                        <i class="fas fa-trash me-2"></i> Clear Cart
+                                    </button>
+                                </form> --}}
+                                <div class="text-end">
+                                    <p class="mb-1 text-muted">Total ({{ $cartCount }} items)</p>
+                                    <h4 class="text-dark fw-bold mb-0">₹{{ number_format($subtotal, 2) }}</h4>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Delivery Info -->
-                {{-- <div class="card rounded-3 shadow-sm border-0 mt-4">
-                    <div class="card-body p-4">
-                        <h6 class="fw-bold mb-3"><i class="fas fa-truck me-2 text-primary"></i>Delivery Information</h6>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="d-flex mb-3">
-                                    <div class="me-3">
-                                        <i class="fas fa-shipping-fast text-success fa-lg"></i>
-                                    </div>
-                                    <div>
-                                        <p class="fw-medium mb-1">Free Delivery</p>
-                                        <p class="text-muted small mb-0">Delivered in 3-5 business days</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="d-flex mb-3">
-                                    <div class="me-3">
-                                        <i class="fas fa-undo-alt text-primary fa-lg"></i>
-                                    </div>
-                                    <div>
-                                        <p class="fw-medium mb-1">Easy Returns</p>
-                                        <p class="text-muted small mb-0">10 days return & exchange policy</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
                 @else
                 <!-- Empty Cart -->
                 <div class="card rounded-3 shadow-sm border-0">
@@ -202,12 +196,14 @@
                         <a href="{{ route('products') }}" class="btn btn-primary rounded-pill px-5 py-2">
                             <i class="fas fa-shopping-bag me-2"></i> Shop Now
                         </a>
-                        <div class="mt-5">
-                            <p class="text-muted small mb-2">You might be interested in</p>
-                            <a href="#" class="btn btn-outline-primary btn-sm me-2">Best Sellers</a>
-                            <a href="#" class="btn btn-outline-primary btn-sm me-2">New Arrivals</a>
-                            <a href="#" class="btn btn-outline-primary btn-sm">Deals of the Day</a>
+                        @if(!auth()->check())
+                        <div class="mt-4">
+                            <p class="text-muted small mb-2">Already have items in another browser?</p>
+                            <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-sign-in-alt me-1"></i> Login to access your saved cart
+                            </a>
                         </div>
+                        @endif
                     </div>
                 </div>
                 @endif
@@ -239,10 +235,6 @@
                                 </span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
-                                <span>Platform Fee</span>
-                                <span>₹10.00</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
                                 <span>Tax (GST 18%)</span>
                                 <span>₹{{ number_format($tax, 2) }}</span>
                             </div>
@@ -266,12 +258,41 @@
                         </div>
                         
                         <!-- Checkout Button -->
-                        <a href="{{ route('checkout') }}" class="btn btn-warning btn-lg w-100 py-3 fw-bold rounded-pill shadow-sm mb-3">
-                            <i class="fas fa-lock me-2"></i> PLACE ORDER
-                        </a>
+                        @auth
+                            <a href="{{ route('checkout') }}" class="btn btn-warning btn-lg w-100 py-3 fw-bold rounded-pill shadow-sm mb-3">
+                                <i class="fas fa-lock me-2"></i> PLACE ORDER
+                            </a>
+                        @else
+                            <a href="{{ route('checkout.guest') }}" class="btn btn-warning btn-lg w-100 py-3 fw-bold rounded-pill shadow-sm mb-3">
+                                <i class="fas fa-lock me-2"></i> PROCEED TO CHECKOUT
+                            </a>
+                            <p class="text-center mt-2 small text-muted">
+                                <i class="fas fa-info-circle me-1"></i>You'll be asked to login before checkout
+                            </p>
+                        @endauth
+                        
+                        <!-- Guest Login Prompt -->
+                        @guest
+                        <div class="card border-info mt-3">
+                            <div class="card-body p-3">
+                                <h6 class="fw-bold mb-2"><i class="fas fa-user-plus me-2 text-info"></i>Benefits of Login</h6>
+                                <ul class="list-unstyled small mb-0">
+                                    <li class="mb-1"><i class="fas fa-check text-success me-1"></i> Save cart across devices</li>
+                                    <li class="mb-1"><i class="fas fa-check text-success me-1"></i> Faster checkout</li>
+                                    <li class="mb-1"><i class="fas fa-check text-success me-1"></i> Order tracking</li>
+                                    <li><i class="fas fa-check text-success me-1"></i> Exclusive offers</li>
+                                </ul>
+                                <div class="text-center mt-3">
+                                    <a href="{{ route('login') }}" class="btn btn-outline-info btn-sm w-100">
+                                        <i class="fas fa-sign-in-alt me-1"></i> Login Now
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        @endguest
                         
                         <!-- Payment Methods -->
-                        <div class="payment-methods text-center mb-3">
+                        <div class="payment-methods text-center mt-3">
                             <p class="text-muted small mb-2">We accept</p>
                             <div class="d-flex justify-content-center gap-2">
                                 <i class="fab fa-cc-visa fa-2x text-primary"></i>
@@ -283,7 +304,7 @@
                         </div>
                         
                         <!-- Security Badge -->
-                        <div class="security-badge text-center">
+                        <div class="security-badge text-center mt-2">
                             <p class="text-muted small mb-0">
                                 <i class="fas fa-shield-alt me-1 text-success"></i>
                                 Safe and Secure Payments. 100% secure
@@ -291,49 +312,34 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Promo Code Card -->
-                {{-- <div class="card rounded-3 shadow-sm border-0 mt-4">
-                    <div class="card-body p-4">
-                        <h6 class="fw-bold mb-3"><i class="fas fa-tag me-2 text-danger"></i>Apply Coupon</h6>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control rounded-start-pill" placeholder="Enter coupon code">
-                            <button class="btn btn-outline-primary rounded-end-pill" type="button">Apply</button>
-                        </div>
-                        <div class="coupon-suggestions">
-                            <p class="small fw-medium mb-2">Available Coupons:</p>
-                            <div class="d-flex flex-wrap gap-2">
-                                <span class="badge bg-light text-dark border">FLIP50</span>
-                                <span class="badge bg-light text-dark border">WELCOME100</span>
-                                <span class="badge bg-light text-dark border">FESTIVE200</span>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
-                
-                <!-- Need Help Card -->
-                {{-- <div class="card rounded-3 shadow-sm border-0 mt-4">
-                    <div class="card-body p-4">
-                        <h6 class="fw-bold mb-3"><i class="fas fa-headset me-2 text-primary"></i>Need Help?</h6>
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-light rounded-circle p-2 me-3">
-                                <i class="fas fa-phone-alt text-primary"></i>
-                            </div>
-                            <div>
-                                <p class="fw-medium mb-0">Call us 24/7</p>
-                                <p class="text-muted small mb-0">+91 1800-123-4567</p>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-outline-dark w-100 rounded-pill">
-                            <i class="fas fa-comments me-2"></i> Chat with us
-                        </a>
-                    </div>
-                </div> --}}
             </div>
             @endif
         </div>
     </div>
 </section>
+
+<!-- Clear Cart Modal -->
+{{-- <div class="modal fade" id="clearCartModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-3">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">Clear Cart</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-4">
+                    <i class="fas fa-trash-alt fa-4x text-danger"></i>
+                </div>
+                <h5 class="fw-bold mb-3">Remove all items?</h5>
+                <p class="text-muted">Are you sure you want to remove all items from your shopping cart?</p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-outline-dark px-4 rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger px-4 rounded-pill" id="confirmClearCart">Remove All</button>
+            </div>
+        </div>
+    </div>
+</div> --}}
 
 @endsection
 
@@ -365,6 +371,12 @@
     .quantity-selector .form-control {
         font-weight: 600;
         color: #212529;
+        border-color: #dee2e6;
+    }
+    
+    .quantity-selector .form-control:focus {
+        box-shadow: none;
+        border-color: #86b7fe;
     }
     
     .sticky-top {
@@ -375,11 +387,13 @@
         background: linear-gradient(135deg, #ff9f00, #ff7200);
         border: none;
         color: #000;
+        transition: all 0.3s ease;
     }
     
     .btn-warning:hover {
         background: linear-gradient(135deg, #ff7200, #ff9f00);
         box-shadow: 0 4px 12px rgba(255, 159, 0, 0.3);
+        transform: translateY(-2px);
     }
     
     .empty-cart-icon {
@@ -393,15 +407,12 @@
     .card {
         border: none;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: transform 0.2s ease;
     }
     
     .card:hover {
         box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    }
-    
-    .form-check-input:checked {
-        background-color: #2874f0;
-        border-color: #2874f0;
+        transform: translateY(-2px);
     }
     
     .price-breakdown div {
@@ -413,26 +424,35 @@
         border-bottom: none;
     }
     
-    .coupon-suggestions .badge {
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-    
-    .coupon-suggestions .badge:hover {
-        background-color: #2874f0 !important;
-        color: white !important;
-    }
-    
     .breadcrumb {
         font-size: 0.875rem;
     }
     
     .breadcrumb-item a {
         color: #2874f0;
+        text-decoration: none;
+    }
+    
+    .breadcrumb-item a:hover {
+        text-decoration: underline;
     }
     
     .modal-content {
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        border: none;
+    }
+    
+    .alert {
+        border: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .input-group .btn-outline-secondary {
+        border: 1px solid #dee2e6;
+    }
+    
+    .input-group .btn-outline-secondary:hover {
+        background-color: #f8f9fa;
     }
 </style>
 @endpush
@@ -440,33 +460,16 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Select all items functionality
-        const selectAll = document.getElementById('selectAll');
-        const itemCheckboxes = document.querySelectorAll('.item-checkbox');
-        
-        if (selectAll) {
-            selectAll.addEventListener('change', function() {
-                itemCheckboxes.forEach(checkbox => {
-                    checkbox.checked = this.checked;
-                });
-            });
-            
-            itemCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const allChecked = [...itemCheckboxes].every(cb => cb.checked);
-                    selectAll.checked = allChecked;
-                });
-            });
-        }
-        
-        // Quantity increment/decrement with Flipkart style
+        // Quantity increment/decrement
         document.querySelectorAll('.increment').forEach(button => {
             button.addEventListener('click', function() {
                 const input = this.parentElement.querySelector('.quantity-input');
                 const max = parseInt(input.max);
-                if (parseInt(input.value) < max) {
-                    input.value = parseInt(input.value) + 1;
-                    input.closest('form').submit();
+                const current = parseInt(input.value);
+                
+                if (current < max) {
+                    input.value = current + 1;
+                    submitQuantityForm(input);
                 } else {
                     showNotification(`Maximum ${max} items allowed`);
                 }
@@ -476,27 +479,48 @@
         document.querySelectorAll('.decrement').forEach(button => {
             button.addEventListener('click', function() {
                 const input = this.parentElement.querySelector('.quantity-input');
-                if (parseInt(input.value) > parseInt(input.min)) {
-                    input.value = parseInt(input.value) - 1;
-                    input.closest('form').submit();
+                const min = parseInt(input.min);
+                const current = parseInt(input.value);
+                
+                if (current > min) {
+                    input.value = current - 1;
+                    submitQuantityForm(input);
                 }
             });
         });
 
+        // Quantity input change
         document.querySelectorAll('.quantity-input').forEach(input => {
             input.addEventListener('change', function() {
-                if (this.value < 1) this.value = 1;
-                if (this.value > 10) this.value = 10;
-                this.closest('form').submit();
+                const min = parseInt(this.min) || 1;
+                const max = parseInt(this.max) || 10;
+                
+                if (this.value < min) this.value = min;
+                if (this.value > max) this.value = max;
+                
+                if (parseInt(this.value) !== parseInt(this.dataset.oldValue || 0)) {
+                    submitQuantityForm(this);
+                }
             });
             
             input.addEventListener('blur', function() {
                 if (this.value === '' || this.value < 1) {
                     this.value = 1;
-                    this.closest('form').submit();
+                    submitQuantityForm(this);
                 }
             });
+            
+            // Store old value
+            input.dataset.oldValue = input.value;
         });
+
+        // Submit quantity form
+        function submitQuantityForm(input) {
+            const form = input.closest('form');
+            if (form) {
+                form.submit();
+            }
+        }
 
         // Remove item with confirmation
         document.querySelectorAll('.remove-item-form').forEach(form => {
@@ -511,7 +535,8 @@
                     cancelButtonColor: '#6c757d',
                     confirmButtonText: 'Yes, remove it!',
                     cancelButtonText: 'Cancel',
-                    reverseButtons: true
+                    reverseButtons: true,
+                    backdrop: true
                 }).then((result) => {
                     if (result.isConfirmed) {
                         this.submit();
@@ -520,42 +545,56 @@
             });
         });
 
-        // Apply coupon animation
-        document.querySelectorAll('.coupon-suggestions .badge').forEach(badge => {
-            badge.addEventListener('click', function() {
-                const couponCode = this.textContent;
-                const couponInput = document.querySelector('input[placeholder="Enter coupon code"]');
-                if (couponInput) {
-                    couponInput.value = couponCode;
-                    couponInput.focus();
-                    
-                    // Animate the badge
-                    this.classList.add('animate__animated', 'animate__bounce');
-                    setTimeout(() => {
-                        this.classList.remove('animate__animated', 'animate__bounce');
-                    }, 1000);
+        // Clear cart with confirmation
+        const clearCartBtn = document.getElementById('clearCartBtn');
+        const clearCartForm = document.getElementById('clearCartForm');
+        const confirmClearCart = document.getElementById('confirmClearCart');
+        
+        if (clearCartBtn) {
+            clearCartBtn.addEventListener('click', function() {
+                const modal = new bootstrap.Modal(document.getElementById('clearCartModal'));
+                modal.show();
+            });
+        }
+        
+        if (confirmClearCart) {
+            confirmClearCart.addEventListener('click', function() {
+                if (clearCartForm) {
+                    clearCartForm.submit();
                 }
             });
-        });
+        }
 
         // Show notification
-        function showNotification(message) {
-            // Create notification element
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            document.querySelectorAll('.cart-notification').forEach(n => n.remove());
+            
+            const colors = {
+                info: 'bg-primary',
+                success: 'bg-success',
+                warning: 'bg-warning',
+                error: 'bg-danger'
+            };
+            
             const notification = document.createElement('div');
-            notification.className = 'position-fixed bottom-0 end-0 m-3 p-3 bg-dark text-white rounded-3 shadow-lg';
+            notification.className = `cart-notification position-fixed bottom-0 end-0 m-3 p-3 text-white rounded-3 shadow-lg animate__animated animate__fadeInUp`;
             notification.style.zIndex = '1060';
             notification.style.maxWidth = '300px';
             notification.innerHTML = `
                 <div class="d-flex align-items-center">
-                    <i class="fas fa-info-circle me-2"></i>
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} me-2"></i>
                     <span>${message}</span>
                 </div>
             `;
+            notification.classList.add(colors[type] || colors.info);
             document.body.appendChild(notification);
             
             // Remove after 3 seconds
             setTimeout(() => {
-                notification.remove();
+                notification.classList.remove('animate__fadeInUp');
+                notification.classList.add('animate__fadeOutDown');
+                setTimeout(() => notification.remove(), 300);
             }, 3000);
         }
         
@@ -564,11 +603,24 @@
             fetch('{{ route("cart.count") }}')
                 .then(response => response.json())
                 .then(data => {
-                    const countElements = document.querySelectorAll('[data-cart-count]');
-                    countElements.forEach(el => {
+                    // Update all cart count elements in navbar (if any)
+                    document.querySelectorAll('[data-cart-count]').forEach(el => {
                         el.textContent = data.count;
+                        if (data.count > 0) {
+                            el.style.display = 'inline-block';
+                        } else {
+                            el.style.display = 'none';
+                        }
                     });
-                });
+                    
+                    // Update page title if cart is empty
+                    if (data.count === 0 && window.location.pathname.includes('cart')) {
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    }
+                })
+                .catch(error => console.error('Error updating cart count:', error));
         }
         
         // Initialize cart animations
@@ -576,6 +628,15 @@
             item.style.animationDelay = `${index * 0.1}s`;
             item.classList.add('animate__animated', 'animate__fadeIn');
         });
+        
+        // Check for success messages
+        @if(session('success'))
+            showNotification('{{ session('success') }}', 'success');
+        @endif
+        
+        @if(session('error'))
+            showNotification('{{ session('error') }}', 'error');
+        @endif
     });
 </script>
 @endpush

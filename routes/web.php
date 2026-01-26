@@ -107,23 +107,24 @@ Route::post('/product/quick-add/{id}', [ProductController::class, 'quickAdd'])->
 use App\Http\Controllers\UserSide\CheckoutController;
 use App\Http\Controllers\UserSide\CartController;
 
-// Cart Routes
+// Cart Routes (PUBLIC - No auth middleware needed)
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+Route::put('/cart/update/{cart}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/{cart}', [CartController::class, 'remove'])->name('cart.remove');
+Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
+Route::post('/cart/increase/{product}', [CartController::class, 'increase'])->name('cart.increase');
+Route::post('/cart/decrease/{product}', [CartController::class, 'decrease'])->name('cart.decrease');
+
+// Checkout routes (PROTECTED - Needs login)
 Route::middleware(['auth'])->group(function() {
-    Route::get('/cart', [CartController::class, 'index'])->name('cart');
-    Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
-    Route::put('/cart/update/{cart}', [CartController::class, 'update'])->name('cart.update');
-    Route::delete('/cart/{cart}', [CartController::class, 'remove'])->name('cart.remove');
-    Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
-    Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
-    Route::post('/cart/increase/{product}', [CartController::class, 'increase'])->name('cart.increase');
-    Route::post('/cart/decrease/{product}', [CartController::class, 'decrease'])->name('cart.decrease');
-    
-    // Add checkout route
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
 
-
+// Guest checkout redirect
+Route::get('/checkout/guest', [CheckoutController::class, 'guestCheckoutRedirect'])->name('checkout.guest');
 
 
 /*
