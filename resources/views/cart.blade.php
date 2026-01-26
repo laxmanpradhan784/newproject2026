@@ -20,9 +20,11 @@
             </div>
         </div>
 
-        <!-- Guest User Notification -->
+       <!-- Guest User Notification -->
         @if(!auth()->check() && $cartCount > 0)
-        <div class="alert alert-info alert-dismissible fade show rounded-3 mb-4" role="alert">
+        <div class="alert alert-info alert-dismissible fade show rounded-3 mb-4 auto-dismiss" 
+            role="alert" 
+            data-dismiss-delay="3000">
             <div class="d-flex align-items-center">
                 <i class="fas fa-info-circle fa-2x me-3"></i>
                 <div>
@@ -39,7 +41,9 @@
 
         <!-- Cart Merge Success Message -->
         @if(session('cart_merged_message'))
-        <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4" role="alert">
+        <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4 auto-dismiss" 
+            role="alert" 
+            data-dismiss-delay="3000">
             <div class="d-flex align-items-center">
                 <i class="fas fa-check-circle fa-2x me-3"></i>
                 <div>
@@ -260,7 +264,7 @@
                         <!-- Checkout Button -->
                         @auth
                             <a href="{{ route('checkout') }}" class="btn btn-warning btn-lg w-100 py-3 fw-bold rounded-pill shadow-sm mb-3">
-                                <i class="fas fa-lock me-2"></i> PLACE ORDER
+                                <i class="fas fa-lock me-2"></i> PROCEED TO CHECKOUT
                             </a>
                         @else
                             <a href="{{ route('checkout.guest') }}" class="btn btn-warning btn-lg w-100 py-3 fw-bold rounded-pill shadow-sm mb-3">
@@ -638,5 +642,68 @@
             showNotification('{{ session('error') }}', 'error');
         @endif
     });
+
+
+    // Auto-dismiss alerts after delay
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-dismiss alerts
+    const autoDismissAlerts = document.querySelectorAll('.auto-dismiss');
+    
+    autoDismissAlerts.forEach(alert => {
+        const delay = alert.getAttribute('data-dismiss-delay') || 3000; // Default 3 seconds
+        
+        setTimeout(() => {
+            // Use Bootstrap to dismiss the alert
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        }, parseInt(delay));
+        
+        // Optional: Add progress bar to show time remaining
+        addProgressBar(alert, delay);
+    });
+});
+
+// Optional: Add progress bar to show time remaining
+function addProgressBar(alertElement, totalTime) {
+    // Create progress bar container
+    const progressContainer = document.createElement('div');
+    progressContainer.className = 'alert-progress';
+    progressContainer.style.cssText = `
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: rgba(0,0,0,0.1);
+        border-radius: 0 0 0.375rem 0.375rem;
+        overflow: hidden;
+    `;
+    
+    // Create progress bar
+    const progressBar = document.createElement('div');
+    progressBar.className = 'alert-progress-bar';
+    progressBar.style.cssText = `
+        height: 100%;
+        width: 100%;
+        background: currentColor;
+        opacity: 0.3;
+        transform-origin: left;
+        transform: scaleX(1);
+        transition: transform ${totalTime}ms linear;
+    `;
+    
+    progressContainer.appendChild(progressBar);
+    alertElement.style.position = 'relative';
+    alertElement.appendChild(progressContainer);
+    
+    // Start the progress animation
+    setTimeout(() => {
+        progressBar.style.transform = 'scaleX(0)';
+    }, 10);
+}
 </script>
+
+
+
+    
 @endpush

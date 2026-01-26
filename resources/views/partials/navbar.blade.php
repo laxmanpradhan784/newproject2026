@@ -118,30 +118,47 @@
                     </div>
                 </form>
 
-                <!-- In your navbar.blade.php -->
-                <!-- Cart Icon with Count -->
+               <!-- Cart Icon with Count (Number of Products) -->
                 <a href="{{ route('cart') }}" class="btn btn-outline-primary position-relative me-3 rounded-circle p-2"
-                style="width: 40px; height: 40px; text-decoration: none;">
+                style="width: 40px; height: 40px; text-decoration: none;"
+                title="Shopping Cart">
                     <i class="fas fa-shopping-cart"></i>
                     
-                    <!-- Cart Count Badge -->
+                    <!-- Cart Count Badge (Number of Products) -->
                     @php
-                        // Use the Cart model method to get count for both guest and logged-in users
                         use App\Models\Cart;
-                        $cartCount = Cart::getCartCount();
+                        
+                        if (auth()->check()) {
+                            // For logged-in users: count distinct products (not quantity)
+                            $cartProductCount = Cart::where('user_id', auth()->id())
+                                ->where('is_guest', false)
+                                ->count();
+                        } else {
+                            // For guest users: count distinct products
+                            $cartProductCount = Cart::where(function($query) {
+                                    if (session()->has('guest_token')) {
+                                        $query->where('guest_token', session('guest_token'));
+                                    }
+                                    $query->orWhere('session_id', session()->getId());
+                                })
+                                ->where('is_guest', true)
+                                ->count();
+                        }
                     @endphp
                     
-                    @if($cartCount > 0)
+                    @if($cartProductCount > 0)
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count-badge" 
-                        style="font-size: 10px; padding: 3px 6px;"
-                        id="navbarCartCount">
-                        {{ $cartCount }}
+                        style="font-size: 10px; padding: 3px 6px; min-width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center;"
+                        id="navbarCartCount"
+                        title="{{ $cartProductCount }} item{{ $cartProductCount > 1 ? 's' : '' }} in cart">
+                        {{ $cartProductCount }}
                     </span>
                     @else
                     <!-- Hidden badge for JavaScript updates -->
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count-badge" 
-                        style="font-size: 10px; padding: 3px 6px; display: none;"
-                        id="navbarCartCount">
+                        style="font-size: 10px; padding: 3px 6px; min-width: 18px; height: 18px; display: none;"
+                        id="navbarCartCount"
+                        title="Cart is empty">
                         0
                     </span>
                     @endif
@@ -182,14 +199,14 @@
                                     <span>Orders</span>
                                 </a>
                             </li>
-                            <li>
+                            {{-- <li>
                                 <a class="dropdown-item d-flex align-items-center py-2 px-3 rounded-2" 
                                    href="{{ route('wishlist') }}"
                                    style="transition: all 0.2s ease;">
                                     <i class="fas fa-heart me-3 text-primary"></i>
                                     <span>Wishlist</span>
                                 </a>
-                            </li>
+                            </li> --}}
                             <li><hr class="dropdown-divider my-2"></li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST">

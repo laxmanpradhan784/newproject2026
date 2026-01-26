@@ -253,6 +253,26 @@
                             </div>
                         </div>
 
+                        <div class="card shadow-sm border-0 mb-4">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <i class="bi bi-receipt text-primary fs-3"></i>
+                                            <div>
+                                                <h2 class="h4 mb-1 fw-semibold">Order Details</h2>
+                                                <p class="text-muted small mb-0">View and manage order information</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary px-4" onclick="window.location='{{ route('orders') }}'">
+                                        <i class="bi bi-arrow-left me-2"></i>Back to Orders
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+
                         <!-- Security Status Card -->
                         {{-- <div class="card shadow-sm">
                             <div class="card-header bg-white">

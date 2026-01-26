@@ -103,4 +103,21 @@ class Cart extends Model
                     $this->guest_token == $identifier['guest_token']);
         }
     }
+    public static function getCartProductCount()
+    {
+        $identifier = self::getCartIdentifier();
+        
+        if (auth()->check()) {
+            return self::where('user_id', auth()->id())
+                ->where('is_guest', false)
+                ->count();
+        } else {
+            return self::where(function($query) use ($identifier) {
+                    $query->where('session_id', $identifier['session_id'])
+                          ->orWhere('guest_token', $identifier['guest_token']);
+                })
+                ->where('is_guest', true)
+                ->count();
+        }
+    }
 }

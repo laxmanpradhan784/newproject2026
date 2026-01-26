@@ -117,14 +117,17 @@ Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.c
 Route::post('/cart/increase/{product}', [CartController::class, 'increase'])->name('cart.increase');
 Route::post('/cart/decrease/{product}', [CartController::class, 'decrease'])->name('cart.decrease');
 
-// Checkout routes (PROTECTED - Needs login)
+// Order Routes
 Route::middleware(['auth'])->group(function() {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-});
+    Route::get('/checkout/guest', [CheckoutController::class, 'guestCheckoutRedirect'])->name('checkout.guest');
+    
+    Route::get('/order/confirmation/{orderNumber}', [CheckoutController::class, 'confirmation'])->name('order.confirmation');
+    Route::get('/orders', [CheckoutController::class, 'orders'])->name('orders');
+    Route::get('/order/{orderNumber}', [CheckoutController::class, 'show'])->name('order-details');
 
-// Guest checkout redirect
-Route::get('/checkout/guest', [CheckoutController::class, 'guestCheckoutRedirect'])->name('checkout.guest');
+});
 
 
 /*
@@ -206,7 +209,15 @@ Route::prefix('admin')->middleware(['auth'])->group(function(){
     Route::get('users/delete/{id}', [AUserController::class, 'delete'])->name('admin.users.delete');
 });
 
+use App\Http\Controllers\Admin\OrderController;
 
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function() {
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders');
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order.details');
+    Route::put('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('order.status.update');
+    Route::post('/orders/{id}/notify', [OrderController::class, 'sendNotification'])->name('order.notify');
+    Route::get('/orders/{id}/invoice', [OrderController::class, 'invoice'])->name('order.invoice');
+});
 
 
 

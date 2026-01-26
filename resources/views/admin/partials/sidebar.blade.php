@@ -200,6 +200,24 @@
                     </div>
                 </a>
             </li>
+
+                <!-- Orders with Badge -->
+                <li class="nav-item mb-2">
+                    <a href="{{ route('admin.orders') }}" 
+                    class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
+                        <div class="nav-icon me-3">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="nav-text">ORDERS</div>
+                        <div class="ms-auto">
+                            <span class="badge police-badge-alert bg-danger">
+                                {{ \App\Models\Order::where('status', 'pending')->count() }}
+                            </span>
+                        </div>
+                    </a>
+                </li>
+
+
         </ul>
     </div>
 

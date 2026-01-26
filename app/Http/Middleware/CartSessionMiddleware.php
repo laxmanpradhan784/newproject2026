@@ -14,6 +14,11 @@ class CartSessionMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+        // ADD THIS: Skip middleware for admin routes
+        if ($this->isAdminRoute($request)) {
+            return $next($request);
+        }
+
         // Generate guest token if not exists for non-logged in users
         if (!Auth::check() && !session()->has('guest_token')) {
             session(['guest_token' => \Illuminate\Support\Str::random(32)]);
@@ -30,6 +35,32 @@ class CartSessionMiddleware
         }
 
         return $next($request);
+    }
+
+    /**
+     * Check if the current route is an admin route
+     */
+    protected function isAdminRoute(Request $request): bool
+    {
+        $path = $request->path();
+        
+        // Check if path starts with 'admin/'
+        if (str_starts_with($path, 'admin/')) {
+            return true;
+        }
+        
+        // Check if path is exactly 'admin'
+        if ($path === 'admin') {
+            return true;
+        }
+        
+        // Check if the route name contains 'admin.'
+        $route = $request->route();
+        if ($route && str_contains($route->getName() ?? '', 'admin.')) {
+            return true;
+        }
+        
+        return false;
     }
 
     /**

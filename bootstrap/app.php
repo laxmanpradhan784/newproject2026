@@ -12,23 +12,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Register CartSessionMiddleware for web routes
+        // Create admin middleware group
+        $middleware->group('admin', [
+            \App\Http\Middleware\AdminMiddleware::class, // Create this if doesn't exist
+        ]);
+        
+        // Cart middleware for regular users only
         $middleware->web(append: [
             CartSessionMiddleware::class,
         ]);
-
-        // Optional: Register as alias if you want to use it on specific routes
-        // $middleware->alias([
-        //     'cart.session' => CartSessionMiddleware::class,
-        // ]);
-
-        // If you have other middleware groups, you can add them here:
-        // $middleware->group('api', [
-        //     \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        //     \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
-        //     \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        // You can add exception handling here
+        //
     })->create();
