@@ -4,7 +4,7 @@
 
 @section('content')
 <section class="order-confirmation py-5">
-    <div class="container">
+    <div class="container pt-5 ">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="card border-0 shadow-lg rounded-4">
@@ -75,8 +75,8 @@
                         </div>
                         
                         <!-- Action Buttons -->
-                        <div class="d-flex justify-content-center gap-3 flex-wrap">
-                            <a href="{{ route('order.details', $order->order_number) }}" class="btn btn-outline-primary btn-lg">
+                        {{-- <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <a href="{{ route('order-details', $order->order_number) }}" class="btn btn-outline-primary btn-lg">
                                 <i class="fas fa-eye me-2"></i> View Order Details
                             </a>
                             <a href="{{ route('orders') }}" class="btn btn-primary btn-lg">
@@ -85,10 +85,10 @@
                             <a href="{{ route('products') }}" class="btn btn-success btn-lg">
                                 <i class="fas fa-shopping-bag me-2"></i> Continue Shopping
                             </a>
-                        </div>
+                        </div> --}}
                         
                         <!-- Shipping Info -->
-                        <div class="mt-5 pt-4 border-top">
+                        {{-- <div class="mt-5 pt-4 border-top">
                             <h5 class="mb-3">Shipping Information</h5>
                             <div class="text-start bg-white p-3 rounded-3">
                                 <p class="mb-1"><strong>{{ $order->shipping_name }}</strong></p>
@@ -97,7 +97,7 @@
                                 <p class="mb-1">{{ $order->shipping_country }}</p>
                                 <p class="mb-0"><i class="fas fa-phone me-2"></i>{{ $order->shipping_phone }}</p>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

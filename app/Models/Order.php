@@ -48,14 +48,37 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    // Generate order number
-    public static function generateOrderNumber()
+    // Generate order number with timestamp and user ID
+    public static function generateOrderNumber($userId = null)
     {
-        return 'ORD-' . date('Ymd') . '-' . strtoupper(uniqid());
+        // Format: ORD-YYMMDD-HHmmss-XXXX
+        // Example: ORD-250126-153045-7891
+        
+        $date = now()->format('ymd');    // Year, Month, Date (yymmdd)
+        $time = now()->format('His');    // Hour, Minute, Second (HHmmss)
+        $random = mt_rand(1000, 9999);   // 4 random digits
+        
+        if ($userId) {
+            // Include last 3 digits of user ID (padded to 3 digits)
+            $userPart = str_pad($userId % 1000, 3, '0', STR_PAD_LEFT);
+            return "ORD-{$date}-{$time}-{$userPart}{$random}";
+        }
+        
+        // If no user ID provided (for guest orders or fallback)
+        return "ORD-{$date}-{$time}-{$random}";
+    }
+
+    // Generate unique order number (prevents duplicates)
+    public static function generateUniqueOrderNumber($userId = null)
+    {
+        do {
+            $orderNumber = self::generateOrderNumber($userId);
+        } while (self::where('order_number', $orderNumber)->exists());
+        
+        return $orderNumber;
     }
 
     // Get status badge color
-    // In your Order model
     public function getStatusBadgeAttribute()
     {
         $badges = [
@@ -67,5 +90,30 @@ class Order extends Model
         ];
 
         return $badges[$this->status] ?? 'secondary';
+    }
+    
+    // Helper method to get order date in readable format
+    public function getFormattedDateAttribute()
+    {
+        return $this->created_at->format('d M, Y');
+    }
+    
+    // Helper method to get order time in readable format
+    public function getFormattedTimeAttribute()
+    {
+        return $this->created_at->format('h:i A');
+    }
+    
+    // Helper method to get payment status badge color
+    public function getPaymentStatusBadgeAttribute()
+    {
+        $badges = [
+            'pending' => 'warning',
+            'paid' => 'success',
+            'failed' => 'danger',
+            'refunded' => 'info'
+        ];
+        
+        return $badges[$this->payment_status] ?? 'secondary';
     }
 }

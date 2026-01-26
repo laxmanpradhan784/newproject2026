@@ -119,8 +119,8 @@
                 <table class="table table-bordered table-hover" id="ordersTable" width="100%" cellspacing="0">
                     <thead class="bg-light">
                         <tr>
-                            <th width="5%">#</th>
-                            <th width="15%">Order #</th>
+                            <th width="5%">Sr No</th>
+                            <th width="15%">Order No</th>
                             <th width="20%">Customer</th>
                             <th width="15%">Date</th>
                             <th width="10%">Items</th>

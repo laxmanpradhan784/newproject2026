@@ -97,7 +97,11 @@ class CheckoutController extends Controller
             $total = $subtotal + $shipping + $tax;
 
             // Generate order number
-            $orderNumber = Order::generateOrderNumber();
+            // Instead of:
+            // $orderNumber = Order::generateOrderNumber();
+
+            // Use:
+            $orderNumber = Order::generateUniqueOrderNumber($user->id);
 
             // Create order
             $order = Order::create([

@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Order #' . $order->order_number)
+@section('title', 'Order Details')
 
 @section('content')
 <div class="container-fluid px-4">
