@@ -187,7 +187,7 @@ class CartController extends Controller
         $cart->delete();
 
         // Recalculate cart count
-        $totalCartItems = Auth::user()->cartItems()->sum('quantity');
+       $totalCartItems = Auth::user()->cartItems()->count(); // count products
         $cartTotal = Auth::user()->cartItems()->get()->sum(function ($item) {
             return $item->price * $item->quantity;
         });

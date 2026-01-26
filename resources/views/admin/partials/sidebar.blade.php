@@ -112,11 +112,11 @@
             <li class="nav-item mb-2">
                 <a href="{{ route('admin.dashboard')}}" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3 active">
                     <div class="nav-icon me-3">
-                        <i class="bi bi-speedometer2"></i>
+                        <i class="bi bi-grid-1x2-fill"></i>
                     </div>
                     <div class="nav-text">DASHBOARD</div>
                     <div class="ms-auto">
-                        <span class="badge police-badge-count">NEW</span>
+                        <span class="badge police-badge-count"></span>
                     </div>
                 </a>
             </li>
@@ -124,12 +124,12 @@
             <!-- Sliders -->
             <li class="nav-item mb-2">
                 <a href="{{ route('admin.sliders')}}" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
-                    <div class="nav-icon me-3">
-                        <i class="bi bi-laptop"></i>
+                   <div class="nav-icon me-3">
+                        <i class="bi bi-images"></i>
                     </div>
                     <div class="nav-text">SLIDER</div>
                     <div class="ms-auto">
-                        <span class="badge police-badge-count">152</span>
+                        <span class="badge police-badge-count"></span>
                     </div>
                 </a>
             </li>
@@ -137,12 +137,12 @@
             <!-- categories -->
             <li class="nav-item mb-2">
                 <a href="{{ route('admin.categories')}}" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
-                    <div class="nav-icon me-3">
-                        <i class="bi bi-laptop"></i>
+                   <div class="nav-icon me-3">
+                        <i class="bi bi-tags-fill"></i>
                     </div>
                     <div class="nav-text">CATEGORIES</div>
                     <div class="ms-auto">
-                        <span class="badge police-badge-count">152</span>
+                        <span class="badge police-badge-count"></span>
                     </div>
                 </a>
             </li>
@@ -153,11 +153,11 @@
             <li class="nav-item mb-2">
                 <a href="{{ route('admin.products')}}" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
                     <div class="nav-icon me-3">
-                        <i class="bi bi-laptop"></i>
+                        <i class="bi bi-box-seam-fill"></i>
                     </div>
                     <div class="nav-text">PRODUCTS</div>
                     <div class="ms-auto">
-                        <span class="badge police-badge-count">152</span>
+                        <span class="badge police-badge-count"></span>
                     </div>
                 </a>
             </li>
@@ -166,11 +166,11 @@
             <li class="nav-item mb-2">
                 <a href="{{ route('admin.contacts')}}" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
                     <div class="nav-icon me-3">
-                        <i class="bi bi-cart-check"></i>
+                        <i class="bi bi-chat-dots-fill"></i>
                     </div>
                     <div class="nav-text">ENQUIRIES</div>
                     <div class="ms-auto">
-                        <span class="badge police-badge-alert">15</span>
+                        <span class="badge police-badge-alert"></span>
                     </div>
                 </a>
             </li>
@@ -183,7 +183,7 @@
                     </div>
                     <div class="nav-text">USERS</div>
                     <div class="ms-auto">
-                        <span class="badge police-badge-count">89</span>
+                        <span class="badge police-badge-count"></span>
                     </div>
                 </a>
             </li>
@@ -192,7 +192,7 @@
             <li class="nav-item mb-2">
                 <a href="{{ route('admin.site-settings')}}" class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
                     <div class="nav-icon me-3">
-                        <i class="bi bi-shield-lock"></i>
+                        <i class="bi bi-info-circle-fill"></i>
                     </div>
                     <div class="nav-text">INFORMATION</div>
                     <div class="ms-auto">
@@ -201,28 +201,6 @@
                 </a>
             </li>
         </ul>
-    </div>
-
-    <!-- System Info -->
-    <div class="system-info p-3 border-top border-secondary" style="background: rgba(0, 0, 0, 0.2);">
-        <div class="section-title mb-2">
-            <i class="bi bi-cpu me-2"></i>
-            <span class="text-uppercase small fw-bold">SYSTEM</span>
-        </div>
-        <div class="system-stats">
-            <div class="stat-item d-flex justify-content-between mb-1">
-                <small class="text-muted">CPU Usage</small>
-                <small class="text-success">42%</small>
-            </div>
-            <div class="stat-item d-flex justify-content-between mb-1">
-                <small class="text-muted">Memory</small>
-                <small class="text-warning">68%</small>
-            </div>
-            <div class="stat-item d-flex justify-content-between">
-                <small class="text-muted">Uptime</small>
-                <small class="text-info">24d 16h</small>
-            </div>
-        </div>
     </div>
 
     <!-- Emergency Logout -->

@@ -39,21 +39,21 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
-    // In User model
-    public function cartItems()
-    {
-        return $this->hasMany(Cart::class);
-    }
-
-    public function cartCount()
-    {
-        return $this->cartItems()->sum('quantity');
-    }
-
     public function cartTotal()
     {
         return $this->cartItems()->get()->sum(function ($item) {
             return $item->price * $item->quantity;
         });
+    }
+
+    public function cartItems()
+    {
+        return $this->hasMany(\App\Models\Cart::class, 'user_id');
+    }
+
+    public function cartCount()
+    {
+        // Count how many different products are in the cart
+        return $this->cartItems()->count();
     }
 }

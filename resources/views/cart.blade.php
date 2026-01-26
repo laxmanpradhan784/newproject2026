@@ -1,7 +1,7 @@
 {{-- resources/views/user/cart.blade.php --}}
 @extends('layouts.app')
 
-@section('title', 'My Cart - Flipkart Style')
+@section('title', 'My Cart')
 
 @section('content')
 <!-- Flipkart Style Cart Page -->
@@ -15,7 +15,7 @@
                         <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-decoration-none">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
                     </ol>
-                    <h2 class="fw-bold mb-0">My Cart ({{ $cartCount }})</h2>
+                    <h2 class="fw-bold mb-0">My Cart</h2>
                 </nav>
             </div>
         </div>
@@ -24,7 +24,7 @@
             <!-- Left Column: Cart Items -->
             <div class="col-lg-8">
                 @if($cartItems->count() > 0)
-                <!-- Cart Header -->
+                {{-- <!-- Cart Header -->
                 <div class="card rounded-3 shadow-sm border-0 mb-3">
                     <div class="card-body p-4">
                         <div class="row align-items-center">
@@ -36,14 +36,9 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-md-6 text-md-end">
-                                <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#removeAllModal">
-                                    <i class="fas fa-trash-alt me-1"></i> Remove All
-                                </button>
-                            </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Cart Items -->
                 <div class="card rounded-3 shadow-sm border-0">
@@ -129,9 +124,9 @@
                                                         </div>
                                                     </form>
                                                 </div>
-                                                <form action="{{ route('cart.remove', $item->id) }}" method="POST" class="remove-item-form ms-3">
-                                                    @csrf
-                                                    @method('DELETE')
+                                               <form action="{{ route('cart.remove', $item->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
                                                     <button type="submit" class="btn btn-link text-danger p-0" title="Remove item">
                                                         <i class="fas fa-trash-alt fa-lg"></i>
                                                     </button>
@@ -166,7 +161,7 @@
                 </div>
 
                 <!-- Delivery Info -->
-                <div class="card rounded-3 shadow-sm border-0 mt-4">
+                {{-- <div class="card rounded-3 shadow-sm border-0 mt-4">
                     <div class="card-body p-4">
                         <h6 class="fw-bold mb-3"><i class="fas fa-truck me-2 text-primary"></i>Delivery Information</h6>
                         <div class="row">
@@ -194,7 +189,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 @else
                 <!-- Empty Cart -->
                 <div class="card rounded-3 shadow-sm border-0">
@@ -298,7 +293,7 @@
                 </div>
                 
                 <!-- Promo Code Card -->
-                <div class="card rounded-3 shadow-sm border-0 mt-4">
+                {{-- <div class="card rounded-3 shadow-sm border-0 mt-4">
                     <div class="card-body p-4">
                         <h6 class="fw-bold mb-3"><i class="fas fa-tag me-2 text-danger"></i>Apply Coupon</h6>
                         <div class="input-group mb-3">
@@ -314,10 +309,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 
                 <!-- Need Help Card -->
-                <div class="card rounded-3 shadow-sm border-0 mt-4">
+                {{-- <div class="card rounded-3 shadow-sm border-0 mt-4">
                     <div class="card-body p-4">
                         <h6 class="fw-bold mb-3"><i class="fas fa-headset me-2 text-primary"></i>Need Help?</h6>
                         <div class="d-flex align-items-center mb-3">
@@ -333,41 +328,12 @@
                             <i class="fas fa-comments me-2"></i> Chat with us
                         </a>
                     </div>
-                </div>
+                </div> --}}
             </div>
             @endif
         </div>
     </div>
 </section>
-
-<!-- Remove All Modal -->
-@if($cartItems->count() > 0)
-<div class="modal fade" id="removeAllModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-3">
-            <div class="modal-header border-0">
-                <h5 class="modal-title fw-bold">Clear Cart</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center py-4">
-                <div class="mb-4">
-                    <i class="fas fa-trash-alt fa-4x text-danger"></i>
-                </div>
-                <h5 class="fw-bold mb-3">Remove all items?</h5>
-                <p class="text-muted">Are you sure you want to remove all items from your shopping cart?</p>
-            </div>
-            <div class="modal-footer border-0 justify-content-center">
-                <button type="button" class="btn btn-outline-dark px-4 rounded-pill" data-bs-dismiss="modal">Cancel</button>
-                <form action="{{ route('cart.clear') }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger px-4 rounded-pill">Remove All</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
 
 @endsection
 

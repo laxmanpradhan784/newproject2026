@@ -254,7 +254,7 @@
                         </div>
 
                         <!-- Security Status Card -->
-                        <div class="card shadow-sm">
+                        {{-- <div class="card shadow-sm">
                             <div class="card-header bg-white">
                                 <h5 class="mb-0">Security Status</h5>
                             </div>
@@ -289,7 +289,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

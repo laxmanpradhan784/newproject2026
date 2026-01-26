@@ -251,7 +251,7 @@
             <div class="col-md-4">
                 <div class="team-card text-center">
                     <div class="team-img mb-4">
-                        <img src="https://images.unsplash.com/photo-1494790108755-2616b786d4d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" 
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" 
                              alt="CTO" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
                     </div>
                     <h4 class="fw-bold mb-2">Sarah Johnson</h4>
