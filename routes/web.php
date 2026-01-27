@@ -33,6 +33,10 @@ Route::get('/products', [ProductController::class, 'allProducts'])->name('produc
 
 
 
+Route::get('/auth/google', [AuthController::class, 'googleRedirect']);
+Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -93,8 +97,6 @@ Route::get('/wishlist', function () {
 Route::get('/deals', function () {
     return view('deals');
 })->name('deals');
-
-
 
 
 

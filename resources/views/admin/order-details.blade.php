@@ -204,11 +204,11 @@
                     <h5 class="mb-0"><i class="fas fa-boxes me-2"></i> Order Items ({{ $order->items->count() }})</h5>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-responsive">
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                         <table class="table table-hover mb-0">
                             <thead class="bg-light">
                                 <tr>
-                                    <th width="5%">#</th>
+                                    <th width="5%">Sr No</th>
                                     <th width="15%">Image</th>
                                     <th>Product</th>
                                     <th width="15%">Category</th>

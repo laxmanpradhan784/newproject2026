@@ -7,6 +7,9 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use App\Mail\OrderPlacedAdminMail;
+use App\Mail\OrderPlacedUserMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
@@ -20,16 +23,16 @@ class CheckoutController extends Controller
         }
 
         $user = Auth::user();
-        
+
         $cartItems = Cart::where('user_id', $user->id)
             ->where('is_guest', false)
             ->with('product.category')
             ->get();
-        
+
         if ($cartItems->isEmpty()) {
             return redirect()->route('cart')->with('error', 'Your cart is empty! Please add items before checkout.');
         }
-        
+
         // Check stock
         $outOfStockItems = [];
         foreach ($cartItems as $item) {
@@ -37,17 +40,19 @@ class CheckoutController extends Controller
                 $outOfStockItems[] = $item->product->name;
             }
         }
-        
+
         if (!empty($outOfStockItems)) {
-            return redirect()->route('cart')->with('error', 
-                'Some items in your cart are out of stock: ' . implode(', ', $outOfStockItems));
+            return redirect()->route('cart')->with(
+                'error',
+                'Some items in your cart are out of stock: ' . implode(', ', $outOfStockItems)
+            );
         }
-        
+
         // Calculate totals
-        $subtotal = $cartItems->sum(function($item) {
+        $subtotal = $cartItems->sum(function ($item) {
             return $item->price * $item->quantity;
         });
-        
+
         $shipping = $subtotal > 1000 ? 0 : 50;
         $tax = $subtotal * 0.18;
         $total = $subtotal + $shipping + $tax;
@@ -88,19 +93,15 @@ class CheckoutController extends Controller
 
         try {
             // Calculate totals
-            $subtotal = $cartItems->sum(function($item) {
+            $subtotal = $cartItems->sum(function ($item) {
                 return $item->price * $item->quantity;
             });
-            
+
             $shipping = $request->shipping_method == 'express' ? 150 : ($subtotal > 1000 ? 0 : 50);
             $tax = $subtotal * 0.18;
             $total = $subtotal + $shipping + $tax;
 
             // Generate order number
-            // Instead of:
-            // $orderNumber = Order::generateOrderNumber();
-
-            // Use:
             $orderNumber = Order::generateUniqueOrderNumber($user->id);
 
             // Create order
@@ -142,19 +143,34 @@ class CheckoutController extends Controller
                 $cartItem->product->decrement('stock', $cartItem->quantity);
             }
 
+
+
+            try {
+                // Send email to Admin
+                Mail::to(config('mail.from.address'))
+                    ->send(new OrderPlacedAdminMail($order));
+
+                // Send email to User
+                Mail::to($order->shipping_email)
+                    ->send(new OrderPlacedUserMail($order));
+            } catch (\Exception $e) {
+                \Log::error('Order email sending failed: ' . $e->getMessage());
+            }
+            // -----------------------
+
             // Clear user's cart after order
             Cart::where('user_id', $user->id)->delete();
 
             // Redirect to order confirmation
             return redirect()->route('order.confirmation', $order->order_number)
                 ->with('success', 'Order placed successfully!');
-
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Error placing order: ' . $e->getMessage());
         }
     }
+
 
     public function guestCheckoutRedirect()
     {
@@ -172,9 +188,11 @@ class CheckoutController extends Controller
         }
 
         session(['url.intended' => route('checkout')]);
-        
-        return redirect()->route('login')->with('info', 
-            'You have ' . $guestCartCount . ' items in your cart. Please login to checkout.');
+
+        return redirect()->route('login')->with(
+            'info',
+            'You have ' . $guestCartCount . ' items in your cart. Please login to checkout.'
+        );
     }
 
     public function confirmation($orderNumber)

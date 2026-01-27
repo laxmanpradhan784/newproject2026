@@ -34,19 +34,19 @@
                                 style="background-image:url('{{ asset('uploads/sliders/' . $slider->image) }}');
                                         background-size:cover;
                                         background-position:center;
-                                        height:450px;">
+                                        height:750px;">
 
 
                                 <div class="container h-100 d-flex align-items-center">
-                                    <div class="carousel-content text-white bg-dark bg-opacity-50 p-4 rounded">
+                                    <div class="carousel-content text-white  p-4 rounded">
 
                                         {{-- <h1 class="display-5 fw-bold mb-3">
                                             {{ $slider->title }}
                                         </h1> --}}
 
-                                        <p class="lead mb-4">
+                                        {{-- <p class="lead mb-4">
                                             {{ $slider->subtitle }}
-                                        </p>
+                                        </p> --}}
 
                                         
 

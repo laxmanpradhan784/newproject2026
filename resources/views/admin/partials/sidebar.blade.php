@@ -211,11 +211,14 @@
                         <div class="nav-text">ORDERS</div>
                         <div class="ms-auto">
                             <span class="badge police-badge-alert bg-danger">
-                                {{ \App\Models\Order::where('status', 'pending')->count() }}
+                                {{ \App\Models\Order::where('status', 'pending')
+                                    ->where('created_at', '>=', now()->subDay())
+                                    ->count() }}
                             </span>
                         </div>
                     </a>
                 </li>
+
 
 
         </ul>

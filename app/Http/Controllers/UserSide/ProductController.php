@@ -14,12 +14,16 @@ class ProductController extends Controller
     public function allProducts()
     {
         $products = Product::with('category')
-            ->where('status', 'active')
+            ->where('status', 'active') // product must be active
+            ->whereHas('category', function ($query) {
+                $query->where('status', 'active'); // category must be active
+            })
             ->orderBy('created_at', 'desc')
-            ->paginate(12); // Show 12 products per page
-        
+            ->paginate(12);
+
         return view('products', compact('products'));
     }
+
 
     // Search products with pagination
     public function search(Request $request)

@@ -301,14 +301,12 @@
                 <span>Or continue with</span>
             </div>
             
-            <div class="social-login">
-                <button type="button" class="social-btn google">
-                    <i class="fab fa-google"></i> Google
-                </button>
-                <button type="button" class="social-btn facebook">
-                    <i class="fab fa-facebook-f"></i> Facebook
-                </button>
+           <div class="social-login">
+                <a href="{{ url('/auth/google') }}" class="social-btn google">
+                    <i class="fab fa-google"></i> Login with Google
+                </a>
             </div>
+
             
             <div class="login-footer">
                 <p>Don't have an account? <a href="{{ route('register') }}">Create an account</a></p>

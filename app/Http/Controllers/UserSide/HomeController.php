@@ -15,10 +15,15 @@ class HomeController extends Controller
         // Fetch all active categories for menu/filter
         $categories = Category::where('status', 'active')->get();
 
+        // Fetch active sliders
         $sliders = Slider::where('status', 'active')->get();
 
-        // Fetch latest active products (limit 8)
-        $products = Product::where('status', 'active')
+        // Fetch latest products where BOTH product and category are active
+        $products = Product::with('category')
+            ->where('status', 'active') // product active
+            ->whereHas('category', function ($query) {
+                $query->where('status', 'active'); // category active
+            })
             ->orderBy('created_at', 'DESC')
             ->limit(6)
             ->get();

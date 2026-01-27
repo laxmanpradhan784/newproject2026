@@ -189,27 +189,31 @@
                 </div>
 
                 @else
-                <!-- Empty Cart -->
-                <div class="card rounded-3 shadow-sm border-0">
-                    <div class="card-body p-5 text-center">
-                        <div class="empty-cart-icon mb-4">
-                            <i class="fas fa-shopping-cart fa-5x text-muted"></i>
-                        </div>
-                        <h3 class="fw-bold mb-3">Your cart is empty!</h3>
-                        <p class="text-muted mb-4">Looks like you haven't added anything to your cart yet.</p>
-                        <a href="{{ route('products') }}" class="btn btn-primary rounded-pill px-5 py-2">
-                            <i class="fas fa-shopping-bag me-2"></i> Shop Now
-                        </a>
-                        @if(!auth()->check())
-                        <div class="mt-4">
-                            <p class="text-muted small mb-2">Already have items in another browser?</p>
-                            <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-sign-in-alt me-1"></i> Login to access your saved cart
+               <!-- Empty Cart -->
+                <div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+                    <div class="card rounded-3 shadow-sm border-0 text-center" style="min-height: 30vh;margin-right: -339px;">
+                        <div class="card-body p-5">
+                            <div class="empty-cart-icon mb-4">
+                                <i class="fas fa-shopping-cart fa-5x text-muted"></i>
+                            </div>
+                            <h3 class="fw-bold mb-3">Your cart is empty!</h3>
+                            <p class="text-muted mb-4">Looks like you haven't added anything to your cart yet.</p>
+                            <a href="{{ route('products') }}" class="btn btn-primary rounded-pill px-5 py-2">
+                                <i class="fas fa-shopping-bag me-2"></i> Shop Now
                             </a>
+
+                            @if(!auth()->check())
+                            <div class="mt-4">
+                                <p class="text-muted small mb-2">Already have items in another browser?</p>
+                                <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-sign-in-alt me-1"></i> Login to access your saved cart
+                                </a>
+                            </div>
+                            @endif
                         </div>
-                        @endif
                     </div>
                 </div>
+
                 @endif
             </div>
 

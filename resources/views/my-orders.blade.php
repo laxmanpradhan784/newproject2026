@@ -4,7 +4,7 @@
 
 @section('content')
 <section class="my-orders py-5 bg-light">
-    <div class="container pt-5">
+    <div class="container pt-1">
         <!-- Breadcrumb with improved styling -->
         <div class="row mb-5">
             <div class="col-12">
@@ -53,11 +53,11 @@
                         </div>
                     </div>
                     <div class="card-body p-0">
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="max-height: 450px; overflow-y: auto;">
                             <table class="table table-hover align-middle mb-0">
-                                <thead class="bg-light bg-opacity-50">
+                                <thead class="bg-light bg-opacity-50 position-sticky top-0">
                                     <tr>
-                                        <th class="py-3 px-4 border-0 fw-semibold text-muted text-uppercase small">Order #</th>
+                                        <th class="py-3 px-4 border-0 fw-semibold text-muted text-uppercase small">Order No</th>
                                         <th class="py-3 px-4 border-0 fw-semibold text-muted text-uppercase small">Date</th>
                                         <th class="py-3 px-4 border-0 fw-semibold text-muted text-uppercase small">Items</th>
                                         <th class="py-3 px-4 border-0 fw-semibold text-muted text-uppercase small">Total</th>

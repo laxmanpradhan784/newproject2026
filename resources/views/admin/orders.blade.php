@@ -115,7 +115,7 @@
             </div>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                 <table class="table table-bordered table-hover" id="ordersTable" width="100%" cellspacing="0">
                     <thead class="bg-light">
                         <tr>
