@@ -1,0 +1,73 @@
+<?php
+session_start();
+require_once '../app/controllers/PaymentController.php';
+
+if (!isset($_SESSION['order_number'])) {
+    header("Location: checkout.php");
+    exit();
+}
+
+$method = $_GET['method'] ?? 'razorpay';
+$orderNumber = $_SESSION['order_number'];
+$orderTotal = $_SESSION['order_total'];
+
+// Clear session data
+unset($_SESSION['order_id']);
+unset($_SESSION['order_number']);
+unset($_SESSION['order_total']);
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Successful</title>
+    <style>
+        .success-box {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            text-align: center;
+            background: #f9fff9;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+        }
+        .success-icon {
+            color: #4CAF50;
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        .order-details {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-box">
+        <div class="success-icon">✓</div>
+        <h1>Payment Successful!</h1>
+        <p>Thank you for your purchase. Your order has been confirmed.</p>
+        
+        <div class="order-details">
+            <h3>Order Details</h3>
+            <p><strong>Order Number:</strong> <?php echo $orderNumber; ?></p>
+            <p><strong>Payment Method:</strong> <?php echo strtoupper($method); ?></p>
+            <p><strong>Amount Paid:</strong> ₹<?php echo number_format($orderTotal, 2); ?></p>
+            <p><strong>Date:</strong> <?php echo date('d-m-Y H:i:s'); ?></p>
+        </div>
+        
+        <p>You will receive an email confirmation shortly.</p>
+        
+        <div style="margin-top: 30px;">
+            <a href="index.php" style="background: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-right: 10px;">
+                Continue Shopping
+            </a>
+            <a href="orders.php" style="background: #2196F3; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                View Orders
+            </a>
+        </div>
+    </div>
+</body>
+</html>

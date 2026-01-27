@@ -119,16 +119,19 @@ Route::get('/cart/count', [CartController::class, 'getCartCount'])->name('cart.c
 Route::post('/cart/increase/{product}', [CartController::class, 'increase'])->name('cart.increase');
 Route::post('/cart/decrease/{product}', [CartController::class, 'decrease'])->name('cart.decrease');
 
-// Order Routes
-Route::middleware(['auth'])->group(function() {
+// Payment Routes
+Route::middleware(['auth'])->group(function () {
+    // Razorpay Routes
+    Route::get('/payment/razorpay', [CheckoutController::class, 'razorpayPayment'])->name('payment.razorpay');
+    Route::post('/payment/razorpay/callback', [CheckoutController::class, 'razorpayCallback'])->name('checkout.razorpay.callback');
+    Route::get('/payment/failed', [CheckoutController::class, 'paymentFailed'])->name('payment.failed');
+    
+    // Existing routes...
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-    Route::get('/checkout/guest', [CheckoutController::class, 'guestCheckoutRedirect'])->name('checkout.guest');
-    
     Route::get('/order/confirmation/{orderNumber}', [CheckoutController::class, 'confirmation'])->name('order.confirmation');
     Route::get('/orders', [CheckoutController::class, 'orders'])->name('orders');
-    Route::get('/order/{orderNumber}', [CheckoutController::class, 'show'])->name('order-details');
-
+    Route::get('/orders/{orderNumber}', [CheckoutController::class, 'show'])->name('order-details');
 });
 
 
