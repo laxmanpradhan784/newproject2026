@@ -18,7 +18,36 @@ class OrderController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+
+            $query->where(function ($q) use ($searchTerm) {
+                // Search by order number
+                $q->where('order_number', 'LIKE', "%{$searchTerm}%")
+                    // Search by payment method
+                    ->orWhere('payment_method', 'LIKE', "%{$searchTerm}%")
+                    // Search by user name (through relationship)
+                    ->orWhereHas('user', function ($userQuery) use ($searchTerm) {
+                        $userQuery->where('name', 'LIKE', "%{$searchTerm}%")
+                            ->orWhere('email', 'LIKE', "%{$searchTerm}%")
+                            ->orWhere('phone', 'LIKE', "%{$searchTerm}%");
+                    })
+                    // Search by shipping name/email/phone
+                    ->orWhere('shipping_name', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('shipping_email', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('shipping_phone', 'LIKE', "%{$searchTerm}%")
+                    // Search by date (format: YYYY-MM-DD)
+                    ->orWhereDate('created_at', 'LIKE', "%{$searchTerm}%");
+            });
+        }
+
         $orders = $query->paginate(20);
+
+        // Add search parameter to pagination links
+        if ($request->has('search')) {
+            $orders->appends(['search' => $request->search]);
+        }
 
         // Stats
         $totalOrders = Order::count();

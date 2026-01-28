@@ -21,18 +21,49 @@
                 <!-- Filter Dropdown -->
                 <div class="dropdown">
                     <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-filter me-1"></i> Filter
+                        <i class="fas fa-filter me-1"></i>
+                        {{ request('status', 'all') == 'all' ? 'All Orders' : ucfirst(request('status')) }}
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="?status=all">All Orders</a></li>
+                        <li>
+                            <a class="dropdown-item {{ !request('status') || request('status') == 'all' ? 'active' : '' }}"
+                                href="{{ route('admin.orders', ['search' => request('search'), 'status' => 'all']) }}">
+                                All Orders
+                            </a>
+                        </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="?status=pending">Pending</a></li>
-                        <li><a class="dropdown-item" href="?status=processing">Processing</a></li>
-                        <li><a class="dropdown-item" href="?status=shipped">Shipped</a></li>
-                        <li><a class="dropdown-item" href="?status=delivered">Delivered</a></li>
-                        <li><a class="dropdown-item" href="?status=cancelled">Cancelled</a></li>
+                        <li>
+                            <a class="dropdown-item {{ request('status') == 'pending' ? 'active' : '' }}"
+                                href="{{ route('admin.orders', ['search' => request('search'), 'status' => 'pending']) }}">
+                                Pending
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ request('status') == 'processing' ? 'active' : '' }}"
+                                href="{{ route('admin.orders', ['search' => request('search'), 'status' => 'processing']) }}">
+                                Processing
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ request('status') == 'shipped' ? 'active' : '' }}"
+                                href="{{ route('admin.orders', ['search' => request('search'), 'status' => 'shipped']) }}">
+                                Shipped
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ request('status') == 'delivered' ? 'active' : '' }}"
+                                href="{{ route('admin.orders', ['search' => request('search'), 'status' => 'delivered']) }}">
+                                Delivered
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ request('status') == 'cancelled' ? 'active' : '' }}"
+                                href="{{ route('admin.orders', ['search' => request('search'), 'status' => 'cancelled']) }}">
+                                Cancelled
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -114,14 +145,47 @@
         </div>
     </div>
 
+    <style>
+        .table-responsive {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        #ordersTable thead th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background-color: #f8f9fa;
+            /* same as bg-light */
+        }
+    </style>
+
     <!-- Orders Table -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 fw-bold text-primary">All Orders</h6>
             <!-- Search Box -->
-            <div class="d-flex" style="max-width: 300px;">
-                <input type="text" id="searchOrders" class="form-control form-control-sm" placeholder="Search orders...">
-            </div>
+            <!-- Search Box -->
+            <form method="GET" action="{{ route('admin.orders') }}" class="d-flex" style="max-width: 400px;">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light border-end-0">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" name="search" id="searchOrders"
+                        class="form-control form-control-sm border-start-0" placeholder="Search by order ID..."
+                        value="{{ request('search') }}" data-bs-toggle="tooltip"
+                        data-bs-title="Search by: User name, Order ID (ORD-), Date (YYYY-MM-DD), Payment (cod/card/upi)">
+                    @if (request('search'))
+                        {{-- <button type="button" class="btn btn-outline-secondary btn-sm border-start-0"
+                            onclick="clearSearch()" title="Clear search">
+                            <i class="bi bi-x-lg"></i>
+                        </button> --}}
+                    @endif
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
         </div>
         <div class="card-body">
             <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
