@@ -327,8 +327,9 @@
                                             <i class="bi {{ $statusIcons[$order->status] ?? 'bi-question' }}"></i>
                                             {{ ucfirst($order->status) }}
                                             @if ($order->delivered_at)
-                                                <small
-                                                    class="text-white-50 ms-1">({{ $order->delivered_at->format('d M') }})</small>
+                                                <small class="text-white-50 ms-1">
+                                                    ({{ \Carbon\Carbon::parse($order->delivered_at)->format('d M') }})
+                                                </small>
                                             @endif
                                         </span>
 
