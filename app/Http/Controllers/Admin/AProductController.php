@@ -32,13 +32,13 @@ class AProductController extends Controller
         if ($request->hasFile('image')) {
             $img = $request->file('image');
             $imgName = 'product_' . time() . '_' . Str::random(10) . '.' . $img->getClientOriginalExtension();
-            
+
             // Ensure directory exists
             $uploadPath = public_path('uploads/products');
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0777, true);
             }
-            
+
             $img->move($uploadPath, $imgName);
         }
 
@@ -69,14 +69,14 @@ class AProductController extends Controller
         ]);
 
         $product = Product::find($request->id);
-        
+
         // Handle new image upload if provided
         if ($request->hasFile('image')) {
             // Delete old image
             if ($product->image && file_exists(public_path('uploads/products/' . $product->image))) {
                 unlink(public_path('uploads/products/' . $product->image));
             }
-            
+
             // Upload new image
             $img = $request->file('image');
             $imgName = 'product_' . time() . '_' . Str::random(10) . '.' . $img->getClientOriginalExtension();
@@ -97,17 +97,29 @@ class AProductController extends Controller
         return back()->with('success', 'Product updated successfully!');
     }
 
+    public function updateStatus(Request $request, Product $product)
+    {
+        $request->validate([
+            'status' => 'required|in:active,inactive'
+        ]);
+
+        $product->status = $request->status;
+        $product->save();
+
+        return redirect()->back()->with('success', 'Product status updated successfully!');
+    }
+
     public function delete($id)
     {
         $product = Product::find($id);
-        
+
         // Delete image file
         if ($product->image && file_exists(public_path('uploads/products/' . $product->image))) {
             unlink(public_path('uploads/products/' . $product->image));
         }
-        
+
         $product->delete();
-        
+
         return back()->with('success', 'Product deleted successfully!');
     }
 }

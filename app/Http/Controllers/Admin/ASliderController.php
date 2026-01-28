@@ -29,13 +29,13 @@ class ASliderController extends Controller
         if ($request->hasFile('image')) {
             $img = $request->file('image');
             $imgName = 'slider_' . time() . '_' . Str::random(10) . '.' . $img->getClientOriginalExtension();
-            
+
             // Ensure directory exists
             $uploadPath = public_path('uploads/sliders');
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0777, true);
             }
-            
+
             $img->move($uploadPath, $imgName);
         }
 
@@ -61,14 +61,14 @@ class ASliderController extends Controller
         ]);
 
         $slider = Slider::find($request->id);
-        
+
         // Handle new image upload if provided
         if ($request->hasFile('image')) {
             // Delete old image
             if ($slider->image && file_exists(public_path('uploads/sliders/' . $slider->image))) {
                 unlink(public_path('uploads/sliders/' . $slider->image));
             }
-            
+
             // Upload new image
             $img = $request->file('image');
             $imgName = 'slider_' . time() . '_' . Str::random(10) . '.' . $img->getClientOriginalExtension();
@@ -87,18 +87,31 @@ class ASliderController extends Controller
         return back()->with('success', 'Slider updated successfully!');
     }
 
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:active,inactive'
+        ]);
+
+        $slider = Slider::findOrFail($id);
+        $slider->status = $request->status;
+        $slider->save();
+
+        return redirect()->back()->with('success', 'Status updated successfully!');
+    }
+
     // Handle deleting slider
     public function delete($id)
     {
         $slider = Slider::find($id);
-        
+
         // Delete image file
         if ($slider->image && file_exists(public_path('uploads/sliders/' . $slider->image))) {
             unlink(public_path('uploads/sliders/' . $slider->image));
         }
-        
+
         $slider->delete();
-        
+
         return back()->with('success', 'Slider deleted successfully!');
     }
 }

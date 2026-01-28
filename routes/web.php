@@ -125,7 +125,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payment/razorpay', [CheckoutController::class, 'razorpayPayment'])->name('payment.razorpay');
     Route::post('/payment/razorpay/callback', [CheckoutController::class, 'razorpayCallback'])->name('checkout.razorpay.callback');
     Route::get('/payment/failed', [CheckoutController::class, 'paymentFailed'])->name('payment.failed');
-    
+
     // Existing routes...
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
@@ -143,15 +143,15 @@ Route::middleware(['auth'])->group(function () {
 
 use App\Http\Controllers\Admin\DashboardController;
 
-Route::prefix('admin')->middleware('auth')->group(function() {
-    Route::get('dashboard', [DashboardController::class,'index'])->name('admin.dashboard');
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 });
 
 
 
 use App\Http\Controllers\Admin\AdminController;
 
-Route::prefix('admin')->middleware(['auth'])->group(function(){
+Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('profile', [AdminController::class, 'profile'])->name('admin.profile');
     Route::post('profile/update', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
     Route::post('profile/change-password', [AdminController::class, 'changePassword'])->name('admin.profile.change-password');
@@ -162,7 +162,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function(){
 // routes/web.php
 use App\Http\Controllers\Admin\SiteController;
 
-Route::prefix('admin')->middleware(['auth'])->group(function(){
+Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('site-settings', [SiteController::class, 'index'])->name('admin.site-settings');
     Route::put('site-settings', [SiteController::class, 'update'])->name('admin.site.update');
 });
@@ -170,29 +170,35 @@ Route::prefix('admin')->middleware(['auth'])->group(function(){
 
 use App\Http\Controllers\Admin\CategoryController;
 
-Route::prefix('admin')->middleware(['auth'])->group(function(){
+Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('categories', [CategoryController::class, 'index'])->name('admin.categories');
     Route::post('categories/store', [CategoryController::class, 'store'])->name('admin.categories.store');
     Route::put('categories/update', [CategoryController::class, 'update'])->name('admin.categories.update');
     Route::delete('categories/delete/{id}', [CategoryController::class, 'delete'])->name('admin.categories.delete');
+    Route::put('/categories/{category}/status', [CategoryController::class, 'updateStatus'])
+    ->name('category.update-status');
 });
 
 use App\Http\Controllers\Admin\aProductController;
 
-Route::prefix('admin')->middleware('auth')->group(function(){
-    Route::get('products', [AProductController::class,'index'])->name('admin.products');
-    Route::post('products/store', [AProductController::class,'store'])->name('admin.products.store');
-    Route::put('products/update', [AProductController::class,'update'])->name('admin.products.update');
-    Route::delete('products/delete/{id}', [AProductController::class,'delete'])->name('admin.products.delete');
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('products', [AProductController::class, 'index'])->name('admin.products');
+    Route::post('products/store', [AProductController::class, 'store'])->name('admin.products.store');
+    Route::put('products/update', [AProductController::class, 'update'])->name('admin.products.update');
+    Route::delete('products/delete/{id}', [AProductController::class, 'delete'])->name('admin.products.delete');
+    Route::put('/products/{product}/status', [AProductController::class, 'updateStatus'])
+    ->name('product.update-status');
 });
 
 use App\Http\Controllers\Admin\ASliderController;
 
-Route::prefix('admin')->middleware(['auth'])->group(function(){
+Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('sliders', [ASliderController::class, 'index'])->name('admin.sliders');
     Route::post('sliders/store', [ASliderController::class, 'store'])->name('admin.sliders.store');
     Route::put('sliders/update', [ASliderController::class, 'update'])->name('admin.sliders.update');
-    
+    Route::put('/sliders/{slider}/status', [ASliderController::class, 'updateStatus'])
+        ->name('slider.update-status');
+
     // Change this to DELETE method
     Route::delete('sliders/delete/{id}', [ASliderController::class, 'delete'])->name('admin.sliders.delete');
 });
@@ -201,14 +207,14 @@ Route::prefix('admin')->middleware(['auth'])->group(function(){
 use App\Http\Controllers\Admin\AContactController;
 
 
-Route::prefix('admin')->middleware('auth')->group(function(){
-    Route::get('contacts', [AContactController::class,'index'])->name('admin.contacts');
-    Route::get('contacts/delete/{id}', [AContactController::class,'delete'])->name('admin.contacts.delete');
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('contacts', [AContactController::class, 'index'])->name('admin.contacts');
+    Route::get('contacts/delete/{id}', [AContactController::class, 'delete'])->name('admin.contacts.delete');
 });
 
 use App\Http\Controllers\Admin\AUserController;
 
-Route::prefix('admin')->middleware(['auth'])->group(function(){
+Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('users', [AUserController::class, 'index'])->name('admin.users');
     Route::post('users/update-role', [AUserController::class, 'updateRole'])->name('admin.users.update-role');
     Route::get('users/delete/{id}', [AUserController::class, 'delete'])->name('admin.users.delete');
@@ -216,16 +222,12 @@ Route::prefix('admin')->middleware(['auth'])->group(function(){
 
 use App\Http\Controllers\Admin\OrderController;
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function() {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders');
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order.details');
     Route::put('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('order.status.update');
     Route::post('/orders/{id}/notify', [OrderController::class, 'sendNotification'])->name('order.notify');
     Route::get('/orders/{id}/invoice', [OrderController::class, 'invoice'])->name('order.invoice');
+    Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])
+    ->name('orders.update-status');
 });
-
-
-
-
-
-

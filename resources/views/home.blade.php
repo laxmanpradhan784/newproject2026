@@ -5,30 +5,25 @@
 @section('content')
     <!-- Hero Slider -->
     <section class="hero-slider mt-5 pt-4">
-            <div id="heroCarousel" class="carousel slide"
-     data-bs-ride="carousel"
-     data-bs-interval="4000"
-     data-bs-pause="false">
+        <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000" data-bs-pause="false">
 
 
-                <!-- Indicators -->
-                <div class="carousel-indicators">
-                    @foreach($sliders as $key => $slider)
-                        <button type="button"
-                                data-bs-target="#heroCarousel"
-                                data-bs-slide-to="{{ $key }}"
-                                class="{{ $key == 0 ? 'active' : '' }}">
-                        </button>
-                    @endforeach
-                </div>
+            <!-- Indicators -->
+            <div class="carousel-indicators">
+                @foreach ($sliders as $key => $slider)
+                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ $key }}"
+                        class="{{ $key == 0 ? 'active' : '' }}">
+                    </button>
+                @endforeach
+            </div>
 
-                <!-- Slides -->
-                <div class="carousel-inner rounded-3">
+            <!-- Slides -->
+            <div class="carousel-inner rounded-3">
 
-                    @foreach($sliders as $key => $slider)
-                        <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                @foreach ($sliders as $key => $slider)
+                    <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
 
-                            <a href="{{ route('products') }}" class="text-decoration-none">
+                        <a href="{{ route('products') }}" class="text-decoration-none">
 
                             <div class="hero-slide position-relative"
                                 style="background-image:url('{{ asset('uploads/sliders/' . $slider->image) }}');
@@ -39,39 +34,25 @@
 
                                 <div class="container h-100 d-flex align-items-center">
                                     <div class="carousel-content text-white  p-4 rounded">
-
-                                        {{-- <h1 class="display-5 fw-bold mb-3">
-                                            {{ $slider->title }}
-                                        </h1> --}}
-
-                                        {{-- <p class="lead mb-4">
-                                            {{ $slider->subtitle }}
-                                        </p> --}}
-
-                                        
-
                                     </div>
                                 </div>
-
                             </div>
-                            </a>
-
-                        </div>
-                    @endforeach
-
-                </div>
-
-                <!-- Controls -->
-                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-
-                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
-
+                        </a>
+                    </div>
+                @endforeach
             </div>
-        </section>
+
+            <!-- Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+
+        </div>
+    </section>
 
 
     <!-- Featured Products -->
@@ -81,19 +62,19 @@
                 <h2>Featured Products</h2>
                 <p class="text-muted">Handpicked selection of our best products</p>
             </div>
-            
+
             <div class="row">
                 @forelse($products as $product)
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="product-card">
                             <div class="product-image position-relative">
                                 <a href="{{ route('product.show', $product->id) }}">
-                                    @if($product->image)
-                                        <img src="{{ asset('uploads/products/' . $product->image) }}" 
-                                            class="img-fluid" alt="{{ $product->name }}">
+                                    @if ($product->image)
+                                        <img src="{{ asset('uploads/products/' . $product->image) }}" class="img-fluid"
+                                            alt="{{ $product->name }}">
                                     @else
-                                        <img src="https://via.placeholder.com/400x300?text=No+Image" 
-                                            class="img-fluid" alt="{{ $product->name }}">
+                                        <img src="https://via.placeholder.com/400x300?text=No+Image" class="img-fluid"
+                                            alt="{{ $product->name }}">
                                     @endif
                                 </a>
 
@@ -107,7 +88,7 @@
                                 </div>
 
                                 <!-- Stock Badge -->
-                                @if($product->stock <= 0)
+                                @if ($product->stock <= 0)
                                     <div class="position-absolute top-0 start-0 m-3">
                                         <span class="badge bg-danger">Out of Stock</span>
                                     </div>
@@ -118,20 +99,22 @@
                                 <!-- Title and badge -->
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <h5 class="mb-0">
-                                        <a href="{{ route('product.show', $product->id) }}" class="text-decoration-none text-dark">
+                                        <a href="{{ route('product.show', $product->id) }}"
+                                            class="text-decoration-none text-dark">
                                             {{ $product->name }}
                                         </a>
                                     </h5>
-                                    @if($product->is_new ?? true)
+                                    @if ($product->is_new ?? true)
                                         <span class="badge bg-success">New</span>
                                     @endif
                                 </div>
 
                                 <!-- Category name -->
-                                @if($product->category)
+                                @if ($product->category)
                                     <p class="text-muted small mb-2">
-                                        Category: 
-                                        <a href="{{ route('category.products', $product->category->slug) }}" class="text-decoration-none">
+                                        Category:
+                                        <a href="{{ route('category.products', $product->category->slug) }}"
+                                            class="text-decoration-none">
                                             {{ $product->category->name }}
                                         </a>
                                     </p>
@@ -146,76 +129,80 @@
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <div>
                                         <span class="h5 text-primary">₹{{ number_format($product->price, 2) }}</span>
-                                        @if($product->old_price)
-                                            <span class="text-muted text-decoration-line-through ms-2">₹{{ number_format($product->old_price, 2) }}</span>
+                                        @if ($product->old_price)
+                                            <span
+                                                class="text-muted text-decoration-line-through ms-2">₹{{ number_format($product->old_price, 2) }}</span>
                                         @endif
                                     </div>
-                                    @if($product->stock <= 0)
+                                    @if ($product->stock <= 0)
                                         <span class="badge bg-danger">Out of Stock</span>
                                     @endif
                                 </div>
 
                                 <!-- Quantity Selector and Add to Cart -->
-                                @if($product->stock > 0)
-                                    @if($product->inCart())
+                                @if ($product->stock > 0)
+                                    @if ($product->inCart())
                                         <div class="d-flex align-items-center justify-content-between">
                                             <div class="btn-group" role="group">
-                                                <form action="{{ route('cart.decrease', $product->id) }}" method="POST" class="d-inline">
+                                                <form action="{{ route('cart.decrease', $product->id) }}" method="POST"
+                                                    class="d-inline">
                                                     @csrf
                                                     <button type="submit" class="btn btn-outline-secondary btn-sm">
                                                         <i class="fas fa-minus"></i>
                                                     </button>
                                                 </form>
-                                                
+
                                                 <span class="px-3 fw-bold">{{ $product->cartQuantity() }}</span>
-                                                
-                                                <form action="{{ route('cart.increase', $product->id) }}" method="POST" class="d-inline">
+
+                                                <form action="{{ route('cart.increase', $product->id) }}" method="POST"
+                                                    class="d-inline">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" 
+                                                    <button type="submit" class="btn btn-outline-secondary btn-sm"
                                                         {{ $product->cartQuantity() >= $product->stock ? 'disabled' : '' }}>
                                                         <i class="fas fa-plus"></i>
                                                     </button>
                                                 </form>
                                             </div>
-                                            
+
                                             <a href="{{ route('cart') }}" class="btn btn-success btn-sm">
                                                 <i class="fas fa-check me-1"></i> In Cart
                                             </a>
                                         </div>
                                     @else
-                                        <form action="{{ route('cart.add', $product->id) }}" method="POST" class="d-inline w-100">
+                                        <form action="{{ route('cart.add', $product->id) }}" method="POST"
+                                            class="d-inline w-100">
                                             @csrf
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
-                                                    <button type="button" class="btn btn-outline-secondary quantity-minus" data-id="{{ $product->id }}">
+                                                    <button type="button" class="btn btn-outline-secondary quantity-minus"
+                                                        data-id="{{ $product->id }}">
                                                         <i class="fas fa-minus"></i>
                                                     </button>
                                                 </div>
-                                                <input type="number" 
-                                                    name="quantity" 
-                                                    class="form-control text-center quantity-input" 
-                                                    value="1" 
-                                                    min="1" 
-                                                    max="{{ $product->stock }}"
-                                                    data-id="{{ $product->id }}"
-                                                    style="max-width: 60px;">
+                                                <input type="number" name="quantity"
+                                                    class="form-control text-center quantity-input" value="1"
+                                                    min="1" max="{{ $product->stock }}"
+                                                    data-id="{{ $product->id }}" style="max-width: 60px;">
                                                 <div class="input-group-append">
-                                                    <button type="button" class="btn btn-outline-secondary quantity-plus" data-id="{{ $product->id }}">
+                                                    <button type="button" class="btn btn-outline-secondary quantity-plus"
+                                                        data-id="{{ $product->id }}">
                                                         <i class="fas fa-plus"></i>
                                                     </button>
                                                 </div>
                                                 <div class="input-group-append">
-                                                    <button type="submit" class="btn btn-primary" style="margin-left: 160px;>
-                                                        <i class="fas fa-cart-plus me-1"></i> Add
+                                                    <button type="submit" class="btn btn-primary"
+                                                        style="margin-left: 160px;>
+                                                        <i class="fas
+                                                        fa-cart-plus me-1"></i> Add
                                                     </button>
                                                 </div>
                                             </div>
                                         </form>
                                     @endif
-                                    
+
                                     <!-- Stock Information -->
                                     <small class="text-muted d-block mt-2">
-                                        <i class="fas fa-box me-1"></i> 
+                                        <i class="fas fa-box me-1"></i>
                                         {{ $product->stock }} in stock
                                     </small>
                                 @else
@@ -233,112 +220,112 @@
                 @endforelse
             </div>
 
-                <!-- Add this JavaScript section to your home page or layout -->
-                @push('scripts')
+            <!-- Add this JavaScript section to your home page or layout -->
+            @push('scripts')
                 <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Quantity plus button
-                    document.querySelectorAll('.quantity-plus').forEach(button => {
-                        button.addEventListener('click', function() {
-                            const productId = this.getAttribute('data-id');
-                            const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
-                            const max = parseInt(input.getAttribute('max'));
-                            let value = parseInt(input.value) || 1;
-                            
-                            if (value < max) {
-                                input.value = value + 1;
-                            }
-                        });
-                    });
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Quantity plus button
+                        document.querySelectorAll('.quantity-plus').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const productId = this.getAttribute('data-id');
+                                const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
+                                const max = parseInt(input.getAttribute('max'));
+                                let value = parseInt(input.value) || 1;
 
-                    // Quantity minus button
-                    document.querySelectorAll('.quantity-minus').forEach(button => {
-                        button.addEventListener('click', function() {
-                            const productId = this.getAttribute('data-id');
-                            const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
-                            const min = parseInt(input.getAttribute('min'));
-                            let value = parseInt(input.value) || 1;
-                            
-                            if (value > min) {
-                                input.value = value - 1;
-                            }
+                                if (value < max) {
+                                    input.value = value + 1;
+                                }
+                            });
                         });
-                    });
 
-                    // Input validation
-                    document.querySelectorAll('.quantity-input').forEach(input => {
-                        input.addEventListener('change', function() {
-                            const min = parseInt(this.getAttribute('min'));
-                            const max = parseInt(this.getAttribute('max'));
-                            let value = parseInt(this.value) || min;
-                            
-                            if (value < min) this.value = min;
-                            if (value > max) this.value = max;
+                        // Quantity minus button
+                        document.querySelectorAll('.quantity-minus').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const productId = this.getAttribute('data-id');
+                                const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
+                                const min = parseInt(input.getAttribute('min'));
+                                let value = parseInt(input.value) || 1;
+
+                                if (value > min) {
+                                    input.value = value - 1;
+                                }
+                            });
+                        });
+
+                        // Input validation
+                        document.querySelectorAll('.quantity-input').forEach(input => {
+                            input.addEventListener('change', function() {
+                                const min = parseInt(this.getAttribute('min'));
+                                const max = parseInt(this.getAttribute('max'));
+                                let value = parseInt(this.value) || min;
+
+                                if (value < min) this.value = min;
+                                if (value > max) this.value = max;
+                            });
                         });
                     });
-                });
                 </script>
                 <style>
-                .quantity-input {
-                    width: 60px;
-                    text-align: center;
-                    border-left: 0;
-                    border-right: 0;
-                }
+                    .quantity-input {
+                        width: 60px;
+                        text-align: center;
+                        border-left: 0;
+                        border-right: 0;
+                    }
 
-                .btn-group .btn {
-                    border-radius: 50% !important;
-                    width: 35px;
-                    height: 35px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 0;
-                }
+                    .btn-group .btn {
+                        border-radius: 50% !important;
+                        width: 35px;
+                        height: 35px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 0;
+                    }
 
-                .input-group .btn {
-                    border-radius: 0.375rem !important;
-                }
+                    .input-group .btn {
+                        border-radius: 0.375rem !important;
+                    }
 
-                .input-group .btn-outline-secondary {
-                    border-color: #dee2e6;
-                }
+                    .input-group .btn-outline-secondary {
+                        border-color: #dee2e6;
+                    }
 
-                .input-group .btn-outline-secondary:hover {
-                    background-color: #f8f9fa;
-                }
+                    .input-group .btn-outline-secondary:hover {
+                        background-color: #f8f9fa;
+                    }
 
-                .product-card {
-                    border: 1px solid #e9ecef;
-                    border-radius: 10px;
-                    overflow: hidden;
-                    transition: all 0.3s ease;
-                    height: 100%;
-                }
+                    .product-card {
+                        border: 1px solid #e9ecef;
+                        border-radius: 10px;
+                        overflow: hidden;
+                        transition: all 0.3s ease;
+                        height: 100%;
+                    }
 
-                .product-card:hover {
-                    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-                    transform: translateY(-5px);
-                }
+                    .product-card:hover {
+                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                        transform: translateY(-5px);
+                    }
 
-                .product-image img {
-                    width: 100%;
-                    height: 200px;
-                    object-fit: cover;
-                }
+                    .product-image img {
+                        width: 100%;
+                        height: 200px;
+                        object-fit: cover;
+                    }
 
-                .product-actions .btn {
-                    opacity: 0.8;
-                    transition: opacity 0.3s;
-                }
+                    .product-actions .btn {
+                        opacity: 0.8;
+                        transition: opacity 0.3s;
+                    }
 
-                .product-actions .btn:hover {
-                    opacity: 1;
-                }
+                    .product-actions .btn:hover {
+                        opacity: 1;
+                    }
                 </style>
-                @endpush
-            
-           <div class="text-center mt-4">
+            @endpush
+
+            <div class="text-center mt-4">
                 <a href="{{ route('products') }}" class="btn btn-outline-primary px-5">
                     View All Products
                 </a>
@@ -365,41 +352,43 @@
 
     <!-- Popular Categories -->
     <section class="categories py-5">
-    <div class="container">
-        <div class="section-title text-center mb-4">
-            <h2>Popular Categories</h2>
-            <p class="text-muted">Browse through our top categories</p>
-        </div>
-        
-        <div class="row justify-content-center">
-            @php
-                // Fetch only 6 active categories
-                $allCategories = \App\Models\Category::where('status', 'active')->take(6)->get();
-            @endphp
+        <div class="container">
+            <div class="section-title text-center mb-4">
+                <h2>Popular Categories</h2>
+                <p class="text-muted">Browse through our top categories</p>
+            </div>
 
-            @forelse($allCategories as $category)
-                <div class="col-md-4 col-lg-2 mb-4">
-                    <a href="{{ route('category.products', $category->slug) }}" class="text-decoration-none text-dark">
-                        <div class="category-card text-center border rounded p-3 h-100 shadow-sm">
-                            <div class="category-icon bg-light rounded-circle p-4 mb-3 mx-auto" style="width: 100px; height: 100px;">
-                                @php
-                                    // Choose icon based on category name
-                                    $icon = match($category->name) {
-                                        'Electronics' => 'tv',
-                                        'Fashion' => 'tshirt',
-                                        'Home & Kitchen' => 'home',
-                                        'Books' => 'book',
-                                        'Sports' => 'futbol',
-                                        'Beauty' => 'spa',
-                                        default => 'layer-group'
-                                    };
-                                @endphp
-                                <i class="fas fa-{{ $icon }} fa-2x text-primary"></i>
+            <div class="row justify-content-center">
+                @php
+                    // Fetch only 6 active categories
+                    $allCategories = \App\Models\Category::where('status', 'active')->take(6)->get();
+                @endphp
+
+                @forelse($allCategories as $category)
+                    <div class="col-md-4 col-lg-2 mb-4">
+                        <a href="{{ route('category.products', $category->slug) }}"
+                            class="text-decoration-none text-dark">
+                            <div class="category-card text-center border rounded p-3 h-100 shadow-sm">
+                                <div class="category-icon bg-light rounded-circle p-4 mb-3 mx-auto"
+                                    style="width: 100px; height: 100px;">
+                                    @php
+                                        // Choose icon based on category name
+                                        $icon = match ($category->name) {
+                                            'Electronics' => 'tv',
+                                            'Fashion' => 'tshirt',
+                                            'Home & Kitchen' => 'home',
+                                            'Books' => 'book',
+                                            'Sports' => 'futbol',
+                                            'Beauty' => 'spa',
+                                            default => 'layer-group',
+                                        };
+                                    @endphp
+                                    <i class="fas fa-{{ $icon }} fa-2x text-primary"></i>
+                                </div>
+                                <h5 class="mb-1">{{ $category->name }}</h5>
+                                <p class="text-muted small mb-0">{{ $category->products()->count() }} Products</p>
                             </div>
-                            <h5 class="mb-1">{{ $category->name }}</h5>
-                            <p class="text-muted small mb-0">{{ $category->products()->count() }} Products</p>
-                        </div>
-                    </a>
+                        </a>
                     </div>
                 @empty
                     <div class="col-12 text-center">
@@ -413,161 +402,161 @@
 @endsection
 
 @push('styles')
-<style>
-    :root {
-        --primary-color: #4361ee;
-        --primary-dark: #3a56d4;
-    }
-    
-    /* Hero Slider */
-    .hero-slider .carousel-item {
-        height: 500px;
-        background-size: cover;
-        background-position: center;
-        border-radius: 15px;
-    }
-    
-    .hero-slider .carousel-item:nth-child(1) {
-        background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
-    }
-    
-    .hero-slider .carousel-item:nth-child(2) {
-        background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
-    }
-    
-    .hero-slider .carousel-item:nth-child(3) {
-        background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
-    }
-    
-    .carousel-content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        color: white;
-        width: 80%;
-    }
-    
-    /* Section Title */
-    .section-title {
-        text-align: center;
-        margin: 60px 0 40px;
-        position: relative;
-    }
-    
-    .section-title h2 {
-        font-weight: 700;
-        color: #333;
-        display: inline-block;
-        padding-bottom: 10px;
-    }
-    
-    .section-title h2::after {
-        content: '';
-        position: absolute;
-        width: 80px;
-        height: 3px;
-        background: var(--primary-color);
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-    
-    /* Product Card */
-    .product-card {
-        border: none;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
-        margin-bottom: 30px;
-        background: white;
-        height: 100%;
-    }
-    
-    .product-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-    }
-    
-    .product-image {
-        height: 250px;
-        overflow: hidden;
-    }
-    
-    .product-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
-    
-    .product-card:hover .product-image img {
-        transform: scale(1.05);
-    }
-    
-    /* Category Card */
-    .category-card {
-        transition: transform 0.3s ease;
-    }
-    
-    .category-card:hover {
-        transform: translateY(-5px);
-    }
-    
-    .category-icon {
-        transition: all 0.3s ease;
-    }
-    
-    .category-card:hover .category-icon {
-        background: var(--primary-color) !important;
-    }
-    
-    .category-card:hover .category-icon i {
-        color: white !important;
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a56d4;
+        }
+
+        /* Hero Slider */
         .hero-slider .carousel-item {
-            height: 300px;
+            height: 500px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
         }
-        
-        .carousel-content h1 {
-            font-size: 2rem;
+
+        .hero-slider .carousel-item:nth-child(1) {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
         }
-        
-        .carousel-content .lead {
-            font-size: 1rem;
+
+        .hero-slider .carousel-item:nth-child(2) {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
         }
-    }
-</style>
+
+        .hero-slider .carousel-item:nth-child(3) {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+        }
+
+        .carousel-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            width: 80%;
+        }
+
+        /* Section Title */
+        .section-title {
+            text-align: center;
+            margin: 60px 0 40px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-weight: 700;
+            color: #333;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 3px;
+            background: var(--primary-color);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Product Card */
+        .product-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            background: white;
+            height: 100%;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        /* Category Card */
+        .category-card {
+            transition: transform 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .category-icon {
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover .category-icon {
+            background: var(--primary-color) !important;
+        }
+
+        .category-card:hover .category-icon i {
+            color: white !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-slider .carousel-item {
+                height: 300px;
+            }
+
+            .carousel-content h1 {
+                font-size: 2rem;
+            }
+
+            .carousel-content .lead {
+                font-size: 1rem;
+            }
+        }
+    </style>
 @endpush
 
 @push('scripts')
-<script>
-    $(document).ready(function() {
-        // Auto-play carousel
-        $('#heroCarousel').carousel({
-            interval: 5000
+    <script>
+        $(document).ready(function() {
+            // Auto-play carousel
+            $('#heroCarousel').carousel({
+                interval: 5000
+            });
+
+            // Add to cart animation
+            $('.btn-primary').on('click', function() {
+                const cartCount = $('.badge.bg-danger');
+                let count = parseInt(cartCount.text()) || 0;
+                cartCount.text(count + 1);
+
+                // Animation
+                $(this).html('<i class="fas fa-check me-1"></i> Added');
+                $(this).removeClass('btn-primary').addClass('btn-success');
+
+                setTimeout(() => {
+                    $(this).html('<i class="fas fa-cart-plus me-1"></i> Add to Cart');
+                    $(this).removeClass('btn-success').addClass('btn-primary');
+                }, 1500);
+            });
         });
-        
-        // Add to cart animation
-        $('.btn-primary').on('click', function() {
-            const cartCount = $('.badge.bg-danger');
-            let count = parseInt(cartCount.text()) || 0;
-            cartCount.text(count + 1);
-            
-            // Animation
-            $(this).html('<i class="fas fa-check me-1"></i> Added');
-            $(this).removeClass('btn-primary').addClass('btn-success');
-            
-            setTimeout(() => {
-                $(this).html('<i class="fas fa-cart-plus me-1"></i> Add to Cart');
-                $(this).removeClass('btn-success').addClass('btn-primary');
-            }, 1500);
-        });
-    });
-</script>
+    </script>
 @endpush
