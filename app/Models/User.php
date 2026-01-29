@@ -56,4 +56,9 @@ class User extends Authenticatable
         // Count how many different products are in the cart
         return $this->cartItems()->count();
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

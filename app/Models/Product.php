@@ -56,4 +56,50 @@ class Product extends Model
 
         return $cart ? $cart->quantity : 0;
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class)->where('status', 'approved');
+    }
+
+    public function allReviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Update rating statistics for the product.
+     */
+    public function updateRatingStats(): void
+    {
+        $approvedReviews = $this->reviews()->approved();
+
+        $this->rating = (float) $approvedReviews->avg('rating') ?? 0.0;
+        $this->review_count = $approvedReviews->count();
+        $this->save();
+    }
+
+    /**
+     * Get the average rating attribute.
+     */
+    public function getAverageRatingAttribute(): float
+    {
+        return (float) $this->reviews()->avg('rating') ?? 0.0;
+    }
+
+    /**
+     * Get the total reviews count attribute.
+     */
+    public function getTotalReviewsAttribute(): int
+    {
+        return $this->reviews()->count();
+    }
+
+    /**
+     * Get the rating distribution.
+     */
+    public function getRatingDistributionAttribute(): array
+    {
+        return Review::ratingDistributionForProduct($this->id);
+    }
 }

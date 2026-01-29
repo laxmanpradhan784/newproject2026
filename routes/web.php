@@ -237,3 +237,19 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 Route::get('/admin/orders/{id}/export', [OrderController::class, 'export'])
     ->name('order.export');
 });
+
+use App\Http\Controllers\Admin\ReviewController;
+
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+    // ... existing admin routes ...
+    
+    // Admin Review Routes
+    Route::prefix('reviews')->name('admin.reviews.')->group(function () {
+        Route::get('/', [ReviewController::class, 'index'])->name('index');
+        Route::get('/{id}', [ReviewController::class, 'show'])->name('show');
+        Route::patch('/{id}/status', [ReviewController::class, 'updateStatus'])->name('update-status');
+        Route::post('/{id}/response', [ReviewController::class, 'addResponse'])->name('add-response');
+        Route::post('/bulk', [ReviewController::class, 'bulkAction'])->name('bulk');
+        Route::delete('/{id}', [ReviewController::class, 'destroy'])->name('destroy');
+    });
+});
