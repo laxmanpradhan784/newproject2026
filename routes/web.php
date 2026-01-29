@@ -132,6 +132,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/order/confirmation/{orderNumber}', [CheckoutController::class, 'confirmation'])->name('order.confirmation');
     Route::get('/orders', [CheckoutController::class, 'orders'])->name('orders');
     Route::get('/orders/{orderNumber}', [CheckoutController::class, 'show'])->name('order-details');
+    Route::get('/checkout/guest', [CheckoutController::class, 'guest'])
+    ->name('checkout.guest');
+
 });
 
 
@@ -176,7 +179,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::put('categories/update', [CategoryController::class, 'update'])->name('admin.categories.update');
     Route::delete('categories/delete/{id}', [CategoryController::class, 'delete'])->name('admin.categories.delete');
     Route::put('/categories/{category}/status', [CategoryController::class, 'updateStatus'])
-    ->name('category.update-status');
+        ->name('category.update-status');
 });
 
 use App\Http\Controllers\Admin\aProductController;
@@ -187,7 +190,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::put('products/update', [AProductController::class, 'update'])->name('admin.products.update');
     Route::delete('products/delete/{id}', [AProductController::class, 'delete'])->name('admin.products.delete');
     Route::put('/products/{product}/status', [AProductController::class, 'updateStatus'])
-    ->name('product.update-status');
+        ->name('product.update-status');
 });
 
 use App\Http\Controllers\Admin\ASliderController;
@@ -229,5 +232,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/orders/{id}/notify', [OrderController::class, 'sendNotification'])->name('order.notify');
     Route::get('/orders/{id}/invoice', [OrderController::class, 'invoice'])->name('order.invoice');
     Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])
-    ->name('orders.update-status');
+        ->name('orders.update-status');
+    // In web.php or admin routes
+Route::get('/admin/orders/{id}/export', [OrderController::class, 'export'])
+    ->name('order.export');
 });

@@ -6,7 +6,7 @@
 @section('content')
     <!-- Flipkart Style Cart Page -->
     <section class="cart-page py-4 bg-light">
-        <div class="container">
+        <div class="container pt-5">
             <!-- Breadcrumb -->
             <div class="row mb-4">
                 <div class="col-12">
@@ -26,35 +26,54 @@
 
             <!-- Guest User Notification -->
             @if (!auth()->check() && $cartCount > 0)
-                <div class="alert alert-info alert-dismissible fade show rounded-3 mb-4 auto-dismiss" role="alert"
-                    data-dismiss-delay="3000">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-info-circle fa-2x me-3"></i>
-                        <div>
-                            <h6 class="alert-heading mb-1">Shopping as Guest</h6>
-                            <p class="mb-0">
-                                Your cart is saved in this browser only.
-                                <a href="{{ route('login') }}" class="alert-link fw-bold">Login</a> to save your cart across
-                                devices and access checkout!
-                            </p>
+                <div class="alert alert-info border-0 rounded-3 mb-3 py-2 px-3 mx-auto text-center auto-dismiss"
+                    role="alert" style="max-width: 400px; background-color: rgba(13, 202, 240, 0.1);"
+                    data-dismiss-delay="4000">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center justify-content-center w-100">
+                            <i class="fas fa-user-clock me-2 text-info" style="font-size: 0.9rem;"></i>
+                            <div>
+                                <small class="fw-bold d-block">Guest Shopping</small>
+                                <small class="d-block">
+                                    <a href="{{ route('login') }}" class="text-info fw-bold">Login</a> to save cart
+                                </small>
+                            </div>
                         </div>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const alerts = document.querySelectorAll('.auto-dismiss');
+                        alerts.forEach(alert => {
+                            const delay = alert.getAttribute('data-dismiss-delay') || 1000;
+                            setTimeout(() => {
+                                const bsAlert = new bootstrap.Alert(alert);
+                                bsAlert.close();
+                            }, delay);
+                        });
+                    });
+                </script>
             @endif
 
             <!-- Cart Merge Success Message -->
             @if (session('cart_merged_message'))
-                <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4 auto-dismiss" role="alert"
-                    data-dismiss-delay="3000">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-check-circle fa-2x me-3"></i>
-                        <div>
-                            <h6 class="alert-heading mb-1">Cart Merged Successfully!</h6>
-                            <p class="mb-0">{{ session('cart_merged_message') }}</p>
+                <div class="alert alert-success alert-dismissible fade show rounded-2 mb-3 py-2 px-3 mx-auto auto-dismiss"
+                    role="alert" data-dismiss-delay="3000"
+                    style="max-width: 500px; background-color: rgba(25, 135, 84, 0.08);">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle me-2 text-success" style="font-size: 1rem;"></i>
+                            <div>
+                                <strong class="d-block mb-1" style="font-size: 0.9rem;">Cart Merged Successfully!</strong>
+                                <p class="mb-0" style="font-size: 0.85rem; line-height: 1.3;">
+                                    {{ session('cart_merged_message') }}
+                                </p>
+                            </div>
                         </div>
+                        <button type="button" class="btn-close btn-close-sm ms-2" data-bs-dismiss="alert"
+                            aria-label="Close"></button>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
 
@@ -153,7 +172,8 @@
                                                                 method="POST" class="remove-item-form ms-3">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit" class="btn btn-link text-danger p-0"
+                                                                <button type="submit"
+                                                                    class="btn btn-link text-danger p-0"
                                                                     title="Remove item">
                                                                     <i class="fas fa-trash-alt fa-lg"></i>
                                                                 </button>

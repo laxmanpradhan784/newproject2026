@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Exports\OrderExport;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -135,5 +136,85 @@ class OrderController extends Controller
 
         // Return PDF or view
         return view('admin.invoice', compact('order'));
+    }
+
+    public function export($id)
+    {
+        $order = Order::with(['user', 'items.product'])->findOrFail($id);
+
+        $data = [
+            ['INVOICE'],
+            [],
+            ['YOUR STORE NAME'],
+            ['123 Street, City, State, ZIP'],
+            ['Phone: (123) 456-7890 | Email: info@store.com'],
+            [],
+            ['Invoice Details'],
+            ['Invoice Number:', $order->order_number],
+            ['Invoice Date:', $order->created_at->format('F d, Y')],
+            ['Invoice Time:', $order->created_at->format('h:i A')],
+            [],
+            ['Bill To'],
+            ['Name:', $order->user->name],
+            ['Email:', $order->user->email],
+            ['Phone:', $order->user->phone ?? 'N/A'],
+            ['Address:', $order->shipping_address],
+            [],
+            ['Order Details'],
+            ['Payment Method:', $order->payment_method],
+            ['Payment Status:', $order->payment_status ?? 'Paid'],
+            ['Order Status:', ucfirst($order->status)],
+            [],
+            ['Items'],
+            ['#', 'Description', 'Category', 'Qty', 'Unit Price', 'Amount']
+        ];
+
+        $counter = 1;
+        foreach ($order->items as $item) {
+            $data[] = [
+                $counter++,
+                $item->product_name,
+                $item->category_name,
+                $item->quantity,
+                '₹' . number_format($item->price, 2),
+                '₹' . number_format($item->total, 2)
+            ];
+        }
+
+        $data[] = [];
+        $data[] = ['Subtotal:', '', '', '', '', '₹' . number_format($order->subtotal, 2)];
+        $data[] = ['Shipping:', '', '', '', '', '₹' . number_format($order->shipping, 2)];
+        $data[] = ['Tax:', '', '', '', '', '₹' . number_format($order->tax, 2)];
+
+        if ($order->discount > 0) {
+            $data[] = ['Discount:', '', '', '', '', '-₹' . number_format($order->discount, 2)];
+        }
+
+        $data[] = ['GRAND TOTAL:', '', '', '', '', '₹' . number_format($order->total, 2)];
+        $data[] = [];
+        $data[] = ['Thank you for your business!'];
+        $data[] = ['For any queries, contact: support@yourstore.com'];
+
+        // Generate CSV
+        $filename = "invoice-{$order->order_number}.csv";
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0'
+        ];
+
+        $callback = function () use ($data) {
+            $file = fopen('php://output', 'w');
+            fwrite($file, "\xEF\xBB\xBF"); // UTF-8 BOM for Excel
+
+            foreach ($data as $row) {
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

@@ -172,14 +172,10 @@
                         <i class="bi bi-search"></i>
                     </span>
                     <input type="text" name="search" id="searchOrders"
-                        class="form-control form-control-sm border-start-0" placeholder="Search by order ID..."
+                        class="form-control form-control-sm border-start-0" placeholder="Search by order ID......"
                         value="{{ request('search') }}" data-bs-toggle="tooltip"
                         data-bs-title="Search by: User name, Order ID (ORD-), Date (YYYY-MM-DD), Payment (cod/card/upi)">
                     @if (request('search'))
-                        {{-- <button type="button" class="btn btn-outline-secondary btn-sm border-start-0"
-                            onclick="clearSearch()" title="Clear search">
-                            <i class="bi bi-x-lg"></i>
-                        </button> --}}
                     @endif
                     <button type="submit" class="btn btn-primary btn-sm">
                         <i class="bi bi-search"></i>
@@ -427,7 +423,7 @@
                                         <!-- View Details -->
                                         <a href="{{ route('admin.order.details', $order->id) }}"
                                             class="btn btn-sm btn-outline-info rounded-start d-flex align-items-center justify-content-center"
-                                            style="width: 40px; height: 40px;" title="View Order Details"
+                                            style="width: 60px; height: 40px;" title="View Order Details"
                                             data-bs-toggle="tooltip">
                                             <i class="bi bi-eye fs-6"></i>
                                         </a>
@@ -435,29 +431,29 @@
                                         <!-- Download Invoice -->
                                         <a href="{{ route('admin.order.invoice', $order->id) }}"
                                             class="btn btn-sm btn-outline-success d-flex align-items-center justify-content-center"
-                                            style="width: 40px; height: 40px;" title="Download Invoice"
+                                            style="width: 60px; height: 40px;" title="Download Invoice"
                                             data-bs-toggle="tooltip">
                                             <i class="bi bi-receipt fs-6"></i>
                                         </a>
 
                                         <!-- Send Update -->
-                                        <button type="button"
+                                        {{-- <button type="button"
                                             class="btn btn-sm btn-outline-warning d-flex align-items-center justify-content-center"
                                             style="width: 40px; height: 40px;" title="Send Status Update"
                                             data-bs-toggle="tooltip"
                                             onclick="sendUpdate('{{ $order->id }}', '{{ $order->shipping_email }}')">
                                             <i class="bi bi-envelope fs-6"></i>
-                                        </button>
+                                        </button> --}}
 
                                         <!-- Delete Order -->
-                                        <button type="button"
+                                        {{-- <button type="button"
                                             class="btn btn-sm btn-outline-danger rounded-end d-flex align-items-center justify-content-center"
                                             style="width: 40px; height: 40px;" title="Delete Order"
                                             data-bs-toggle="tooltip" data-bs-toggle="modal"
                                             data-bs-target="#deleteOrderModal"
                                             onclick="setDeleteOrderId('{{ $order->id }}')">
                                             <i class="bi bi-trash fs-6"></i>
-                                        </button>
+                                        </button> --}}
                                     </div>
                                 </td>
                             </tr>
