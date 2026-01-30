@@ -18,11 +18,11 @@ class CartController extends Controller
         // Get cart items using the model helper
         $cartItems = Cart::getCartItems();
         $cartCount = $cartItems->sum('quantity');
-        
-        $subtotal = $cartItems->sum(function($item) {
+
+        $subtotal = $cartItems->sum(function ($item) {
             return $item->price * $item->quantity;
         });
-        
+
         // Shipping and tax calculations
         $shipping = $subtotal > 999 ? 0 : 50; // Free shipping above ₹999
         $tax = $subtotal * 0.18; // 18% GST
@@ -54,20 +54,20 @@ class CartController extends Controller
         }
 
         $identifier = Cart::getCartIdentifier();
-        
+
         // Check if product already in cart
         $existingCart = null;
-        
+
         if (Auth::check()) {
             $existingCart = Cart::where('user_id', Auth::id())
                 ->where('product_id', $product->id)
                 ->where('is_guest', false)
                 ->first();
         } else {
-            $existingCart = Cart::where(function($query) use ($identifier) {
-                    $query->where('session_id', $identifier['session_id'])
-                          ->orWhere('guest_token', $identifier['guest_token']);
-                })
+            $existingCart = Cart::where(function ($query) use ($identifier) {
+                $query->where('session_id', $identifier['session_id'])
+                    ->orWhere('guest_token', $identifier['guest_token']);
+            })
                 ->where('product_id', $product->id)
                 ->where('is_guest', true)
                 ->first();
@@ -75,7 +75,7 @@ class CartController extends Controller
 
         if ($existingCart) {
             $newQuantity = $existingCart->quantity + $quantity;
-            
+
             // Check if new quantity exceeds max limit
             if ($newQuantity > 10) {
                 if ($request->ajax() || $request->wantsJson()) {
@@ -86,7 +86,7 @@ class CartController extends Controller
                 }
                 return back()->with('error', 'Maximum 10 items allowed per product.');
             }
-            
+
             // Check stock availability for new quantity
             if ($newQuantity > $product->stock) {
                 if ($request->ajax() || $request->wantsJson()) {
@@ -97,7 +97,7 @@ class CartController extends Controller
                 }
                 return back()->with('error', 'Cannot add more than available stock.');
             }
-            
+
             $existingCart->quantity = $newQuantity;
             $existingCart->save();
             $message = 'Product quantity updated in cart!';
@@ -173,7 +173,7 @@ class CartController extends Controller
 
         // Recalculate totals
         $cartItems = Cart::getCartItems();
-        $subtotal = $cartItems->sum(function($item) {
+        $subtotal = $cartItems->sum(function ($item) {
             return $item->price * $item->quantity;
         });
         $cartCount = $cartItems->sum('quantity');
@@ -210,17 +210,17 @@ class CartController extends Controller
         }
 
         $productName = $cart->product->name;
-        
+
         // Restore product stock
         $cart->product->increment('stock', $cart->quantity);
-        
+
         // Delete cart item
         $cart->delete();
 
         // Get updated cart info
         $cartItems = Cart::getCartItems();
         $cartCount = $cartItems->sum('quantity');
-        $cartTotal = $cartItems->sum(function($item) {
+        $cartTotal = $cartItems->sum(function ($item) {
             return $item->price * $item->quantity;
         });
 
@@ -234,7 +234,7 @@ class CartController extends Controller
             ]);
         }
 
-        return back()->with('success', 'Item removed from cart!');
+        return back()->with('success', '');
     }
 
     /**
@@ -243,12 +243,12 @@ class CartController extends Controller
     public function clear()
     {
         $cartItems = Cart::getCartItems();
-        
+
         // Restore all product stocks
         foreach ($cartItems as $item) {
             $item->product->increment('stock', $item->quantity);
         }
-        
+
         // Delete all cart items
         $cartItems->each->delete();
 
@@ -278,7 +278,7 @@ class CartController extends Controller
     public function increase($productId)
     {
         $product = Product::findOrFail($productId);
-        
+
         // Find the cart item
         $cart = null;
         if (Auth::check()) {
@@ -288,10 +288,10 @@ class CartController extends Controller
                 ->first();
         } else {
             $identifier = Cart::getCartIdentifier();
-            $cart = Cart::where(function($query) use ($identifier) {
-                    $query->where('session_id', $identifier['session_id'])
-                          ->orWhere('guest_token', $identifier['guest_token']);
-                })
+            $cart = Cart::where(function ($query) use ($identifier) {
+                $query->where('session_id', $identifier['session_id'])
+                    ->orWhere('guest_token', $identifier['guest_token']);
+            })
                 ->where('product_id', $productId)
                 ->where('is_guest', true)
                 ->first();
@@ -310,10 +310,10 @@ class CartController extends Controller
         // Check if enough stock is available and max limit
         if ($cart->quantity < 10 && $cart->quantity < $product->stock) {
             $cart->increment('quantity');
-            
+
             // Update product stock
             $product->decrement('stock', 1);
-            
+
             if (request()->ajax() || request()->wantsJson()) {
                 $cartCount = Cart::getCartCount();
                 return response()->json([
@@ -326,7 +326,7 @@ class CartController extends Controller
             return back()->with('success', 'Quantity increased successfully.');
         } else {
             $message = $cart->quantity >= 10 ? 'Maximum 10 items allowed.' : 'Maximum stock limit reached.';
-            
+
             if (request()->ajax() || request()->wantsJson()) {
                 return response()->json([
                     'success' => false,
@@ -351,10 +351,10 @@ class CartController extends Controller
                 ->first();
         } else {
             $identifier = Cart::getCartIdentifier();
-            $cart = Cart::where(function($query) use ($identifier) {
-                    $query->where('session_id', $identifier['session_id'])
-                          ->orWhere('guest_token', $identifier['guest_token']);
-                })
+            $cart = Cart::where(function ($query) use ($identifier) {
+                $query->where('session_id', $identifier['session_id'])
+                    ->orWhere('guest_token', $identifier['guest_token']);
+            })
                 ->where('product_id', $productId)
                 ->where('is_guest', true)
                 ->first();
@@ -372,10 +372,10 @@ class CartController extends Controller
 
         if ($cart->quantity > 1) {
             $cart->decrement('quantity');
-            
+
             // Update product stock
             $cart->product->increment('stock', 1);
-            
+
             if (request()->ajax() || request()->wantsJson()) {
                 $cartCount = Cart::getCartCount();
                 return response()->json([
@@ -390,7 +390,7 @@ class CartController extends Controller
             // If quantity is 1, remove the item from cart
             $cart->product->increment('stock', 1);
             $cart->delete();
-            
+
             if (request()->ajax() || request()->wantsJson()) {
                 $cartCount = Cart::getCartCount();
                 return response()->json([

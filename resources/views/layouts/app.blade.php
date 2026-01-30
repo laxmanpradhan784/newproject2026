@@ -25,7 +25,15 @@
 
     @stack('styles')
 
+
 </head>
+
+<!-- Add this right after the opening <body> tag -->
+<style>
+    body {
+        background-color: #ced3da;
+    }
+</style>
 
 <body>
     <!-- Cart Merge Notification -->
