@@ -5,7 +5,7 @@
 @section('content')
 
 <section class="py-5">
-    <div class="container pt-5">
+    <div class="container">
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
