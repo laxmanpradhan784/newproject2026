@@ -4,36 +4,30 @@
 
 @section('content')
     <!-- Hero Slider -->
-    <section class="hero-slider mt-5 pt-4">
-        <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000" data-bs-pause="false">
-
-
+    <section class="hero-section position-relative overflow-hidden mt-5 pt-4">
+        <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
             <!-- Indicators -->
-            <div class="carousel-indicators">
+            <div class="carousel-indicators position-absolute bottom-0 mb-5">
                 @foreach ($sliders as $key => $slider)
                     <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ $key }}"
-                        class="{{ $key == 0 ? 'active' : '' }}">
+                        class="{{ $key == 0 ? 'active' : '' }} rounded-circle"
+                        style="width: 12px; height: 12px; border: 2px solid white; background-color: transparent;">
                     </button>
                 @endforeach
             </div>
 
             <!-- Slides -->
             <div class="carousel-inner rounded-3">
-
                 @foreach ($sliders as $key => $slider)
                     <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-
                         <a href="{{ route('products') }}" class="text-decoration-none">
-
                             <div class="hero-slide position-relative"
                                 style="background-image:url('{{ asset('uploads/sliders/' . $slider->image) }}');
-                                        background-size:cover;
-                                        background-position:center;
-                                        height:750px;">
-
-
+                                    background-size:cover;
+                                    background-position:center;
+                                    height:850px;">
                                 <div class="container h-100 d-flex align-items-center">
-                                    <div class="carousel-content text-white  p-4 rounded">
+                                    <div class="carousel-content text-white p-4 rounded">
                                     </div>
                                 </div>
                             </div>
@@ -46,11 +40,9 @@
             <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon"></span>
             </button>
-
             <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon"></span>
             </button>
-
         </div>
     </section>
 
@@ -399,7 +391,7 @@
         </div>
     </section>
 
-    
+
 
 @endsection
 
