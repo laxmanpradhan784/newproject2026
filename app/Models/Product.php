@@ -57,9 +57,10 @@ class Product extends Model
         return $cart ? $cart->quantity : 0;
     }
 
+    // Add relationship to reviews
     public function reviews()
     {
-        return $this->hasMany(Review::class)->where('status', 'approved');
+        return $this->hasMany(Review::class);
     }
 
     public function allReviews()
@@ -101,5 +102,55 @@ class Product extends Model
     public function getRatingDistributionAttribute(): array
     {
         return Review::ratingDistributionForProduct($this->id);
+    }
+
+    // Check if user has purchased this product
+    public function hasUserPurchased($userId)
+    {
+        return OrderItem::whereHas('order', function ($query) use ($userId) {
+            $query->where('user_id', $userId)
+                ->whereIn('status', ['delivered', 'completed']);
+        })
+            ->where('product_id', $this->id)
+            ->exists();
+    }
+
+    // Get purchase date for user
+    public function getPurchaseDate($userId)
+    {
+        $orderItem = OrderItem::whereHas('order', function ($query) use ($userId) {
+            $query->where('user_id', $userId)
+                ->whereIn('status', ['delivered', 'completed']);
+        })
+            ->where('product_id', $this->id)
+            ->first();
+
+        return $orderItem ? $orderItem->created_at : null;
+    }
+
+    // Check if user has already reviewed this product
+    public function hasUserReviewed($userId)
+    {
+        return $this->reviews()->where('user_id', $userId)->exists();
+    }
+
+    // Get user's review for this product
+    public function getUserReview($userId)
+    {
+        return $this->reviews()->where('user_id', $userId)->first();
+    }
+
+    // Update product rating when new review is added
+    public function updateRating()
+    {
+        $approvedReviews = $this->reviews()->where('status', 'approved');
+
+        $avgRating = $approvedReviews->avg('rating');
+        $reviewCount = $approvedReviews->count();
+
+        $this->update([
+            'rating' => $avgRating ?? 0,
+            'review_count' => $reviewCount
+        ]);
     }
 }

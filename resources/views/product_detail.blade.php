@@ -4,350 +4,865 @@
 
 @section('content')
 
-    <section class="py-5">
-        <div class="container pt-5">
-            <div class="row g-4">
+<section class="py-5">
+    <div class="container pt-5">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('category.products', $product->category->slug) }}" class="text-decoration-none">{{ $product->category->name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ Str::limit($product->name, 30) }}</li>
+            </ol>
+        </nav>
 
-                <!-- Product Image & Info -->
-                <div class="col-lg-8">
-                    <div class="row g-4">
-                        <!-- Product Image -->
-                        <div class="col-md-12">
-                            @if ($product->image)
-                                <img src="{{ asset('uploads/products/' . $product->image) }}"
-                                    class="img-fluid rounded shadow-sm" alt="{{ $product->name }}"
-                                    style="max-height: 400px; width: 100%; object-fit: contain;">
-                            @else
-                                <div class="bg-light d-flex align-items-center justify-content-center rounded shadow-sm"
-                                    style="height: 400px;">
-                                    <i class="fas fa-box fa-5x text-muted"></i>
+        <div class="row g-4">
+            <!-- Product Images & Details -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-body p-4">
+                        <div class="row g-4">
+                            <!-- Product Image -->
+                            <div class="col-md-6">
+                                <div class="product-image-container position-relative">
+                                    @if ($product->image)
+                                        <img src="{{ asset('uploads/products/' . $product->image) }}"
+                                            class="img-fluid rounded-3 shadow-sm product-main-image" 
+                                            alt="{{ $product->name }}"
+                                            style="max-height: 500px; width: 100%; object-fit: contain;">
+                                    @else
+                                        <div class="bg-light d-flex align-items-center justify-content-center rounded-3 shadow-sm"
+                                            style="height: 500px;">
+                                            <i class="fas fa-box fa-6x text-muted"></i>
+                                        </div>
+                                    @endif
+                                    
+                                    @if ($product->stock > 0)
+                                        <span class="position-absolute top-0 start-0 m-3 badge bg-success bg-opacity-90 fs-6">
+                                            <i class="fas fa-check-circle me-1"></i> In Stock
+                                        </span>
+                                    @else
+                                        <span class="position-absolute top-0 start-0 m-3 badge bg-danger bg-opacity-90 fs-6">
+                                            <i class="fas fa-times-circle me-1"></i> Out of Stock
+                                        </span>
+                                    @endif
                                 </div>
-                            @endif
-                        </div>
-
-                        <!-- Product Info -->
-                        <div class="col-md-12 mt-3">
-                            <h2 class="fw-bold">{{ $product->name }}</h2>
-                            @if ($product->is_new ?? true)
-                                <span class="badge bg-success mb-2">New</span>
-                            @endif
-
-                            <p class="text-muted mb-2">Category:
-                                <a href="{{ route('category.products', $product->category->slug) }}"
-                                    class="text-decoration-none">
-                                    {{ $product->category->name }}
-                                </a>
-                            </p>
-
-                            <h4 class="text-primary">₹{{ number_format($product->price, 2) }}
-                                @if ($product->old_price)
-                                    <span
-                                        class="text-muted text-decoration-line-through ms-2">₹{{ number_format($product->old_price, 2) }}</span>
-                                @endif
-                            </h4>
-
-                            <!-- Stock Status -->
-                            @if ($product->stock > 0)
-                                <div class="d-flex align-items-center mb-3">
-                                    <span class="badge bg-success me-2">In Stock</span>
-                                    <small class="text-muted">{{ $product->stock }} units available</small>
-                                </div>
-                            @else
-                                <div class="d-flex align-items-center mb-3">
-                                    <span class="badge bg-danger me-2">Out of Stock</span>
-                                    <small class="text-muted">Currently unavailable</small>
-                                </div>
-                            @endif
-
-                            <!-- Product Description -->
-                            <div class="mb-4">
-                                <h5 class="mb-3">Description</h5>
-                                <p class="mb-0">{{ $product->description ?? 'No detailed description available.' }}</p>
                             </div>
 
-                            <!-- Quantity Selector and Add to Cart -->
-                            @if ($product->stock > 0)
-                                @if ($product->inCart())
-                                    <div class="d-flex align-items-center">
-                                        <div class="d-flex align-items-center me-4">
-                                            <h6 class="me-3 mb-0">Quantity:</h6>
-                                            <div class="btn-group" role="group">
-                                                <form action="{{ route('cart.decrease', $product->id) }}" method="POST"
-                                                    class="d-inline">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-outline-secondary">
-                                                        <i class="fas fa-minus"></i>
-                                                    </button>
-                                                </form>
-
-                                                <span class="px-3 fw-bold d-flex align-items-center"
-                                                    style="min-width: 40px; justify-content: center;">
-                                                    {{ $product->cartQuantity() }}
-                                                </span>
-
-                                                <form action="{{ route('cart.increase', $product->id) }}" method="POST"
-                                                    class="d-inline">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-outline-secondary"
-                                                        {{ $product->cartQuantity() >= $product->stock ? 'disabled' : '' }}>
-                                                        <i class="fas fa-plus"></i>
-                                                    </button>
-                                                </form>
+                            <!-- Product Info -->
+                            <div class="col-md-6">
+                                <div class="product-info">
+                                    <h1 class="fw-bold mb-3">{{ $product->name }}</h1>
+                                    
+                                    <!-- Rating & Reviews -->
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="rating-display">
+                                            <div class="stars d-inline-block">
+                                                @php
+                                                    $avgRating = $product->reviews()->where('status', 'approved')->avg('rating') ?? 0;
+                                                    $totalReviews = $product->reviews()->where('status', 'approved')->count();
+                                                @endphp
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    @if ($i <= floor($avgRating))
+                                                        <i class="fas fa-star text-warning"></i>
+                                                    @elseif($i - 0.5 <= $avgRating)
+                                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                                    @else
+                                                        <i class="far fa-star text-warning"></i>
+                                                    @endif
+                                                @endfor
                                             </div>
+                                            <span class="ms-2">
+                                                <strong class="fs-5">{{ number_format($avgRating, 1) }}</strong>
+                                                <span class="text-muted">({{ $totalReviews }} reviews)</span>
+                                            </span>
                                         </div>
-
-                                        <a href="{{ route('cart') }}" class="btn btn-success">
-                                            <i class="fas fa-check me-1"></i> View in Cart
-                                        </a>
                                     </div>
-                                @else
-                                    <form action="{{ route('cart.add', $product->id) }}" method="POST"
-                                        class="row g-3 align-items-center">
-                                        @csrf
-                                        <div class="col-auto">
-                                            <label class="form-label fw-bold mb-0">Quantity:</label>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="input-group" style="width: 150px;">
-                                                <button type="button" class="btn btn-outline-secondary quantity-minus">
-                                                    <i class="fas fa-minus"></i>
-                                                </button>
-                                                <input type="number" name="quantity"
-                                                    class="form-control text-center quantity-input" value="1"
-                                                    min="1" max="{{ $product->stock }}"
-                                                    style="border-left: 0; border-right: 0;">
-                                                <button type="button" class="btn btn-outline-secondary quantity-plus">
-                                                    <i class="fas fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <button type="submit" class="btn btn-primary btn-lg">
-                                                <i class="fas fa-cart-plus me-2"></i> Add to Cart
-                                            </button>
-                                        </div>
-                                    </form>
-                                @endif
 
-                                <!-- Stock Information -->
-                                <div class="mt-3">
-                                    <small class="text-muted">
-                                        <i class="fas fa-shipping-fast me-1"></i>
-                                        Free shipping on orders above ₹999
-                                    </small>
-                                    <br>
-                                    <small class="text-muted">
-                                        <i class="fas fa-undo me-1"></i>
-                                        7-day return policy
-                                    </small>
-                                </div>
-                            @else
-                                <button class="btn btn-secondary btn-lg" disabled>
-                                    <i class="fas fa-times-circle me-2"></i> Out of Stock
-                                </button>
-                                <div class="mt-3">
-                                    <button class="btn btn-outline-primary notify-btn" data-id="{{ $product->id }}">
-                                        <i class="fas fa-bell me-1"></i> Notify When Available
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sidebar: Other Products in Same Category -->
-                <div class="col-lg-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title mb-3">Other Products in {{ $product->category->name }}</h5>
-                            <div class="list-group list-group-flush">
-                                @php
-                                    $relatedProducts = \App\Models\Product::with('category')
-                                        ->where('category_id', $product->category_id)
-                                        ->where('id', '!=', $product->id)
-                                        ->where('status', 'active')
-                                        ->limit(5)
-                                        ->get();
-                                @endphp
-
-                                @forelse($relatedProducts as $related)
-                                    <a href="{{ route('product.show', $related->id) }}"
-                                        class="list-group-item list-group-item-action d-flex align-items-center border-0 py-3">
-                                        @if ($related->image)
-                                            <img src="{{ asset('uploads/products/' . $related->image) }}"
-                                                alt="{{ $related->name }}" style="width:60px;height:60px;object-fit:cover;"
-                                                class="me-3 rounded">
-                                        @else
-                                            <div class="bg-light d-flex align-items-center justify-content-center me-3"
-                                                style="width:60px;height:60px;border-radius:8px;">
-                                                <i class="fas fa-box text-muted"></i>
+                                    <!-- Price -->
+                                    <div class="product-price mb-4">
+                                        <h2 class="text-primary fw-bold display-6">₹{{ number_format($product->price, 2) }}</h2>
+                                        @if ($product->old_price)
+                                            <div class="text-muted">
+                                                <span class="text-decoration-line-through me-2">₹{{ number_format($product->old_price, 2) }}</span>
+                                                <span class="badge bg-danger">
+                                                    Save ₹{{ number_format($product->old_price - $product->price, 2) }}
+                                                </span>
                                             </div>
                                         @endif
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1 fw-bold">{{ Str::limit($related->name, 30) }}</h6>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <span
-                                                    class="text-success fw-bold">₹{{ number_format($related->price, 2) }}</span>
-                                                @if ($related->stock > 0)
-                                                    <span class="badge bg-success bg-opacity-10 text-success">In
-                                                        Stock</span>
+                                    </div>
+
+                                    <!-- Highlights -->
+                                    <div class="product-highlights mb-4">
+                                        <h5 class="mb-3">Key Features</h5>
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2">
+                                                <i class="fas fa-check-circle text-success me-2"></i>
+                                                <strong>Category:</strong> {{ $product->category->name }}
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="fas fa-check-circle text-success me-2"></i>
+                                                <strong>Availability:</strong> 
+                                                @if ($product->stock > 0)
+                                                    <span class="text-success">{{ $product->stock }} units available</span>
                                                 @else
-                                                    <span class="badge bg-danger bg-opacity-10 text-danger">Out of
-                                                        Stock</span>
+                                                    <span class="text-danger">Currently unavailable</span>
                                                 @endif
+                                            </li>
+                                            <li class="mb-2">
+                                                <i class="fas fa-check-circle text-success me-2"></i>
+                                                <strong>Free Shipping</strong> on orders above ₹999
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-check-circle text-success me-2"></i>
+                                                <strong>7-Day Return Policy</strong>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- Add to Cart Form -->
+                                    @if ($product->stock > 0)
+                                        <div class="add-to-cart-form mb-4">
+                                            <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                                                @csrf
+                                                <div class="row g-3 align-items-center">
+                                                    <div class="col-auto">
+                                                        <label class="form-label fw-bold">Quantity:</label>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div class="input-group" style="width: 150px;">
+                                                            <button type="button" class="btn btn-outline-secondary quantity-btn minus">
+                                                                <i class="fas fa-minus"></i>
+                                                            </button>
+                                                            <input type="number" name="quantity" class="form-control text-center quantity-input" 
+                                                                   value="1" min="1" max="{{ $product->stock }}">
+                                                            <button type="button" class="btn btn-outline-secondary quantity-btn plus">
+                                                                <i class="fas fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 mt-3">
+                                                        <button type="submit" class="btn btn-primary btn-lg w-100 py-3">
+                                                            <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    @else
+                                        <div class="out-of-stock mb-4">
+                                            <button class="btn btn-secondary btn-lg w-100 py-3" disabled>
+                                                <i class="fas fa-times-circle me-2"></i> Out of Stock
+                                            </button>
+                                            <div class="mt-3 text-center">
+                                                <button class="btn btn-outline-primary notify-btn" data-id="{{ $product->id }}">
+                                                    <i class="fas fa-bell me-1"></i> Notify When Available
+                                                </button>
                                             </div>
                                         </div>
-                                    </a>
-                                @empty
-                                    <div class="text-center py-3">
-                                        <p class="text-muted mb-0">No other products in this category.</p>
-                                    </div>
-                                @endforelse
-                            </div>
-                        </div>
-                    </div>
+                                    @endif
 
-                    <!-- Additional Info Card -->
-                    <div class="card border-0 shadow-sm mt-4">
-                        <div class="card-body">
-                            <h6 class="card-title mb-3">Product Details</h6>
-                            <ul class="list-unstyled mb-0">
-                                <li class="mb-2">
-                                    <small class="text-muted">
-                                        <i class="fas fa-tag me-2"></i>
-                                        Category: {{ $product->category->name }}
-                                    </small>
-                                </li>
-                                <li class="mb-2">
-                                    <small class="text-muted">
-                                        <i class="fas fa-box me-2"></i>
-                                        Status:
-                                        <span class="badge {{ $product->stock > 0 ? 'bg-success' : 'bg-danger' }}">
-                                            {{ $product->stock > 0 ? 'In Stock' : 'Out of Stock' }}
-                                        </span>
-                                    </small>
-                                </li>
-                                <li class="mb-2">
-                                    <small class="text-muted">
-                                        <i class="fas fa-calendar me-2"></i>
-                                        Added: {{ $product->created_at->format('M d, Y') }}
-                                    </small>
-                                </li>
-                                <li>
-                                    <small class="text-muted">
-                                        <i class="fas fa-sync me-2"></i>
-                                        Last updated: {{ $product->updated_at->format('M d, Y') }}
-                                    </small>
-                                </li>
-                            </ul>
+                                    <!-- Additional Info -->
+                                    <div class="additional-info">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="text-center p-3 border rounded">
+                                                    <i class="fas fa-shipping-fast fa-2x text-primary mb-2"></i>
+                                                    <p class="mb-0 small">Free Shipping</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="text-center p-3 border rounded">
+                                                    <i class="fas fa-undo fa-2x text-primary mb-2"></i>
+                                                    <p class="mb-0 small">Easy Returns</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Product Description -->
+                <div class="card border-0 shadow-sm rounded-3 mt-4">
+                    <div class="card-header bg-white border-0">
+                        <ul class="nav nav-tabs nav-justified" id="productTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="description-tab" data-bs-toggle="tab" 
+                                        data-bs-target="#description" type="button" role="tab">
+                                    <i class="fas fa-info-circle me-2"></i>Description
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="specifications-tab" data-bs-toggle="tab" 
+                                        data-bs-target="#specifications" type="button" role="tab">
+                                    <i class="fas fa-list-alt me-2"></i>Specifications
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" 
+                                        data-bs-target="#reviews" type="button" role="tab">
+                                    <i class="fas fa-star me-2"></i>Reviews ({{ $totalReviews }})
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="tab-content" id="productTabContent">
+                            <!-- Description Tab -->
+                            <div class="tab-pane fade show active" id="description" role="tabpanel">
+                                <h4 class="mb-4">Product Description</h4>
+                                <p class="mb-0 fs-5">{{ $product->description ?? 'No detailed description available.' }}</p>
+                            </div>
+
+                            <!-- Specifications Tab -->
+                            <div class="tab-pane fade" id="specifications" role="tabpanel">
+                                <h4 class="mb-4">Product Specifications</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <table class="table table-striped">
+                                            <tbody>
+                                                <tr>
+                                                    <td><strong>Product Name</strong></td>
+                                                    <td>{{ $product->name }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Category</strong></td>
+                                                    <td>{{ $product->category->name }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>SKU</strong></td>
+                                                    <td>PROD-{{ str_pad($product->id, 6, '0', STR_PAD_LEFT) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Stock Status</strong></td>
+                                                    <td>
+                                                        @if ($product->stock > 0)
+                                                            <span class="badge bg-success">In Stock ({{ $product->stock }})</span>
+                                                        @else
+                                                            <span class="badge bg-danger">Out of Stock</span>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <table class="table table-striped">
+                                            <tbody>
+                                                <tr>
+                                                    <td><strong>Price</strong></td>
+                                                    <td class="text-primary fw-bold">₹{{ number_format($product->price, 2) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Added Date</strong></td>
+                                                    <td>{{ $product->created_at->format('M d, Y') }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Last Updated</strong></td>
+                                                    <td>{{ $product->updated_at->format('M d, Y') }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Average Rating</strong></td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="stars">
+                                                                @for ($i = 1; $i <= 5; $i++)
+                                                                    @if ($i <= floor($avgRating))
+                                                                        <i class="fas fa-star text-warning fa-sm"></i>
+                                                                    @elseif($i - 0.5 <= $avgRating)
+                                                                        <i class="fas fa-star-half-alt text-warning fa-sm"></i>
+                                                                    @else
+                                                                        <i class="far fa-star text-warning fa-sm"></i>
+                                                                    @endif
+                                                                @endfor
+                                                            </div>
+                                                            <span class="ms-2">{{ number_format($avgRating, 1) }}/5</span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reviews Tab -->
+                            <div class="tab-pane fade" id="reviews" role="tabpanel">
+                                <div class="reviews-section">
+                                    <!-- Review Header -->
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div>
+                                            <h4 class="mb-0">Customer Reviews</h4>
+                                            <p class="text-muted mb-0">Share your experience with this product</p>
+                                        </div>
+                                        
+                                        @auth
+                                            @php
+                                                $existingReview = \App\Models\Review::where('product_id', $product->id)
+                                                    ->where('user_id', auth()->id())
+                                                    ->first();
+                                            @endphp
+
+                                            @if (!$existingReview)
+                                                <a href="{{ route('reviews.create', $product->id) }}" class="btn btn-primary">
+                                                    <i class="fas fa-pen me-1"></i> Write a Review
+                                                </a>
+                                            @else
+                                                <div class="btn-group">
+                                                    <a href="{{ route('reviews.edit', $existingReview->id) }}"
+                                                        class="btn btn-outline-primary">
+                                                        <i class="fas fa-edit me-1"></i> Edit Review
+                                                    </a>
+                                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                                        data-bs-target="#deleteModal{{ $existingReview->id }}">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            @endif
+                                        @else
+                                            <a href="{{ route('login') }}?redirect={{ url()->current() }}"
+                                                class="btn btn-primary">
+                                                <i class="fas fa-pen me-1"></i> Login to Review
+                                            </a>
+                                        @endauth
+                                    </div>
+
+                                    <!-- Review Summary -->
+                                    <div class="review-summary mb-5">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-4 text-center mb-4 mb-md-0">
+                                                <div class="total-rating">
+                                                    <h2 class="display-4 fw-bold text-primary">{{ number_format($avgRating, 1) }}</h2>
+                                                    <div class="rating-stars mb-2">
+                                                        @for ($i = 1; $i <= 5; $i++)
+                                                            @if ($i <= floor($avgRating))
+                                                                <i class="fas fa-star text-warning fs-4"></i>
+                                                            @elseif($i - 0.5 <= $avgRating)
+                                                                <i class="fas fa-star-half-alt text-warning fs-4"></i>
+                                                            @else
+                                                                <i class="far fa-star text-warning fs-4"></i>
+                                                            @endif
+                                                        @endfor
+                                                    </div>
+                                                    <p class="text-muted">{{ $totalReviews }} reviews</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                @php
+                                                    $ratingDistribution = [];
+                                                    for ($i = 5; $i >= 1; $i--) {
+                                                        $count = $product
+                                                            ->reviews()
+                                                            ->where('rating', $i)
+                                                            ->where('status', 'approved')
+                                                            ->count();
+                                                        $percentage =
+                                                            $totalReviews > 0 ? ($count / $totalReviews) * 100 : 0;
+                                                        $ratingDistribution[$i] = [
+                                                            'count' => $count,
+                                                            'percentage' => $percentage,
+                                                        ];
+                                                    }
+                                                @endphp
+                                                
+                                                @for ($i = 5; $i >= 1; $i--)
+                                                    <div class="rating-bar-row mb-2">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="me-3" style="width: 80px;">
+                                                                <small class="text-muted">{{ $i }} star</small>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <div class="progress" style="height: 10px;">
+                                                                    <div class="progress-bar bg-warning" role="progressbar"
+                                                                         style="width: {{ $ratingDistribution[$i]['percentage'] }}%"
+                                                                         aria-valuenow="{{ $ratingDistribution[$i]['percentage'] }}">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ms-3" style="width: 60px;">
+                                                                <small class="text-muted text-end d-block">{{ $ratingDistribution[$i]['count'] }}</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endfor
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Reviews List -->
+                                    <div class="reviews-list">
+                                        @php
+                                            $approvedReviews = $product
+                                                ->reviews()
+                                                ->where('status', 'approved')
+                                                ->orderBy('created_at', 'desc')
+                                                ->paginate(5);
+                                        @endphp
+
+                                        @forelse($approvedReviews as $review)
+                                            <div class="review-card card border mb-4">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                                        <div>
+                                                            <h5 class="fw-bold mb-1">{{ $review->title }}</h5>
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="rating-stars">
+                                                                    @for ($i = 1; $i <= 5; $i++)
+                                                                        @if ($i <= $review->rating)
+                                                                            <i class="fas fa-star text-warning"></i>
+                                                                        @else
+                                                                            <i class="far fa-star text-warning"></i>
+                                                                        @endif
+                                                                    @endfor
+                                                                </div>
+                                                                @if ($review->is_verified_purchase)
+                                                                    <span class="badge bg-success bg-opacity-10 text-success border border-success ms-2">
+                                                                        <i class="fas fa-check-circle"></i> Verified Purchase
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        <small class="text-muted">{{ $review->created_at->format('M d, Y') }}</small>
+                                                    </div>
+
+                                                    <div class="review-author mb-3">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="author-avatar rounded-circle bg-light d-flex align-items-center justify-content-center me-3"
+                                                                 style="width: 40px; height: 40px;">
+                                                                <i class="fas fa-user text-muted"></i>
+                                                            </div>
+                                                            <div>
+                                                                <div class="fw-bold">{{ $review->user->name ?? 'Anonymous' }}</div>
+                                                                <small class="text-muted">Customer</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <p class="review-comment mb-3">{{ $review->comment }}</p>
+
+                                                    <!-- Helpful Votes -->
+                                                    <div class="helpful-votes">
+                                                        <small class="text-muted me-3">Was this review helpful?</small>
+                                                        <form action="{{ route('reviews.vote') }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            <input type="hidden" name="review_id" value="{{ $review->id }}">
+                                                            <input type="hidden" name="type" value="yes">
+                                                            <button type="submit" class="btn btn-sm btn-outline-success me-2">
+                                                                <i class="fas fa-thumbs-up"></i> Yes ({{ $review->helpful_yes }})
+                                                            </button>
+                                                        </form>
+                                                        <form action="{{ route('reviews.vote') }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            <input type="hidden" name="review_id" value="{{ $review->id }}">
+                                                            <input type="hidden" name="type" value="no">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                                <i class="fas fa-thumbs-down"></i> No ({{ $review->helpful_no }})
+                                                            </button>
+                                                        </form>
+                                                    </div>
+
+                                                    <!-- Admin Response -->
+                                                    @if ($review->admin_response)
+                                                        <div class="admin-response mt-4 p-3 bg-light border-start border-4 border-primary">
+                                                            <div class="d-flex align-items-center mb-2">
+                                                                <div class="admin-avatar rounded-circle bg-primary d-flex align-items-center justify-content-center me-3"
+                                                                     style="width: 30px; height: 30px;">
+                                                                    <i class="fas fa-user-tie text-white"></i>
+                                                                </div>
+                                                                <div>
+                                                                    <small class="fw-bold">Admin Response</small>
+                                                                    <small class="text-muted ms-2">{{ $review->response_date->format('M d, Y') }}</small>
+                                                                </div>
+                                                            </div>
+                                                            <p class="mb-0 small">{{ $review->admin_response }}</p>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @empty
+                                            <div class="text-center py-5">
+                                                <i class="fas fa-comments fa-4x text-muted mb-4"></i>
+                                                <h4>No reviews yet</h4>
+                                                <p class="text-muted mb-4">Be the first to share your experience with this product!</p>
+                                                @auth
+                                                    <a href="{{ route('reviews.create', $product->id) }}" class="btn btn-primary">
+                                                        <i class="fas fa-pen me-2"></i> Write First Review
+                                                    </a>
+                                                @else
+                                                    <a href="{{ route('login') }}?redirect={{ url()->current() }}" class="btn btn-primary">
+                                                        <i class="fas fa-sign-in-alt me-2"></i> Login to Review
+                                                    </a>
+                                                @endauth
+                                            </div>
+                                        @endforelse
+
+                                        <!-- Pagination -->
+                                        @if ($approvedReviews->hasPages())
+                                            <div class="d-flex justify-content-center mt-4">
+                                                <nav aria-label="Reviews pagination">
+                                                    <ul class="pagination">
+                                                        @if ($approvedReviews->onFirstPage())
+                                                            <li class="page-item disabled">
+                                                                <span class="page-link">Previous</span>
+                                                            </li>
+                                                        @else
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="{{ $approvedReviews->previousPageUrl() }}">Previous</a>
+                                                            </li>
+                                                        @endif
+
+                                                        @foreach ($approvedReviews->getUrlRange(1, $approvedReviews->lastPage()) as $page => $url)
+                                                            <li class="page-item {{ $approvedReviews->currentPage() == $page ? 'active' : '' }}">
+                                                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                                            </li>
+                                                        @endforeach
+
+                                                        @if ($approvedReviews->hasMorePages())
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="{{ $approvedReviews->nextPageUrl() }}">Next</a>
+                                                            </li>
+                                                        @else
+                                                            <li class="page-item disabled">
+                                                                <span class="page-link">Next</span>
+                                                            </li>
+                                                        @endif
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Related Products -->
+                <div class="card border-0 shadow-sm rounded-3 mb-4">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">
+                            <i class="fas fa-th-large text-primary me-2"></i>
+                            Related Products
+                        </h5>
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="list-group list-group-flush">
+                            @php
+                                $relatedProducts = \App\Models\Product::with('category')
+                                    ->where('category_id', $product->category_id)
+                                    ->where('id', '!=', $product->id)
+                                    ->where('status', 'active')
+                                    ->limit(5)
+                                    ->get();
+                            @endphp
+
+                            @forelse($relatedProducts as $related)
+                                <a href="{{ route('product.show', $related->id) }}"
+                                   class="list-group-item list-group-item-action border-0 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="related-product-image me-3">
+                                            @if ($related->image)
+                                                <img src="{{ asset('uploads/products/' . $related->image) }}"
+                                                     alt="{{ $related->name }}"
+                                                     style="width:70px;height:70px;object-fit:cover;" 
+                                                     class="rounded-2 shadow-sm">
+                                            @else
+                                                <div class="bg-light d-flex align-items-center justify-content-center rounded-2 shadow-sm"
+                                                     style="width:70px;height:70px;">
+                                                    <i class="fas fa-box text-muted"></i>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="fw-bold mb-1 text-dark">{{ Str::limit($related->name, 40) }}</h6>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="text-success fw-bold">₹{{ number_format($related->price, 2) }}</span>
+                                                @if ($related->stock > 0)
+                                                    <span class="badge bg-success bg-opacity-10 text-success small">
+                                                        <i class="fas fa-check-circle"></i> In Stock
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-danger bg-opacity-10 text-danger small">
+                                                        <i class="fas fa-times-circle"></i> Out of Stock
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            @if ($related->reviews()->where('status', 'approved')->count() > 0)
+                                                <div class="mt-1">
+                                                    <small class="text-warning">
+                                                        <i class="fas fa-star fa-xs"></i>
+                                                        {{ number_format($related->reviews()->where('status', 'approved')->avg('rating') ?? 0, 1) }}
+                                                    </small>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </a>
+                            @empty
+                                <div class="text-center py-4">
+                                    <i class="fas fa-box-open fa-2x text-muted mb-3"></i>
+                                    <p class="text-muted mb-0">No related products found</p>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Info Card -->
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle text-primary me-2"></i>
+                            Product Details
+                        </h5>
+                    </div>
+                    <div class="card-body p-3">
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Category</span>
+                                    <span class="fw-bold">{{ $product->category->name }}</span>
+                                </div>
+                            </li>
+                            <li class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Status</span>
+                                    <span class="badge {{ $product->stock > 0 ? 'bg-success' : 'bg-danger' }}">
+                                        {{ $product->stock > 0 ? 'In Stock' : 'Out of Stock' }}
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Added Date</span>
+                                    <span class="fw-bold">{{ $product->created_at->format('M d, Y') }}</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Last Updated</span>
+                                    <span class="fw-bold">{{ $product->updated_at->format('M d, Y') }}</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Shipping Info -->
+                <div class="card border-0 shadow-sm rounded-3 mt-4">
+                    <div class="card-body p-3">
+                        <h6 class="fw-bold mb-3">
+                            <i class="fas fa-shipping-fast text-primary me-2"></i>
+                            Shipping Info
+                        </h6>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                <small>Free shipping on orders above ₹999</small>
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                <small>Estimated delivery: 3-5 business days</small>
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                <small>Cash on Delivery available</small>
+                            </li>
+                            <li>
+                                <i class="fas fa-check text-success me-2"></i>
+                                <small>7-day return policy</small>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- JavaScript for Quantity Controls -->
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Quantity plus button
-                document.querySelectorAll('.quantity-plus').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const input = this.parentElement.querySelector('.quantity-input');
-                        const max = parseInt(input.getAttribute('max'));
-                        let value = parseInt(input.value) || 1;
+<!-- Delete Modal -->
+@auth
+    @if(isset($existingReview) && $existingReview)
+        <div class="modal fade" id="deleteModal{{ $existingReview->id }}" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Review</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete your review for "{{ $product->name }}"?</p>
+                        <p class="text-muted small">This action cannot be undone.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <form action="{{ route('reviews.destroy', $existingReview->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Delete Review</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+@endauth
 
-                        if (value < max) {
-                            input.value = value + 1;
-                        }
-                    });
-                });
+@push('styles')
+<style>
+    .product-image-container {
+        position: relative;
+        overflow: hidden;
+        border-radius: 12px;
+    }
+    
+    .product-main-image {
+        transition: transform 0.3s ease;
+    }
+    
+    .product-main-image:hover {
+        transform: scale(1.05);
+    }
+    
+    .rating-stars {
+        color: #ffc107;
+    }
+    
+    .review-card {
+        border-left: 4px solid #0d6efd;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .review-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .admin-response {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 8px;
+    }
+    
+    .quantity-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .quantity-input {
+        border-left: none;
+        border-right: none;
+        text-align: center;
+        font-weight: bold;
+    }
+    
+    .nav-tabs .nav-link {
+        color: #6c757d;
+        border: none;
+        padding: 1rem 1.5rem;
+    }
+    
+    .nav-tabs .nav-link.active {
+        color: #0d6efd;
+        background-color: transparent;
+        border-bottom: 3px solid #0d6efd;
+    }
+    
+    .related-product-image img {
+        transition: transform 0.3s ease;
+    }
+    
+    .related-product-image img:hover {
+        transform: scale(1.1);
+    }
+    
+    .progress {
+        border-radius: 10px;
+    }
+    
+    .progress-bar {
+        border-radius: 10px;
+    }
+    
+    .breadcrumb {
+        background-color: transparent;
+        padding: 0;
+    }
+    
+    .breadcrumb-item a {
+        color: #6c757d;
+    }
+    
+    .breadcrumb-item.active {
+        color: #495057;
+    }
+    
+    .author-avatar {
+        background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+    }
+    
+    .admin-avatar {
+        background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+    }
+</style>
+@endpush
 
-                // Quantity minus button
-                document.querySelectorAll('.quantity-minus').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const input = this.parentElement.querySelector('.quantity-input');
-                        const min = parseInt(input.getAttribute('min'));
-                        let value = parseInt(input.value) || 1;
-
-                        if (value > min) {
-                            input.value = value - 1;
-                        }
-                    });
-                });
-
-                // Input validation
-                document.querySelectorAll('.quantity-input').forEach(input => {
-                    input.addEventListener('change', function() {
-                        const min = parseInt(this.getAttribute('min'));
-                        const max = parseInt(this.getAttribute('max'));
-                        let value = parseInt(this.value) || min;
-
-                        if (value < min) this.value = min;
-                        if (value > max) this.value = max;
-                    });
-                });
-
-                // Notify when available button
-                document.querySelectorAll('.notify-btn').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const productId = this.getAttribute('data-id');
-                        alert('We will notify you when product #' + productId + ' is back in stock!');
-                        this.innerHTML = '<i class="fas fa-bell me-1"></i> Notifications Set';
-                        this.classList.remove('btn-outline-primary');
-                        this.classList.add('btn-outline-success');
-                        this.disabled = true;
-                    });
-                });
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Quantity buttons
+        document.querySelectorAll('.quantity-btn.plus').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const input = this.parentElement.querySelector('.quantity-input');
+                const max = parseInt(input.getAttribute('max'));
+                let value = parseInt(input.value) || 1;
+                if (value < max) {
+                    input.value = value + 1;
+                }
             });
-        </script>
-        <style>
-            .quantity-input {
-                width: 60px;
-                text-align: center;
-            }
+        });
 
-            .btn-group .btn {
-                border-radius: 50% !important;
-                width: 40px;
-                height: 40px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 0;
-            }
+        document.querySelectorAll('.quantity-btn.minus').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const input = this.parentElement.querySelector('.quantity-input');
+                const min = parseInt(input.getAttribute('min'));
+                let value = parseInt(input.value) || 1;
+                if (value > min) {
+                    input.value = value - 1;
+                }
+            });
+        });
 
-            .input-group .btn {
-                border-radius: 0.375rem !important;
-                width: 40px;
-            }
+        // Notify when available
+        document.querySelectorAll('.notify-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const productId = this.getAttribute('data-id');
+                alert('We will notify you when product #' + productId + ' is back in stock!');
+                this.innerHTML = '<i class="fas fa-bell me-1"></i> Notification Set';
+                this.classList.remove('btn-outline-primary');
+                this.classList.add('btn-outline-success');
+                this.disabled = true;
+            });
+        });
 
-            .input-group .btn-outline-secondary {
-                border-color: #dee2e6;
-            }
-
-            .input-group .btn-outline-secondary:hover {
-                background-color: #f8f9fa;
-            }
-
-            .list-group-item:hover {
-                background-color: #f8f9fa;
-                transform: translateX(5px);
-                transition: all 0.3s ease;
-            }
-
-            .card {
-                border-radius: 12px;
-                overflow: hidden;
-            }
-
-            .notify-btn:hover {
-                background-color: #0d6efd;
-                color: white;
-            }
-        </style>
-    @endpush
+        // Bootstrap tab activation
+        const triggerTabList = document.querySelectorAll('#productTab button');
+        triggerTabList.forEach(triggerEl => {
+            const tabTrigger = new bootstrap.Tab(triggerEl);
+            triggerEl.addEventListener('click', event => {
+                event.preventDefault();
+                tabTrigger.show();
+            });
+        });
+    });
+</script>
+@endpush
 
 @endsection

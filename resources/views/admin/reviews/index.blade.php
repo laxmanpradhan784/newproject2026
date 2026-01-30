@@ -8,18 +8,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Product Reviews</h3>
-                        <div class="card-tools">
-                            <div class="input-group input-group-sm" style="width: 150px;">
-                                <input type="text" name="table_search" class="form-control float-right"
-                                    placeholder="Search">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-default">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        <h3 class="card-title text-primary ">Product Reviews</h3>
                     </div>
 
                     <!-- Filter Section -->
@@ -80,163 +69,268 @@
                         </form>
                     </div>
 
-                    <!-- Bulk Actions -->
-                    <form method="POST" action="{{ route('admin.reviews.bulk') }}" id="bulkForm">
-                        @csrf
-                        <div class="card-header bg-light">
-                            <div class="row align-items-center">
-                                <div class="col-md-6">
-                                    <select name="action" class="form-control form-control-sm d-inline-block w-auto"
-                                        required>
-                                        <option value="">Bulk Actions</option>
-                                        <option value="approve">Approve</option>
-                                        <option value="reject">Reject</option>
-                                        <option value="mark_spam">Mark as Spam</option>
-                                        <option value="delete">Delete</option>
-                                    </select>
-                                    <button type="submit" class="btn btn-sm btn-primary ml-2"
-                                        onclick="return confirmBulkAction()">
-                                        Apply
-                                    </button>
-                                </div>
-                                <div class="col-md-6 text-right">
-                                    <span class="text-muted">Showing {{ $reviews->firstItem() }} to
-                                        {{ $reviews->lastItem() }} of {{ $reviews->total() }} reviews</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card-body table-responsive p-0">
-                            <table class="table table-hover text-nowrap">
-                                <thead>
+                    <div class="card-body table-responsive p-0" style="max-height: 600px; overflow-y: auto;">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <thead class="sticky-top" style="background-color: #f8f9fa; z-index: 10;">
                                     <tr>
-                                        <th width="50">
-                                            <input type="checkbox" id="selectAll">
+                                        <th width="80" class="text-center align-middle">
+                                            <span class="text-uppercase" style="font-size: 0.85rem;">Sr No</span>
                                         </th>
-                                        <th width="80">ID</th>
-                                        <th>Product & Review</th>
-                                        <th>Customer</th>
-                                        <th width="100">Rating</th>
-                                        <th width="120">Status</th>
-                                        <th width="150">Date</th>
-                                        <th width="120">Actions</th>
+                                        <th class="align-middle">
+                                            <span class="text-uppercase" style="font-size: 0.85rem;">Product &
+                                                Review</span>
+                                        </th>
+                                        <th class="align-middle">
+                                            <span class="text-uppercase" style="font-size: 0.85rem;">Customer</span>
+                                        </th>
+                                        <th width="100" class="text-center align-middle">
+                                            <span class="text-uppercase" style="font-size: 0.85rem;">Rating</span>
+                                        </th>
+                                        <th width="120" class="text-center align-middle">
+                                            <span class="text-uppercase" style="font-size: 0.85rem;">Status</span>
+                                        </th>
+                                        <th width="150" class="text-center align-middle">
+                                            <span class="text-uppercase" style="font-size: 0.85rem;">Date</span>
+                                        </th>
+                                        <th width="120" class="text-center align-middle">
+                                            <span class="text-uppercase" style="font-size: 0.85rem;">Actions</span>
+                                        </th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @forelse($reviews as $review)
-                                        <tr>
-                                            <td>
-                                                <input type="checkbox" name="review_ids[]" value="{{ $review->id }}"
-                                                    class="review-checkbox">
-                                            </td>
-                                            <td>{{ $review->id }}</td>
-                                            <td>
-                                                <div class="d-flex">
-                                                    @if ($review->product->image)
-                                                        <img src="{{ asset('storage/' . $review->product->image) }}"
-                                                            alt="{{ $review->product->name }}" width="40"
-                                                            height="40" class="mr-2 rounded">
-                                                    @endif
-                                                    <div>
-                                                        <a href="{{ route('product.show', $review->product->slug) }}"
-                                                            target="_blank" class="font-weight-bold d-block">
-                                                            {{ Str::limit($review->product->name, 40) }}
-                                                        </a>
-                                                        @if ($review->title)
-                                                            <small class="text-dark">{{ $review->title }}</small><br>
-                                                        @endif
-                                                        <small
-                                                            class="text-muted">{{ Str::limit($review->comment, 80) }}</small>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <span class="font-weight-bold">{{ $review->user->name }}</span><br>
-                                                    <small class="text-muted">{{ $review->user->email }}</small>
-                                                    @if ($review->is_verified_purchase)
-                                                        <span class="badge badge-success ml-1">Verified</span>
-                                                    @endif
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="rating-stars">
-                                                    @for ($i = 1; $i <= 5; $i++)
-                                                        <i
-                                                            class="fas fa-star {{ $i <= $review->rating ? 'text-warning' : 'text-light' }}"></i>
-                                                    @endfor
-                                                    <br>
-                                                    <small class="text-muted">({{ $review->rating }}/5)</small>
-                                                </div>
-                                            </td>
-                                            <td>
+                            </thead>
+                            <tbody>
+                                @forelse($reviews as $review)
+                                    <tr>
+                                        <td class="ps-4 py-3 align-middle">
+                                            <div class="d-flex align-items-center gap-2">
                                                 <span
-                                                    class="badge badge-{{ $review->status == 'approved' ? 'success' : ($review->status == 'pending' ? 'warning' : ($review->status == 'rejected' ? 'danger' : 'secondary')) }}">
-                                                    {{ ucfirst($review->status) }}
+                                                    class="badge bg-primary bg-opacity-10 text-primary border border-primary rounded-pill px-3 py-1">
+                                                    {{ $loop->iteration }}
                                                 </span>
-                                            </td>
-                                            <td>
-                                                {{ $review->created_at->format('M d, Y') }}<br>
-                                                <small
-                                                    class="text-muted">{{ $review->created_at->format('h:i A') }}</small>
-                                            </td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    <a href="{{ route('admin.reviews.show', $review->id) }}"
-                                                        class="btn btn-sm btn-info" title="View">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split"
-                                                        data-toggle="dropdown">
-                                                        <span class="sr-only">Toggle Dropdown</span>
-                                                    </button>
-                                                    <div class="dropdown-menu">
-                                                        @if ($review->status != 'approved')
-                                                            <a href="#"
-                                                                onclick="updateStatus({{ $review->id }}, 'approved')"
-                                                                class="dropdown-item">
-                                                                <i class="fas fa-check text-success mr-1"></i> Approve
-                                                            </a>
-                                                        @endif
-                                                        @if ($review->status != 'rejected')
-                                                            <a href="#"
-                                                                onclick="updateStatus({{ $review->id }}, 'rejected')"
-                                                                class="dropdown-item">
-                                                                <i class="fas fa-times text-danger mr-1"></i> Reject
-                                                            </a>
-                                                        @endif
-                                                        @if ($review->status != 'spam')
-                                                            <a href="#"
-                                                                onclick="updateStatus({{ $review->id }}, 'spam')"
-                                                                class="dropdown-item">
-                                                                <i class="fas fa-ban text-secondary mr-1"></i> Mark as Spam
-                                                            </a>
-                                                        @endif
-                                                        <div class="dropdown-divider"></div>
-                                                        <a href="#" onclick="deleteReview({{ $review->id }})"
-                                                            class="dropdown-item text-danger">
-                                                            <i class="fas fa-trash mr-1"></i> Delete
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="8" class="text-center py-4">
-                                                <i class="fas fa-comment-slash fa-2x text-muted mb-2"></i>
-                                                <p class="text-muted">No reviews found.</p>
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="d-flex align-items-start gap-3">
 
-                        <div class="card-footer clearfix">
-                            {{ $reviews->links() }}
-                        </div>
+                                                <!-- Product Image -->
+                                                @if ($review->product->image)
+                                                    <img src="{{ asset('uploads/products/' . $review->product->image) }}"
+                                                        alt="{{ $review->product->name }}" width="45" height="45"
+                                                        class="rounded-2 border" style="object-fit: cover;">
+                                                @else
+                                                    <div class="bg-light text-center rounded-2 border d-flex align-items-center justify-content-center"
+                                                        style="width: 45px; height: 45px;">
+                                                        <i class="fas fa-box text-muted fa-sm"></i>
+                                                    </div>
+                                                @endif
+
+                                                <!-- Product Info -->
+                                                <div class="flex-grow-1">
+                                                    <a href="{{ route('product.show', $review->product->id) }}"
+                                                        target="_blank"
+                                                        class="fw-semibold text-dark text-decoration-none d-block mb-1"
+                                                        title="{{ $review->product->name }}">
+                                                        {{ Str::limit($review->product->name, 40) }}
+                                                    </a>
+
+                                                    @if ($review->title)
+                                                        <small class="d-block text-dark mb-1" title="{{ $review->title }}">
+                                                            “{{ Str::limit($review->title, 60) }}”
+                                                        </small>
+                                                    @endif
+
+                                                    <small class="text-muted d-block" title="{{ $review->comment }}">
+                                                        {{ Str::limit($review->comment, 60) }}
+                                                    </small>
+                                                </div>
+
+                                            </div>
+                                        </td>
+
+                                        <td class="align-middle">
+                                            <div class="d-flex flex-column gap-2">
+
+                                                <!-- Name + Avatar -->
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center fw-semibold text-secondary"
+                                                        style="width: 32px; height: 32px;">
+                                                        {{ strtoupper(substr($review->user->name, 0, 1)) }}
+                                                    </div>
+
+                                                    <span class="fw-semibold text-dark" style="font-size: 0.95rem;">
+                                                        {{ $review->user->name }}
+                                                    </span>
+                                                </div>
+
+                                                <!-- Email -->
+                                                <small class="text-muted d-flex align-items-center">
+                                                    <i class="fas fa-envelope fa-xs me-1"></i>
+                                                    {{ Str::limit($review->user->email, 25) }}
+                                                </small>
+
+                                                <!-- Verified Badge -->
+                                                @if ($review->is_verified_purchase)
+                                                    <span
+                                                        class="badge bg-success-subtle text-success d-inline-flex align-items-center w-fit"
+                                                        style="font-size: 0.75rem;">
+                                                        <i class="fas fa-check-circle fa-xs me-1"></i>
+                                                        Verified Purchase
+                                                    </span>
+                                                @endif
+
+                                                <!-- Review Count -->
+                                                <small class="text-muted d-flex align-items-center">
+                                                    <i class="fas fa-star fa-xs text-warning me-1"></i>
+                                                    {{ $review->user->reviews->count() ?? 0 }} reviews
+                                                </small>
+
+                                            </div>
+                                        </td>
+
+                                        <td class="text-center align-middle">
+                                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                                <!-- Stars -->
+                                                <div class="mb-1">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= $review->rating)
+                                                            <i class="fas fa-star text-warning"
+                                                                style="font-size: 1rem;"></i>
+                                                        @else
+                                                            <i class="far fa-star text-light"
+                                                                style="font-size: 1rem;"></i>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+
+                                                <!-- Rating Number -->
+                                                <div class="rating-number">
+                                                    <span class="badge badge-light border font-weight-medium"
+                                                        style="font-size: 0.85rem; min-width: 40px; color:#4a5568">
+                                                        {{ $review->rating }}/5
+                                                    </span>
+                                                </div>
+
+                                                <!-- Rating Label -->
+                                                <div class="rating-label mt-1">
+                                                    @php
+                                                        $ratingLabels = [
+                                                            1 => 'Poor',
+                                                            2 => 'Fair',
+                                                            3 => 'Good',
+                                                            4 => 'Very Good',
+                                                            5 => 'Excellent',
+                                                        ];
+                                                    @endphp
+                                                    <small class="text-muted" style="font-size: 0.8rem;">
+                                                        {{ $ratingLabels[$review->rating] ?? '' }}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <!-- Status Badge -->
+                                                @php
+                                                    $statusConfig = [
+                                                        'pending' => [
+                                                            'class' => 'warning',
+                                                            'icon' => 'clock',
+                                                            'label' => 'Pending',
+                                                        ],
+                                                        'approved' => [
+                                                            'class' => 'success',
+                                                            'icon' => 'check-circle',
+                                                            'label' => 'Approved',
+                                                        ],
+                                                        'rejected' => [
+                                                            'class' => 'danger',
+                                                            'icon' => 'times-circle',
+                                                            'label' => 'Rejected',
+                                                        ],
+                                                        'spam' => [
+                                                            'class' => 'secondary',
+                                                            'icon' => 'ban',
+                                                            'label' => 'Spam',
+                                                        ],
+                                                    ];
+                                                    $config =
+                                                        $statusConfig[$review->status] ?? $statusConfig['pending'];
+                                                @endphp
+
+                                                <span class="badge badge-pill badge-{{ $config['class'] }} px-3 py-2 mb-1"
+                                                    style="font-size: 0.85rem; min-width: 100px; color:#4a5568">
+                                                    <i class="fas fa-{{ $config['icon'] }} mr-1"></i>
+                                                    {{ $config['label'] }}
+                                                </span>
+
+                                                <!-- Status Change Time (if applicable) -->
+                                                @if ($review->status == 'approved' || $review->status == 'rejected')
+                                                    <small class="text-muted" style="font-size: 0.75rem;">
+                                                        {{ $review->updated_at->diffForHumans() }}
+                                                    </small>
+                                                @endif
+
+                                                <!-- Pending since -->
+                                                @if ($review->status == 'pending')
+                                                    <small class="text-muted" style="font-size: 0.75rem;">
+                                                        Waiting {{ $review->created_at->diffForHumans() }}
+                                                    </small>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <!-- Date -->
+                                                <div class="date-container mb-1">
+                                                    <span class="font-weight-medium text-dark" style="font-size: 0.9rem;">
+                                                        {{ $review->created_at->format('d M Y') }}
+                                                    </span>
+                                                </div>
+
+                                                <!-- Time -->
+                                                <div class="time-container mb-2">
+                                                    <small class="text-muted" style="font-size: 0.8rem;">
+                                                        <i class="far fa-clock mr-1"></i>
+                                                        {{ $review->created_at->format('h:i A') }}
+                                                    </small>
+                                                </div>
+
+                                                <!-- Time Ago -->
+                                                <div class="time-ago-container">
+                                                    <small class="badge badge-light border px-2 py-1"
+                                                        style="font-size: 0.75rem; color:#4a5568">
+                                                        {{ $review->created_at->diffForHumans() }}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <!-- View Button -->
+                                                <a href="{{ route('admin.reviews.show', $review->id) }}"
+                                                    class="btn btn-sm btn-outline-info border-end-1 rounded-start"
+                                                    title="View Details" data-toggle="tooltip">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="text-center py-4">
+                                            <i class="fas fa-comment-slash fa-2x text-muted mb-2"></i>
+                                            <p class="text-muted">No reviews found.</p>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card-footer clearfix">
+                        {{ $reviews->links() }}
+                    </div>
                     </form>
                 </div>
             </div>

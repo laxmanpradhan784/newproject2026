@@ -20,27 +20,10 @@
             </div>
         </div>
 
-        <!-- Success/Error Messages -->
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i>
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
         <!-- Messages Table -->
         <div class="card border-0 shadow-sm">
             <div class="card-body p-0">
-                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                <div class="table-responsive" style="max-height: 650px; overflow-y: auto;">
                     <table class="table table-hover align-middle mb-0">
                         <thead class="bg-light" style="position: sticky; top: 0; z-index: 1;">
                             <tr class="bg-light bg-gradient border-bottom border-3">

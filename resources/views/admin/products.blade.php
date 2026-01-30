@@ -20,7 +20,7 @@
         <!-- Products Table -->
         <div class="card border-0 shadow-sm">
             <div class="card-body p-0">
-                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                <div class="table-responsive" style="max-height: 700px; overflow-y: auto;">
                     <table class="table table-hover align-middle mb-0">
                         <thead class="bg-light" style="position: sticky; top: 0; z-index: 1;">
                             <tr class="bg-light bg-gradient border-bottom border-3">

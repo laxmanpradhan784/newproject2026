@@ -136,9 +136,9 @@
                             </div>
                             <div class="h5 mb-0 fw-bold text-gray-800">₹{{ number_format($totalRevenue, 2) }}</div>
                         </div>
-                        <div class="col-auto">
+                        {{-- <div class="col-auto">
                             <i class="fas fa-rupee-sign fa-2x text-gray-300"></i>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -162,7 +162,7 @@
 
     <!-- Orders Table -->
     <div class="card shadow mb-4">
-        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <div class="card-header py-2 d-flex justify-content-between align-items-center">
             <h6 class="m-0 fw-bold text-primary">All Orders</h6>
             <!-- Search Box -->
             <!-- Search Box -->
@@ -383,7 +383,7 @@
 
                                         <span
                                             class="badge bg-{{ $statusColors[$order->status] ?? 'secondary' }} 
-                  rounded-pill py-2 px-3 d-inline-flex align-items-center gap-2">
+                                             rounded-pill py-2 px-3 d-inline-flex align-items-center gap-2">
                                             <i class="bi {{ $statusIcons[$order->status] ?? 'bi-question' }}"></i>
                                             {{ ucfirst($order->status) }}
                                             @if ($order->delivered_at)
@@ -433,27 +433,8 @@
                                             class="btn btn-sm btn-outline-success d-flex align-items-center justify-content-center"
                                             style="width: 60px; height: 40px;" title="Download Invoice"
                                             data-bs-toggle="tooltip">
-                                            <i class="bi bi-receipt fs-6"></i>
+                                            <i class="fa fa-file-download"></i>
                                         </a>
-
-                                        <!-- Send Update -->
-                                        {{-- <button type="button"
-                                            class="btn btn-sm btn-outline-warning d-flex align-items-center justify-content-center"
-                                            style="width: 40px; height: 40px;" title="Send Status Update"
-                                            data-bs-toggle="tooltip"
-                                            onclick="sendUpdate('{{ $order->id }}', '{{ $order->shipping_email }}')">
-                                            <i class="bi bi-envelope fs-6"></i>
-                                        </button> --}}
-
-                                        <!-- Delete Order -->
-                                        {{-- <button type="button"
-                                            class="btn btn-sm btn-outline-danger rounded-end d-flex align-items-center justify-content-center"
-                                            style="width: 40px; height: 40px;" title="Delete Order"
-                                            data-bs-toggle="tooltip" data-bs-toggle="modal"
-                                            data-bs-target="#deleteOrderModal"
-                                            onclick="setDeleteOrderId('{{ $order->id }}')">
-                                            <i class="bi bi-trash fs-6"></i>
-                                        </button> --}}
                                     </div>
                                 </td>
                             </tr>

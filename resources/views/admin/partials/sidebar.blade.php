@@ -213,9 +213,6 @@
                         <i class="bi bi-info-circle-fill"></i>
                     </div>
                     <div class="nav-text">INFORMATION</div>
-                    <div class="ms-auto">
-                        <i class="bi bi-chevron-right small"></i>
-                    </div>
                 </a>
             </li>
 

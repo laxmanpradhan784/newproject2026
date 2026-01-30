@@ -44,6 +44,20 @@
         </div>
     @endif
 
+
+    @auth
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li>
+            <a class="dropdown-item" href="{{ route('reviews.my') }}">
+                <i class="fas fa-star me-2"></i> My Reviews
+            </a>
+        </li>
+    @endauth
+
+
+
     <!-- Navigation -->
     @include('partials.navbar')
 
@@ -151,7 +165,7 @@
                 });
             });
         </script>
-        
+
         @yield('content')
     </main>
 
