@@ -251,6 +251,26 @@
                     </div>
                 </a>
             </li>
+            
+            <!-- Coupons with Badge -->
+            <li class="nav-item mb-2">
+                <a href="{{ route('admin.coupons.index') }}"
+                    class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3 
+               {{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
+                    <div class="nav-icon me-3">
+                        <i class="fas fa-tags"></i> <!-- Changed icon to tags for coupons -->
+                    </div>
+                    <div class="nav-text">COUPONS</div>
+                    <div class="ms-auto">
+                        <span class="badge police-badge-alert bg-info">
+                            <!-- Show count of active coupons that will expire soon (within 7 days) -->
+                            {{ \App\Models\Coupon::where('status', 'active')->where('end_date', '>=', now())->where('end_date', '<=', now()->addDays(7))->count() }}
+                            <!-- Or show total active coupons -->
+                            <!-- {{ \App\Models\Coupon::where('status', 'active')->count() }} -->
+                        </span>
+                    </div>
+                </a>
+            </li>
         </ul>
     </div>
 

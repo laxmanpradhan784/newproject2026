@@ -21,7 +21,7 @@
                 @foreach ($sliders as $key => $slider)
                     <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
                         <a href="{{ route('products') }}" class="text-decoration-none">
-                            <div class="hero-slide position-relative"
+                            <div class="hero-slide position-relative border border-3 border-gray"
                                 style="background-image:url('{{ asset('uploads/sliders/' . $slider->image) }}');
                                     background-size:cover;
                                     background-position:center;

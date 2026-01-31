@@ -27,8 +27,23 @@ class Order extends Model
         'shipping_state',
         'shipping_zip',
         'shipping_country',
-        'shipping_method'
+        'shipping_method',
+        'coupon_id',
+        'coupon_code',
+        'discount_amount',
     ];
+
+    // Add relationship
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
+    }
+
+    // Add accessor for discounted total
+    public function getDiscountedTotalAttribute(): float
+    {
+        return $this->total + $this->discount_amount;
+    }
 
     protected $casts = [
         'subtotal' => 'decimal:2',
@@ -53,17 +68,17 @@ class Order extends Model
     {
         // Format: ORD-YYMMDD-HHmmss-XXXX
         // Example: ORD-250126-153045-7891
-        
+
         $date = now()->format('ymd');    // Year, Month, Date (yymmdd)
         $time = now()->format('His');    // Hour, Minute, Second (HHmmss)
         $random = mt_rand(1000, 9999);   // 4 random digits
-        
+
         if ($userId) {
             // Include last 3 digits of user ID (padded to 3 digits)
             $userPart = str_pad($userId % 1000, 3, '0', STR_PAD_LEFT);
             return "ORD-{$date}-{$time}-{$userPart}{$random}";
         }
-        
+
         // If no user ID provided (for guest orders or fallback)
         return "ORD-{$date}-{$time}-{$random}";
     }
@@ -74,7 +89,7 @@ class Order extends Model
         do {
             $orderNumber = self::generateOrderNumber($userId);
         } while (self::where('order_number', $orderNumber)->exists());
-        
+
         return $orderNumber;
     }
 
@@ -91,19 +106,19 @@ class Order extends Model
 
         return $badges[$this->status] ?? 'secondary';
     }
-    
+
     // Helper method to get order date in readable format
     public function getFormattedDateAttribute()
     {
         return $this->created_at->format('d M, Y');
     }
-    
+
     // Helper method to get order time in readable format
     public function getFormattedTimeAttribute()
     {
         return $this->created_at->format('h:i A');
     }
-    
+
     // Helper method to get payment status badge color
     public function getPaymentStatusBadgeAttribute()
     {
@@ -113,7 +128,7 @@ class Order extends Model
             'failed' => 'danger',
             'refunded' => 'info'
         ];
-        
+
         return $badges[$this->payment_status] ?? 'secondary';
     }
 }
