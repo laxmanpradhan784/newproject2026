@@ -3,26 +3,17 @@
 @section('title', 'Checkout')
 
 @section('content')
-    <section class="checkout-page py-5 bg-light">
+    <section class="checkout-page mt-5 pt-5 bg-light">
         <div class="container">
             <!-- Breadcrumb -->
             <div class="row mb-4">
                 <div class="col-12">
-                    <nav style="--bs-breadcrumb-divider: '›';" aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-decoration-none">Home</a>
-                            </li>
-                            <li class="breadcrumb-item"><a href="{{ route('cart') }}" class="text-decoration-none">Cart</a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page">Checkout</li>
-                        </ol>
-                        <h1 class="fw-bold mb-0">Checkout</h1>
-                    </nav>
+                    <h1 class="fw-bold mb-0">Checkout</h1>
                 </div>
             </div>
 
             <!-- Coupon Messages -->
-            @if(session('coupon_error'))
+            @if (session('coupon_error'))
                 <div class="alert alert-danger alert-dismissible fade show rounded-2 mb-3" role="alert">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-exclamation-circle me-2"></i>
@@ -32,7 +23,7 @@
                 </div>
             @endif
 
-            @if(session('coupon_success'))
+            @if (session('coupon_success'))
                 <div class="alert alert-success alert-dismissible fade show rounded-2 mb-3" role="alert">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-check-circle me-2"></i>
@@ -49,11 +40,11 @@
                         @csrf
 
                         <!-- Coupon Section -->
-                        @if(!session('applied_coupon_code'))
+                        @if (!session('applied_coupon_code'))
                             <div class="card rounded-3 shadow-sm border-0 mb-4">
                                 <div class="card-header bg-white border-0 py-3">
                                     <h4 class="mb-0 d-flex align-items-center">
-                                        <i class="fas fa-tag text-primary me-2"></i> 
+                                        <i class="fas fa-tag text-primary me-2"></i>
                                         Have a Coupon Code?
                                     </h4>
                                 </div>
@@ -61,26 +52,19 @@
                                     <div class="row g-3 align-items-center">
                                         <div class="col-md-8">
                                             <div class="input-group">
-                                                <input type="text" 
-                                                       name="coupon_code" 
-                                                       class="form-control rounded-start-3 py-2 px-3" 
-                                                       placeholder="Enter coupon code"
-                                                       id="checkoutCouponInput"
-                                                       style="height: 48px; border-color: #dee2e6;">
-                                                <button type="button" 
-                                                        class="btn btn-primary rounded-end-3 px-4" 
-                                                        id="applyCouponBtn"
-                                                        style="height: 48px;">
+                                                <input type="text" name="coupon_code"
+                                                    class="form-control rounded-start-3 py-2 px-3"
+                                                    placeholder="Enter coupon code" id="checkoutCouponInput"
+                                                    style="height: 48px; border-color: #dee2e6;">
+                                                <button type="button" class="btn btn-primary rounded-end-3 px-4"
+                                                    id="applyCouponBtn" style="height: 48px;">
                                                     <i class="fas fa-check me-1"></i> Apply
                                                 </button>
                                             </div>
                                         </div>
                                         <div class="col-md-4 text-md-end">
-                                            <button type="button" 
-                                                    class="btn btn-outline-primary rounded-3 px-4" 
-                                                    data-bs-toggle="modal" 
-                                                    data-bs-target="#couponModal"
-                                                    style="height: 48px;">
+                                            <button type="button" class="btn btn-outline-primary rounded-3 px-4"
+                                                data-bs-toggle="modal" data-bs-target="#couponModal" style="height: 48px;">
                                                 <i class="fas fa-eye me-1"></i> View All Coupons
                                             </button>
                                         </div>
@@ -93,7 +77,7 @@
                                 <div class="card-header bg-white border-0 py-3">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h4 class="mb-0 d-flex align-items-center">
-                                            <i class="fas fa-tag text-success me-2"></i> 
+                                            <i class="fas fa-tag text-success me-2"></i>
                                             Coupon Applied
                                         </h4>
                                         <a href="{{ route('coupon.remove') }}" class="btn btn-sm btn-outline-danger">
@@ -110,7 +94,7 @@
                                             </div>
                                             <p class="text-muted small mb-0">{{ session('applied_coupon.name') }}</p>
                                             <small class="text-success">
-                                                @if(session('applied_coupon.discount_type') == 'percentage')
+                                                @if (session('applied_coupon.discount_type') == 'percentage')
                                                     {{ session('applied_coupon.discount_value') }}% OFF
                                                 @else
                                                     Flat ₹{{ session('applied_coupon.discount_value') }} OFF
@@ -154,7 +138,8 @@
                                             value="{{ $user->email }}" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label fw-medium">Phone <span class="text-danger">*</span></label>
+                                        <label class="form-label fw-medium">Phone <span
+                                                class="text-danger">*</span></label>
                                         <input type="tel" name="phone" class="form-control"
                                             value="{{ $user->phone ?? '' }}" required>
                                     </div>
@@ -166,8 +151,8 @@
                                     <div class="mb-3">
                                         <label class="form-label fw-medium">Address <span
                                                 class="text-danger">*</span></label>
-                                        <textarea name="address" class="form-control" rows="3" placeholder="Street address, apartment, suite, unit, etc."
-                                            required></textarea>
+                                        <textarea name="address" class="form-control" rows="3"
+                                            placeholder="Street address, apartment, suite, unit, etc." required></textarea>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-4 mb-3">
@@ -231,7 +216,7 @@
                         </div>
 
                         <!-- Hidden coupon fields for checkout -->
-                        @if(session('applied_coupon'))
+                        @if (session('applied_coupon'))
                             <input type="hidden" name="coupon_id" value="{{ session('applied_coupon.id') }}">
                             <input type="hidden" name="coupon_code" value="{{ session('applied_coupon.code') }}">
                             <input type="hidden" name="discount_amount" value="{{ session('cart_discount') }}">
@@ -348,22 +333,30 @@
                                     <span class="text-muted">Subtotal</span>
                                     <span>₹<span id="displaySubtotal">{{ number_format($subtotal, 2) }}</span></span>
                                 </div>
-                                
-                                @if($discountAmount > 0)
+
+                                @if ($discountAmount > 0)
                                     <div class="d-flex justify-content-between mb-2 text-success">
                                         <span class="text-muted">Discount</span>
-                                        <span>-₹<span id="displayDiscount">{{ number_format($discountAmount, 2) }}</span></span>
+                                        <span>-₹<span
+                                                id="displayDiscount">{{ number_format($discountAmount, 2) }}</span></span>
                                     </div>
-                                    
+
                                     <div class="d-flex justify-content-between mb-2">
                                         <span class="text-muted">Discounted Price</span>
-                                        <span>₹<span id="displayDiscountedSubtotal">{{ number_format($discountedSubtotal, 2) }}</span></span>
+                                        <span>₹<span
+                                                id="displayDiscountedSubtotal">{{ number_format($discountedSubtotal, 2) }}</span></span>
                                     </div>
                                 @endif
-                                
+
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="text-muted">Shipping</span>
-                                    <span id="displayShipping">@if($shipping == 0) FREE @else ₹{{ number_format($shipping, 2) }} @endif</span>
+                                    <span id="displayShipping">
+                                        @if ($shipping == 0)
+                                            FREE
+                                        @else
+                                            ₹{{ number_format($shipping, 2) }}
+                                        @endif
+                                    </span>
                                 </div>
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="text-muted">Tax (GST 18%)</span>
@@ -380,9 +373,10 @@
                                     <span class="h4 fw-bold text-primary"
                                         id="displayTotal">₹{{ number_format($total, 2) }}</span>
                                 </div>
-                                @if($discountAmount > 0)
+                                @if ($discountAmount > 0)
                                     <p class="text-success small mt-1 mb-0">
-                                        <i class="fas fa-check-circle me-1"></i>You saved ₹{{ number_format($discountAmount, 2) }}
+                                        <i class="fas fa-check-circle me-1"></i>You saved
+                                        ₹{{ number_format($discountAmount, 2) }}
                                     </p>
                                 @endif
                             </div>
@@ -452,7 +446,7 @@
             border: 2px solid #2874f0;
             border-right: none;
         }
-        
+
         .coupon-input:focus {
             border-color: #2874f0;
             box-shadow: none;
@@ -484,30 +478,30 @@
             if (applyCouponBtn) {
                 applyCouponBtn.addEventListener('click', function() {
                     const couponCode = document.getElementById('checkoutCouponInput').value.trim();
-                    
+
                     if (!couponCode) {
                         alert('Please enter a coupon code');
                         return;
                     }
-                    
+
                     // Create a form and submit it
                     const form = document.createElement('form');
                     form.method = 'POST';
-                    form.action = '{{ route("coupon.apply") }}';
+                    form.action = '{{ route('coupon.apply') }}';
                     form.style.display = 'none';
-                    
+
                     const csrfToken = document.createElement('input');
                     csrfToken.type = 'hidden';
                     csrfToken.name = '_token';
                     csrfToken.value = '{{ csrf_token() }}';
                     form.appendChild(csrfToken);
-                    
+
                     const couponInput = document.createElement('input');
                     couponInput.type = 'hidden';
                     couponInput.name = 'coupon_code';
                     couponInput.value = couponCode;
                     form.appendChild(couponInput);
-                    
+
                     document.body.appendChild(form);
                     form.submit();
                 });
