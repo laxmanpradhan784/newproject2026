@@ -26,6 +26,16 @@ use App\Http\Controllers\Admin\ReviewController;
 |--------------------------------------------------------------------------
 */
 
+
+// Coupon Routes
+Route::middleware(['web'])->group(function () {
+    Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon'])->name('coupon.apply');
+    Route::get('/cart/remove-coupon', [CartController::class, 'removeCoupon'])->name('coupon.remove');
+    
+    // For modal coupons
+    Route::get('/coupons/available', [CartController::class, 'getAvailableCoupons'])->name('coupons.available');
+});
+
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', function () {

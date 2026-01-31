@@ -36,7 +36,7 @@ class Order extends Model
     // Add relationship
     public function coupon()
     {
-        return $this->belongsTo(Coupon::class);
+        return $this->belongsTo(Coupon::class, 'coupon_id');
     }
 
     // Add accessor for discounted total

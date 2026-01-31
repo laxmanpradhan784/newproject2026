@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Coupon;
+use App\Models\CouponUsage;
 use Illuminate\Http\Request;
 use App\Mail\OrderPlacedAdminMail;
 use App\Mail\OrderPlacedUserMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
@@ -53,11 +56,52 @@ class CheckoutController extends Controller
             return $item->price * $item->quantity;
         });
 
-        $shipping = $subtotal > 1000 ? 0 : 50;
-        $tax = $subtotal * 0.18;
-        $total = $subtotal + $shipping + $tax;
+        // Get applied coupon from session
+        $appliedCoupon = session('applied_coupon');
+        $discountAmount = session('cart_discount', 0);
+        
+        // Apply discount if coupon is valid
+        $discountedSubtotal = $subtotal;
+        if ($appliedCoupon && $discountAmount > 0) {
+            // Re-validate coupon before checkout
+            $cartController = new CartController();
+            $validation = $cartController->validateCoupon(
+                $appliedCoupon['code'], 
+                $user->id, 
+                $subtotal
+            );
+            
+            if (!$validation['valid']) {
+                // Remove invalid coupon
+                session()->forget(['applied_coupon', 'applied_coupon_code', 'cart_discount']);
+                $discountAmount = 0;
+            } else {
+                // Recalculate discount to ensure it's correct
+                $discountAmount = $cartController->calculateDiscount($validation['coupon'], $subtotal);
+                session(['cart_discount' => $discountAmount]);
+                $discountedSubtotal = $subtotal - $discountAmount;
+            }
+        }
 
-        return view('checkout', compact('user', 'cartItems', 'subtotal', 'shipping', 'tax', 'total'));
+        $shipping = $discountedSubtotal > 1000 ? 0 : 50;
+        $tax = $discountedSubtotal * 0.18;
+        $total = $discountedSubtotal + $shipping + $tax;
+
+        // Get available coupons for modal
+        $cartController = new CartController();
+        $availableCoupons = $cartController->getAvailableCoupons();
+
+        return view('checkout', compact(
+            'user', 
+            'cartItems', 
+            'subtotal', 
+            'discountedSubtotal', 
+            'discountAmount',
+            'shipping', 
+            'tax', 
+            'total',
+            'availableCoupons'
+        ));
     }
 
     public function store(Request $request)
@@ -97,15 +141,27 @@ class CheckoutController extends Controller
                 return $item->price * $item->quantity;
             });
 
-            $shipping = $request->shipping_method == 'express' ? 150 : ($subtotal > 1000 ? 0 : 50);
-            $tax = $subtotal * 0.18;
-            $total = $subtotal + $shipping + $tax;
+            // Get coupon details from session
+            $appliedCoupon = session('applied_coupon');
+            $discountAmount = session('cart_discount', 0);
+            $couponCode = session('applied_coupon_code');
+            $couponId = session('applied_coupon.id') ?? null;
+            
+            // Apply discount
+            $discountedSubtotal = $subtotal;
+            if ($appliedCoupon && $discountAmount > 0) {
+                $discountedSubtotal = $subtotal - $discountAmount;
+            }
+
+            $shipping = $request->shipping_method == 'express' ? 150 : ($discountedSubtotal > 1000 ? 0 : 50);
+            $tax = $discountedSubtotal * 0.18;
+            $total = $discountedSubtotal + $shipping + $tax;
 
             // Generate order number
             $orderNumber = Order::generateUniqueOrderNumber($user->id);
 
-            // Create order
-            $order = Order::create([
+            // Create order with coupon details
+            $orderData = [
                 'order_number' => $orderNumber,
                 'user_id' => $user->id,
                 'subtotal' => $subtotal,
@@ -124,7 +180,16 @@ class CheckoutController extends Controller
                 'shipping_zip' => $request->zip_code,
                 'shipping_country' => $request->country,
                 'shipping_method' => $request->shipping_method,
-            ]);
+            ];
+
+            // Add coupon details if applied
+            if ($appliedCoupon && $couponId) {
+                $orderData['coupon_id'] = $couponId;
+                $orderData['coupon_code'] = $couponCode;
+                $orderData['discount_amount'] = $discountAmount;
+            }
+
+            $order = Order::create($orderData);
 
             // Create order items
             foreach ($cartItems as $cartItem) {
@@ -143,8 +208,19 @@ class CheckoutController extends Controller
                 $cartItem->product->decrement('stock', $cartItem->quantity);
             }
 
+            // Record coupon usage if applied
+            if ($appliedCoupon && $couponId) {
+                CouponUsage::create([
+                    'coupon_id' => $couponId,
+                    'user_id' => $user->id,
+                    'order_id' => $order->id,
+                    'discount_amount' => $discountAmount,
+                    'original_total' => $subtotal,
+                    'final_total' => $total,
+                ]);
+            }
 
-
+            // Send emails
             try {
                 // Send email to Admin
                 Mail::to(config('mail.from.address'))
@@ -156,10 +232,12 @@ class CheckoutController extends Controller
             } catch (\Exception $e) {
                 \Log::error('Order email sending failed: ' . $e->getMessage());
             }
-            // -----------------------
 
             // Clear user's cart after order
             Cart::where('user_id', $user->id)->delete();
+            
+            // Clear coupon session data
+            session()->forget(['applied_coupon', 'applied_coupon_code', 'cart_discount']);
 
             // Redirect to order confirmation
             return redirect()->route('order.confirmation', $order->order_number)
@@ -170,7 +248,6 @@ class CheckoutController extends Controller
                 ->with('error', 'Error placing order: ' . $e->getMessage());
         }
     }
-
 
     public function guestCheckoutRedirect()
     {

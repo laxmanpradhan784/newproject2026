@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 30, 2026 at 10:23 AM
+-- Generation Time: Jan 31, 2026 at 12:22 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -69,7 +69,7 @@ CREATE TABLE `carts` (
 --
 
 INSERT INTO `carts` (`id`, `user_id`, `session_id`, `guest_token`, `is_guest`, `product_id`, `quantity`, `price`, `created_at`, `updated_at`) VALUES
-(134, 9, NULL, NULL, 0, 7, 1, 999.00, '2026-01-29 07:00:50', '2026-01-29 07:00:50');
+(141, NULL, 'IzILGB0hZDdNeocj2l52dtKpPYTLgnkrLZRmbx0x', 'ngj0Kiym8WJMruGpxUdec0zu8p6GkonQ', 1, 62, 1, 10.00, '2026-01-31 02:01:11', '2026-01-31 02:01:11');
 
 -- --------------------------------------------------------
 
@@ -97,10 +97,10 @@ INSERT INTO `categories` (`id`, `name`, `slug`, `image`, `status`, `created_at`,
 (3, 'Home & Kitchen', 'home-kitchen', 'category_1769231503_iVP18Yzu9B.jpg', 'active', '2024-01-17 05:45:00', '2024-01-17 05:45:00'),
 (4, 'Beauty & Personal Care', 'beauty-personal-care', 'category_1769231503_iVP18Yzu9B.jpg', 'active', '2024-01-18 08:50:00', '2024-01-18 08:50:00'),
 (5, 'Books & Stationery', 'books-stationery', 'category_1769231503_iVP18Yzu9B.jpg', 'active', '2024-01-19 11:15:00', '2024-01-19 11:15:00'),
-(6, 'Sports & Fitness', 'sports-fitness', 'category_1769231503_iVP18Yzu9B.jpg', 'inactive', '2024-01-20 06:40:00', '2026-01-28 04:24:24'),
+(6, 'Sports & Fitness', 'sports-fitness', 'category_1769231503_iVP18Yzu9B.jpg', 'active', '2024-01-20 06:40:00', '2026-01-31 02:02:12'),
 (7, 'Toys & Games', 'toys-games', 'category_1769231503_iVP18Yzu9B.jpg', 'active', '2024-01-21 10:00:00', '2026-01-28 04:19:51'),
-(8, 'Automotive', 'automotive', 'category_1769231503_iVP18Yzu9B.jpg', 'inactive', '2024-01-22 04:30:00', '2026-01-28 04:24:04'),
-(9, 'Groceries', 'groceries', 'category_1769231503_iVP18Yzu9B.jpg', 'inactive', '2024-01-23 07:55:00', '2026-01-28 04:19:55'),
+(8, 'Automotive', 'automotive', 'category_1769231503_iVP18Yzu9B.jpg', 'active', '2024-01-22 04:30:00', '2026-01-31 02:02:11'),
+(9, 'Groceries', 'groceries', 'category_1769231503_iVP18Yzu9B.jpg', 'active', '2024-01-23 07:55:00', '2026-01-30 06:07:03'),
 (10, 'Healthcare', 'healthcare', 'category_1769231503_iVP18Yzu9B.jpg', 'active', '2024-01-24 12:30:00', '2026-01-28 04:19:49');
 
 -- --------------------------------------------------------
@@ -127,13 +127,123 @@ INSERT INTO `contacts` (`id`, `name`, `email`, `subject`, `message`, `created_at
 (1, 'Rajesh Kumar', 'rajesh.kumar@example.com', 'Product Inquiry', 'Hello, I would like to know more about your premium subscription plans and the features included.', '2024-01-15 05:00:00', '2024-01-15 05:00:00'),
 (2, 'Priya Sharma', 'priya.sharma22@example.com', 'Customer Support', 'My order #45678 has not been delivered yet. It was supposed to arrive last Monday. Can you please check the status?', '2024-01-16 09:15:00', '2024-01-16 09:15:00'),
 (3, 'Arun Patel', 'arun.patel@example.com', 'Feedback', 'I recently used your mobile app and found it very user-friendly. However, I think the dark mode option would be a great addition.', '2024-01-17 03:45:00', '2024-01-17 03:45:00'),
-(4, 'Meera Iyer', 'meera.iyer@example.com', 'Job Application', 'I am writing to apply for the Marketing Manager position advertised on your website. I have attached my resume for your consideration.', '2024-01-18 05:50:00', '2024-01-18 05:50:00'),
 (5, 'Vikram Singh', 'vikram.singh@example.com', 'Technical Issue', 'I am unable to reset my password on your portal. The reset link in the email is not working. Please help.', '2024-01-19 11:00:00', '2024-01-19 11:00:00'),
 (6, 'Ananya Reddy', 'ananya.reddy@example.com', 'Partnership Proposal', 'I represent a startup in the ed-tech space and would like to explore collaboration opportunities with your platform.', '2024-01-20 07:40:00', '2024-01-20 07:40:00'),
 (7, 'Suresh Menon', 'suresh.menon@example.com', 'Complaint', 'The product I received is damaged and different from what was shown on the website. I would like a refund or replacement.', '2024-01-21 10:15:00', '2024-01-21 10:15:00'),
 (8, 'Neha Gupta', 'neha.gupta@example.com', 'Service Inquiry', 'Do you offer custom software development services for healthcare businesses? If yes, please share your portfolio.', '2024-01-22 04:35:00', '2024-01-22 04:35:00'),
 (9, 'Karthik Nair', 'karthik.nair@example.com', 'Feature Request', 'Could you add UPI payment option to your checkout process? It would make payments much easier for Indian customers.', '2024-01-23 06:55:00', '2024-01-23 06:55:00'),
 (10, 'Divya Joshi', 'divya.joshi@example.com', 'Account Deletion', 'I would like to delete my account from your platform. Please confirm the process and let me know if any data will be retained.', '2024-01-24 12:20:00', '2024-01-24 12:20:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coupons`
+--
+
+CREATE TABLE `coupons` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `code` varchar(50) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `discount_type` enum('percentage','fixed_amount') NOT NULL DEFAULT 'percentage',
+  `discount_value` decimal(10,2) NOT NULL,
+  `min_order_amount` decimal(10,2) DEFAULT 0.00,
+  `max_discount_amount` decimal(10,2) DEFAULT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `usage_limit` int(11) DEFAULT NULL,
+  `usage_limit_per_user` int(11) DEFAULT 1,
+  `user_scope` enum('all','specific') DEFAULT 'all',
+  `category_scope` enum('all','specific') DEFAULT 'all',
+  `product_scope` enum('all','specific') DEFAULT 'all',
+  `status` enum('active','inactive','expired') DEFAULT 'active',
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `coupons`
+--
+
+INSERT INTO `coupons` (`id`, `code`, `name`, `description`, `discount_type`, `discount_value`, `min_order_amount`, `max_discount_amount`, `start_date`, `end_date`, `usage_limit`, `usage_limit_per_user`, `user_scope`, `category_scope`, `product_scope`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'WELCOME10', 'Welcome Discount', '10% off for new customers', 'percentage', 10.00, 1000.00, 500.00, '2026-01-01', '2026-12-31', 1000, 1, 'all', 'all', 'all', 'active', '2026-01-31 08:48:42', '2026-01-31 08:48:42'),
+(2, 'FLAT500', 'Flat ₹500 Off', 'Get ₹500 off on orders above ₹3000', 'fixed_amount', 500.00, 3000.00, 500.00, '2026-01-01', '2026-12-31', 500, 1, 'all', 'all', 'all', 'active', '2026-01-31 08:48:42', '2026-01-31 08:48:42'),
+(3, 'SUMMER20', 'Summer Sale', '20% off on all summer items', 'percentage', 20.00, 1500.00, 1000.00, '2026-06-01', '2026-08-31', NULL, 3, 'all', 'specific', 'all', 'active', '2026-01-31 08:48:42', '2026-01-31 08:48:42'),
+(4, 'VIP25', 'VIP Customer Discount', '25% off exclusive for VIP customers', 'percentage', 25.00, 2000.00, 1500.00, '2026-01-01', '2026-12-31', NULL, 1, 'specific', 'all', 'all', 'active', '2026-01-31 08:48:42', '2026-01-31 08:48:42'),
+(5, 'FREESHIP', 'Free Shipping', 'Free shipping on all orders', 'fixed_amount', 50.00, 0.00, 50.00, '2026-01-01', '2026-12-31', 10000, 1, 'all', 'all', 'all', 'active', '2026-01-31 08:48:42', '2026-01-31 05:11:36'),
+(8, 'fbhfd', 'sdvgsdvg', 'vsegfrbh er 4', 'percentage', 22.00, 22.00, 22.00, '2026-01-31', '2026-02-27', 22, 12, 'all', 'all', 'all', 'active', '2026-01-31 04:56:52', '2026-01-31 04:56:52');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coupon_categories`
+--
+
+CREATE TABLE `coupon_categories` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `coupon_id` bigint(20) UNSIGNED NOT NULL,
+  `category_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `coupon_categories`
+--
+
+INSERT INTO `coupon_categories` (`id`, `coupon_id`, `category_id`, `created_at`) VALUES
+(1, 3, 2, '2026-01-31 08:48:42'),
+(2, 3, 6, '2026-01-31 08:48:42');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coupon_products`
+--
+
+CREATE TABLE `coupon_products` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `coupon_id` bigint(20) UNSIGNED NOT NULL,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coupon_usages`
+--
+
+CREATE TABLE `coupon_usages` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `coupon_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `order_id` bigint(20) UNSIGNED NOT NULL,
+  `discount_amount` decimal(10,2) NOT NULL,
+  `original_total` decimal(10,2) NOT NULL,
+  `final_total` decimal(10,2) NOT NULL,
+  `used_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coupon_users`
+--
+
+CREATE TABLE `coupon_users` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `coupon_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `coupon_users`
+--
+
+INSERT INTO `coupon_users` (`id`, `coupon_id`, `user_id`, `created_at`) VALUES
+(1, 4, 1, '2026-01-31 08:48:42'),
+(2, 4, 2, '2026-01-31 08:48:42');
 
 -- --------------------------------------------------------
 
@@ -240,25 +350,29 @@ CREATE TABLE `orders` (
   `delivered_at` timestamp NULL DEFAULT NULL,
   `cancelled_at` timestamp NULL DEFAULT NULL,
   `transaction_id` varchar(255) DEFAULT NULL,
-  `gateway_response` text DEFAULT NULL
+  `gateway_response` text DEFAULT NULL,
+  `coupon_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `coupon_code` varchar(50) DEFAULT NULL,
+  `discount_amount` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `order_number`, `user_id`, `subtotal`, `shipping`, `tax`, `total`, `status`, `payment_method`, `payment_gateway`, `payment_status`, `shipping_name`, `shipping_email`, `shipping_phone`, `shipping_address`, `shipping_city`, `shipping_state`, `shipping_zip`, `shipping_country`, `shipping_method`, `created_at`, `updated_at`, `delivered_at`, `cancelled_at`, `transaction_id`, `gateway_response`) VALUES
-(1, 'ORD-20260126-697733164FB57', 2, 2647.00, 0.00, 476.46, 3123.46, 'processing', 'cod', NULL, 'pending', 'Regular Users', 'user@example.com', '0987654321', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-26 03:55:42', '2026-01-28 07:13:19', NULL, NULL, NULL, NULL),
-(4, 'ORD-260126-115122-0044', 2, 314.99, 50.00, 56.70, 421.69, 'delivered', 'upi', NULL, 'paid', 'Regular Users', 'user@example.com', '0987654321', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-26 06:21:22', '2026-01-29 06:05:44', '2026-01-29 06:05:44', NULL, NULL, NULL),
-(5, 'ORD-260126-120445-0095975', 9, 314.99, 50.00, 56.70, 421.69, 'delivered', 'upi', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-26 06:34:45', '2026-01-29 06:03:32', '2026-01-29 06:03:32', NULL, NULL, NULL),
-(6, 'ORD-260126-123355-0093725', 9, 2498.00, 150.00, 449.64, 3097.64, 'cancelled', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-26 07:03:55', '2026-01-28 07:28:49', NULL, '2026-01-28 07:28:49', NULL, NULL),
-(7, 'ORD-260126-123504-0096403', 9, 1999.00, 0.00, 359.82, 2358.82, 'processing', 'upi', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-26 07:05:04', '2026-01-28 07:13:09', NULL, NULL, NULL, NULL),
-(8, 'ORD-260126-123954-0096586', 9, 899.00, 50.00, 161.82, 1110.82, 'processing', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-26 07:09:54', '2026-01-28 07:13:05', NULL, NULL, NULL, NULL),
-(9, 'ORD-260126-124349-0099760', 9, 2662.99, 150.00, 479.34, 3292.33, 'shipped', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-26 07:13:49', '2026-01-29 06:03:21', NULL, NULL, NULL, NULL),
-(10, 'ORD-260126-125013-0099295', 9, 2847.00, 150.00, 512.46, 3509.46, 'pending', 'upi', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-26 07:20:13', '2026-01-28 07:28:21', NULL, NULL, NULL, NULL),
-(11, 'ORD-260126-130557-0095327', 9, 648.00, 150.00, 116.64, 914.64, 'processing', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-26 07:35:57', '2026-01-28 06:18:05', NULL, NULL, NULL, NULL),
-(13, 'ORD-260127-094000-0094389', 9, 999.00, 50.00, 179.82, 1228.82, 'shipped', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-27 04:10:00', '2026-01-28 07:21:05', NULL, NULL, NULL, NULL),
-(14, 'ORD-260128-062903-0098880', 9, 3798.00, 0.00, 683.64, 4481.64, 'delivered', 'cod', NULL, 'pending', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-28 00:59:03', '2026-01-29 05:00:45', '2026-01-29 05:00:45', NULL, NULL, NULL);
+INSERT INTO `orders` (`id`, `order_number`, `user_id`, `subtotal`, `shipping`, `tax`, `total`, `status`, `payment_method`, `payment_gateway`, `payment_status`, `shipping_name`, `shipping_email`, `shipping_phone`, `shipping_address`, `shipping_city`, `shipping_state`, `shipping_zip`, `shipping_country`, `shipping_method`, `created_at`, `updated_at`, `delivered_at`, `cancelled_at`, `transaction_id`, `gateway_response`, `coupon_id`, `coupon_code`, `discount_amount`) VALUES
+(1, 'ORD-20260126-697733164FB57', 2, 2647.00, 0.00, 476.46, 3123.46, 'processing', 'cod', NULL, 'pending', 'Regular Users', 'user@example.com', '0987654321', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-26 03:55:42', '2026-01-28 07:13:19', NULL, NULL, NULL, NULL, NULL, NULL, 0.00),
+(4, 'ORD-260126-115122-0044', 2, 314.99, 50.00, 56.70, 421.69, 'delivered', 'upi', NULL, 'paid', 'Regular Users', 'user@example.com', '0987654321', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-26 06:21:22', '2026-01-29 06:05:44', '2026-01-29 06:05:44', NULL, NULL, NULL, NULL, NULL, 0.00),
+(5, 'ORD-260126-120445-0095975', 9, 314.99, 50.00, 56.70, 421.69, 'delivered', 'upi', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-26 06:34:45', '2026-01-29 06:03:32', '2026-01-29 06:03:32', NULL, NULL, NULL, NULL, NULL, 0.00),
+(6, 'ORD-260126-123355-0093725', 9, 2498.00, 150.00, 449.64, 3097.64, 'cancelled', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-26 07:03:55', '2026-01-28 07:28:49', NULL, '2026-01-28 07:28:49', NULL, NULL, NULL, NULL, 0.00),
+(7, 'ORD-260126-123504-0096403', 9, 1999.00, 0.00, 359.82, 2358.82, 'processing', 'upi', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-26 07:05:04', '2026-01-28 07:13:09', NULL, NULL, NULL, NULL, NULL, NULL, 0.00),
+(8, 'ORD-260126-123954-0096586', 9, 899.00, 50.00, 161.82, 1110.82, 'processing', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-26 07:09:54', '2026-01-28 07:13:05', NULL, NULL, NULL, NULL, NULL, NULL, 0.00),
+(9, 'ORD-260126-124349-0099760', 9, 2662.99, 150.00, 479.34, 3292.33, 'shipped', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-26 07:13:49', '2026-01-29 06:03:21', NULL, NULL, NULL, NULL, NULL, NULL, 0.00),
+(10, 'ORD-260126-125013-0099295', 9, 2847.00, 150.00, 512.46, 3509.46, 'pending', 'upi', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-26 07:20:13', '2026-01-28 07:28:21', NULL, NULL, NULL, NULL, NULL, NULL, 0.00),
+(11, 'ORD-260126-130557-0095327', 9, 648.00, 150.00, 116.64, 914.64, 'processing', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-26 07:35:57', '2026-01-28 06:18:05', NULL, NULL, NULL, NULL, NULL, NULL, 0.00),
+(13, 'ORD-260127-094000-0094389', 9, 999.00, 50.00, 179.82, 1228.82, 'shipped', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-27 04:10:00', '2026-01-28 07:21:05', NULL, NULL, NULL, NULL, NULL, NULL, 0.00),
+(14, 'ORD-260128-062903-0098880', 9, 3798.00, 0.00, 683.64, 4481.64, 'delivered', 'cod', NULL, 'pending', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-28 00:59:03', '2026-01-29 05:00:45', '2026-01-29 05:00:45', NULL, NULL, NULL, NULL, NULL, 0.00),
+(15, 'ORD-260130-100006-0099821', 9, 999.00, 150.00, 179.82, 1328.82, 'processing', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-30 04:30:06', '2026-01-30 06:07:31', NULL, NULL, NULL, NULL, NULL, NULL, 0.00);
 
 -- --------------------------------------------------------
 
@@ -307,7 +421,8 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `product_name`, `quan
 (27, 11, 9, 'Organic Green Tea', 1, 349.00, 349.00, 9, 'Groceries', '2026-01-26 07:35:57', '2026-01-26 07:35:57'),
 (31, 13, 7, 'Educational Building Blocks', 1, 999.00, 999.00, 7, 'Toys & Games', '2026-01-27 04:10:00', '2026-01-27 04:10:00'),
 (32, 14, 3, 'Non-Stick Cookware Set', 1, 2499.00, 2499.00, 3, 'Home & Kitchen', '2026-01-28 00:59:03', '2026-01-28 00:59:03'),
-(33, 14, 2, 'Men\'s Casual Shirt', 1, 1299.00, 1299.00, 2, 'Fashion', '2026-01-28 00:59:03', '2026-01-28 00:59:03');
+(33, 14, 2, 'Men\'s Casual Shirt', 1, 1299.00, 1299.00, 2, 'Fashion', '2026-01-28 00:59:03', '2026-01-28 00:59:03'),
+(34, 15, 7, 'Educational Building Blocks', 1, 999.00, 999.00, 7, 'Toys & Games', '2026-01-30 04:30:06', '2026-01-30 04:30:06');
 
 -- --------------------------------------------------------
 
@@ -372,11 +487,11 @@ INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `image`, `descripti
 (4, 4, 'Vitamin C Face Serum', 'vitamin-c-face-serum', 'product_1769234603_Nb4pjAqd9m.jpg', 'Anti-aging vitamin C serum with hyaluronic acid for brightening and reducing dark spots. 30ml bottle.', 899.00, 78, 0.00, 0, 'active', '2024-01-18 08:50:00', '2026-01-26 07:09:54'),
 (5, 5, 'The Psychology of Money', 'psychology-of-money', 'product_1769234603_Nb4pjAqd9m.jpg', 'Bestselling book on personal finance and investment psychology by Morgan Housel. Hardcover edition.', 499.00, 200, 0.00, 0, 'active', '2024-01-19 09:40:00', '2026-01-29 06:56:24'),
 (6, 6, 'Yoga Mat Premium', 'yoga-mat-premium', 'product_1769234603_Nb4pjAqd9m.jpg', '6mm thick non-slip yoga mat with carrying strap. Eco-friendly TPE material in multiple colors.', 1499.00, 57, 0.00, 0, 'active', '2024-01-20 11:00:00', '2026-01-28 07:28:49'),
-(7, 7, 'Educational Building Blocks', 'educational-building-blocks', 'product_1769234603_Nb4pjAqd9m.jpg', '500-piece building blocks set for kids ages 5+. Promotes creativity and motor skills development.', 999.00, 69, 0.00, 0, 'active', '2024-01-21 12:15:00', '2026-01-29 07:00:50'),
+(7, 7, 'Educational Building Blocks', 'educational-building-blocks', 'product_1769234603_Nb4pjAqd9m.jpg', '500-piece building blocks set for kids ages 5+. Promotes creativity and motor skills development.', 999.00, 68, 0.00, 0, 'active', '2024-01-21 12:15:00', '2026-01-30 04:30:06'),
 (8, 8, 'Car Air Purifier', 'car-air-purifier', 'product_1769234603_Nb4pjAqd9m.jpg', 'Compact HEPA filter car air purifier with ionizer. USB powered with adjustable fan speed.', 1999.00, 32, 0.00, 0, 'active', '2024-01-22 03:45:00', '2026-01-28 01:42:08'),
-(9, 9, 'Organic Green Tea', 'organic-green-tea', 'product_1769234603_Nb4pjAqd9m.jpg', '100% organic green tea leaves packed in airtight container. 250g pack with antioxidant benefits.', 349.00, 134, 0.00, 0, 'active', '2024-01-23 07:55:00', '2026-01-26 07:38:37'),
-(10, 10, 'Digital Thermometer', 'digital-thermometer', 'product_1769234603_Nb4pjAqd9m.jpg', 'Fast and accurate digital thermometer with beep alert and fever indicator. Battery included.', 299.00, 283, 0.00, 0, 'active', '2024-01-24 12:30:00', '2026-01-29 06:16:38'),
-(62, 1, 'Operations', 'operations', 'product_1769258578_rWP0gdhIvh.jpg', 'testing', 10.00, 68, 0.00, 0, 'active', '2026-01-24 07:12:58', '2026-01-29 06:06:38');
+(9, 9, 'Organic Green Tea', 'organic-green-tea', 'product_1769234603_Nb4pjAqd9m.jpg', '100% organic green tea leaves packed in airtight container. 250g pack with antioxidant benefits.', 349.00, 134, 0.00, 0, 'active', '2024-01-23 07:55:00', '2026-01-30 07:17:31'),
+(10, 10, 'Digital Thermometer', 'digital-thermometer', 'product_1769234603_Nb4pjAqd9m.jpg', 'Fast and accurate digital thermometer with beep alert and fever indicator. Battery included.', 299.00, 283, 0.00, 0, 'active', '2024-01-24 12:30:00', '2026-01-30 07:18:30'),
+(62, 1, 'Operations', 'operations', 'product_1769258578_rWP0gdhIvh.jpg', 'testing', 10.00, 67, 0.00, 0, 'active', '2026-01-24 07:12:58', '2026-01-31 02:01:11');
 
 -- --------------------------------------------------------
 
@@ -408,7 +523,8 @@ CREATE TABLE `reviews` (
 --
 
 INSERT INTO `reviews` (`id`, `product_id`, `user_id`, `order_id`, `rating`, `title`, `comment`, `status`, `is_verified_purchase`, `helpful_yes`, `helpful_no`, `report_count`, `admin_response`, `response_date`, `created_at`, `updated_at`) VALUES
-(2, 1, 9, 5, 4, 'Good but has issues', 'Overall good phone but the charging speed could be better. Camera is excellent though.', 'approved', 1, 5, 1, 0, 'ok we will do our best to in out time', '2026-01-30 03:52:10', '2026-01-29 13:16:32', '2026-01-30 03:52:10');
+(2, 1, 9, 5, 4, 'Good but has issues', 'Overall good phone but the charging speed could be better. Camera is excellent though.', 'approved', 1, 5, 1, 0, 'ok we will do our best to in out time', '2026-01-30 03:52:10', '2026-01-29 13:16:32', '2026-01-30 03:52:10'),
+(9, 4, 9, NULL, 4, 'rbgfrbgh', 'frbhfrebh  rfhbgfrtgh', 'approved', 0, 0, 0, 0, NULL, NULL, '2026-01-30 06:56:25', '2026-01-30 07:44:19');
 
 -- --------------------------------------------------------
 
@@ -430,7 +546,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('uBNWkUG2dRsf423qxbrSdRQ4rPHnnKXA6PlDxZ4D', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiRnptVDVoVm91OU5nZUVieWpwUjNpTUNFVW5rS01KaDVJWnJIVGpKdiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6IkFzNXpHR0k3Mm5UYXlMY21lS3JLczlhOW1UM0pYMHo5IjtzOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo0OToiaHR0cDovL2xvY2FsaG9zdC9lLWNvbW1tZXJjZS9wdWJsaWMvYWRtaW4vc2xpZGVycyI7czo1OiJyb3V0ZSI7czoxMzoiYWRtaW4uc2xpZGVycyI7fXM6MzoidXJsIjthOjE6e3M6ODoiaW50ZW5kZWQiO3M6Nzk6Imh0dHA6Ly9sb2NhbGhvc3QvZS1jb21tbWVyY2UvcHVibGljL2FkbWluL3Jldmlld3M/cmF0aW5nPWFsbCZzZWFyY2g9JnN0YXR1cz1hbGwiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1769764950);
+('wBcr1WRYhzCOSuFcEExeEzgfb1YSU9qYLJrOaaVq', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiNHRkc2gwcFY4TWhuU1dDSk1zSUZLY1hHZENZenlvbEsybGZpTVZjeSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6IkxRZ0JsTzZaU0JGcG9DTlowSzJVZ1FiSXRlNVNvbUxIIjtzOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo0OToiaHR0cDovL2xvY2FsaG9zdC9lLWNvbW1tZXJjZS9wdWJsaWMvYWRtaW4vY291cG9ucyI7czo1OiJyb3V0ZSI7czoxOToiYWRtaW4uY291cG9ucy5pbmRleCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1769858433);
 
 -- --------------------------------------------------------
 
@@ -487,13 +603,12 @@ CREATE TABLE `sliders` (
 --
 
 INSERT INTO `sliders` (`id`, `title`, `subtitle`, `image`, `button_text`, `button_link`, `status`, `created_at`, `updated_at`) VALUES
-(2, 'New Arrivals', 'Discover the Latest Trends in Electronics', 'slider_1769490420_57wRHIuClq.png', 'Explore', NULL, 'active', '2024-01-16 05:00:00', '2026-01-26 23:37:00'),
-(3, 'Free Shipping', 'On All Orders Above ₹999', 'slider_1769490433_jn1mMYUDBz.png', 'Learn More', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2024-01-17 05:45:00', '2026-01-26 23:37:13'),
-(5, 'Fitness Essentials', 'Get Fit with Premium Equipment', 'slider_1769490384_idu3lik8ye.png', 'Shop Fitness', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2024-01-19 11:15:00', '2026-01-26 23:36:24'),
-(6, 'Mobile Mania', 'Best Deals on Smartphones', 'slider_1769490375_8DAI1xBYU4.png', 'Buy Now', NULL, 'inactive', '2024-01-20 06:40:00', '2026-01-26 23:38:12'),
-(7, 'Book Fair', 'Thousands of Books at Discounted Prices', 'slider_1769490365_r3q1e0vTSB.png', 'View Books', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'inactive', '2024-01-21 10:00:00', '2026-01-28 04:14:19'),
-(8, 'Beauty Bonanza', 'Premium Cosmetics & Skincare', 'slider_1769490357_59OFV1pqxb.png', 'Shop Beauty', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2024-01-22 04:30:00', '2026-01-28 04:26:28'),
-(10, 'Weekend Special', 'Extra 20% Off on Selected Items', 'slider_1769490337_ABTWU37Dzu.png', 'Grab Deal', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'inactive', '2024-01-24 12:30:00', '2026-01-28 04:12:31');
+(3, 'Free Shipping', 'On All Orders Above ₹999', 'slider_1769843141_MjO2RDXK7k.jpg', 'Learn More', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2024-01-17 05:45:00', '2026-01-31 01:35:41'),
+(5, 'Fitness Essentials', 'Get Fit with Premium Equipment', 'slider_1769843334_b8rmT1xo9Y.jpg', 'Shop Fitness', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2024-01-19 11:15:00', '2026-01-31 01:38:54'),
+(6, 'Mobile Mania', 'Best Deals on Smartphones', 'slider_1769843219_NRwmPw5Ko4.jpg', 'Buy Now', NULL, 'active', '2024-01-20 06:40:00', '2026-01-31 01:36:59'),
+(7, 'Book Fair', 'Thousands of Books at Discounted Prices', 'slider_1769843094_UJfQWTOgB7.jpg', 'View Books', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2024-01-21 10:00:00', '2026-01-31 01:34:54'),
+(8, 'Beauty Bonanza', 'Premium Cosmetics & Skincare', 'slider_1769843047_Mg4rPp2XCq.jpg', 'Shop Beauty', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2024-01-22 04:30:00', '2026-01-31 01:34:07'),
+(10, 'Weekend Special', 'Extra 20% Off on Selected Items', 'slider_1769842994_Jwh2Vrpm1Q.jpg', 'Grab Deal', 'http://localhost/phpmyadmin/index.php?route=/database/export&db=e-database', 'active', '2024-01-24 12:30:00', '2026-01-31 01:33:14');
 
 -- --------------------------------------------------------
 
@@ -568,6 +683,52 @@ ALTER TABLE `contacts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `coupons`
+--
+ALTER TABLE `coupons`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `coupons_code_unique` (`code`),
+  ADD KEY `coupons_status_index` (`status`),
+  ADD KEY `coupons_date_range` (`start_date`,`end_date`);
+
+--
+-- Indexes for table `coupon_categories`
+--
+ALTER TABLE `coupon_categories`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `coupon_category_unique` (`coupon_id`,`category_id`),
+  ADD KEY `coupon_categories_coupon_id_foreign` (`coupon_id`),
+  ADD KEY `coupon_categories_category_id_foreign` (`category_id`);
+
+--
+-- Indexes for table `coupon_products`
+--
+ALTER TABLE `coupon_products`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `coupon_product_unique` (`coupon_id`,`product_id`),
+  ADD KEY `coupon_products_coupon_id_foreign` (`coupon_id`),
+  ADD KEY `coupon_products_product_id_foreign` (`product_id`);
+
+--
+-- Indexes for table `coupon_usages`
+--
+ALTER TABLE `coupon_usages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `coupon_usages_coupon_id_foreign` (`coupon_id`),
+  ADD KEY `coupon_usages_user_id_foreign` (`user_id`),
+  ADD KEY `coupon_usages_order_id_foreign` (`order_id`),
+  ADD KEY `coupon_user_unique` (`coupon_id`,`user_id`);
+
+--
+-- Indexes for table `coupon_users`
+--
+ALTER TABLE `coupon_users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `coupon_user_unique` (`coupon_id`,`user_id`),
+  ADD KEY `coupon_users_coupon_id_foreign` (`coupon_id`),
+  ADD KEY `coupon_users_user_id_foreign` (`user_id`);
+
+--
 -- Indexes for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -601,7 +762,8 @@ ALTER TABLE `orders`
   ADD UNIQUE KEY `order_number` (`order_number`),
   ADD UNIQUE KEY `order_number_unique` (`order_number`),
   ADD KEY `orders_user_id_foreign` (`user_id`),
-  ADD KEY `orders_status_index` (`status`);
+  ADD KEY `orders_status_index` (`status`),
+  ADD KEY `orders_coupon_id_index` (`coupon_id`);
 
 --
 -- Indexes for table `order_items`
@@ -681,7 +843,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -694,6 +856,36 @@ ALTER TABLE `categories`
 --
 ALTER TABLE `contacts`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `coupons`
+--
+ALTER TABLE `coupons`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `coupon_categories`
+--
+ALTER TABLE `coupon_categories`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `coupon_products`
+--
+ALTER TABLE `coupon_products`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `coupon_usages`
+--
+ALTER TABLE `coupon_usages`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `coupon_users`
+--
+ALTER TABLE `coupon_users`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -717,13 +909,13 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `payment_logs`
@@ -735,13 +927,13 @@ ALTER TABLE `payment_logs`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `site_settings`
@@ -773,9 +965,39 @@ ALTER TABLE `carts`
   ADD CONSTRAINT `carts_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `coupon_categories`
+--
+ALTER TABLE `coupon_categories`
+  ADD CONSTRAINT `coupon_categories_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `coupon_categories_coupon_id_foreign` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `coupon_products`
+--
+ALTER TABLE `coupon_products`
+  ADD CONSTRAINT `coupon_products_coupon_id_foreign` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `coupon_products_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `coupon_usages`
+--
+ALTER TABLE `coupon_usages`
+  ADD CONSTRAINT `coupon_usages_coupon_id_foreign` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `coupon_usages_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `coupon_usages_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `coupon_users`
+--
+ALTER TABLE `coupon_users`
+  ADD CONSTRAINT `coupon_users_coupon_id_foreign` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `coupon_users_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_coupon_id_foreign` FOREIGN KEY (`coupon_id`) REFERENCES `coupons` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `orders_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --

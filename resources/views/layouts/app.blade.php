@@ -53,7 +53,7 @@
     @endif
 
 
-    @auth
+    {{-- @auth
         <li>
             <hr class="dropdown-divider">
         </li>
@@ -62,7 +62,7 @@
                 <i class="fas fa-star me-2"></i> My Reviews
             </a>
         </li>
-    @endauth
+    @endauth --}}
 
 
 

@@ -5,8 +5,12 @@ namespace App\Http\Controllers\UserSide;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\Coupon;
+use App\Models\CouponUsage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -23,12 +27,52 @@ class CartController extends Controller
             return $item->price * $item->quantity;
         });
 
-        // Shipping and tax calculations
-        $shipping = $subtotal > 999 ? 0 : 50; // Free shipping above ₹999
-        $tax = $subtotal * 0.18; // 18% GST
-        $total = $subtotal + $shipping + $tax;
+        // Get applied coupon from session
+        $appliedCoupon = session('applied_coupon');
+        $discountAmount = session('cart_discount', 0);
+        
+        // Apply discount if coupon is valid
+        $discountedSubtotal = $subtotal;
+        if ($appliedCoupon && $discountAmount > 0) {
+            // Re-validate coupon before showing cart
+            $validation = $this->validateCoupon(
+                $appliedCoupon['code'], 
+                Auth::id(), 
+                $subtotal
+            );
+            
+            if (!$validation['valid']) {
+                // Remove invalid coupon
+                session()->forget(['applied_coupon', 'applied_coupon_code', 'cart_discount']);
+                $discountAmount = 0;
+            } else {
+                // Recalculate discount to ensure it's correct
+                $discountAmount = $this->calculateDiscount($validation['coupon'], $subtotal);
+                session(['cart_discount' => $discountAmount]);
+                $discountedSubtotal = $subtotal - $discountAmount;
+            }
+        }
 
-        return view('cart', compact('cartItems', 'subtotal', 'shipping', 'tax', 'total', 'cartCount'));
+        // Shipping and tax calculations
+        $shipping = $discountedSubtotal > 999 ? 0 : 50; // Free shipping above ₹999 (on discounted amount)
+        $tax = $discountedSubtotal * 0.18; // 18% GST on discounted amount
+        $total = $discountedSubtotal + $shipping + $tax;
+
+        // Get available coupons for modal
+        $availableCoupons = $this->getAvailableCoupons();
+
+        return view('cart', [
+            'cartItems' => $cartItems,
+            'subtotal' => $subtotal,
+            'discountedSubtotal' => $discountedSubtotal,
+            'discountAmount' => $discountAmount,
+            'shipping' => $shipping,
+            'tax' => $tax,
+            'total' => $total,
+            'cartCount' => $cartCount,
+            'availableCoupons' => $availableCoupons,
+            'appliedCoupon' => $appliedCoupon
+        ]);
     }
 
     /**
@@ -252,6 +296,9 @@ class CartController extends Controller
         // Delete all cart items
         $cartItems->each->delete();
 
+        // Clear coupon from session
+        session()->forget(['applied_coupon', 'applied_coupon_code', 'cart_discount']);
+
         if (request()->ajax() || request()->wantsJson()) {
             return response()->json([
                 'success' => true,
@@ -402,5 +449,269 @@ class CartController extends Controller
             }
             return back()->with('success', 'Product removed from cart.');
         }
+    }
+
+    /**
+     * Apply coupon to cart
+     */
+    public function applyCoupon(Request $request)
+    {
+        $request->validate([
+            'coupon_code' => 'required|string|max:50'
+        ]);
+        
+        $couponCode = $request->coupon_code;
+        $user = Auth::user();
+        $userId = $user ? $user->id : null;
+        $sessionId = session()->getId();
+        
+        // Get cart total
+        $cartTotal = $this->calculateCartTotal($userId, $sessionId);
+        
+        if ($cartTotal <= 0) {
+            return redirect()->back()->with('coupon_error', 'Your cart is empty');
+        }
+        
+        // Validate coupon
+        $validation = $this->validateCoupon($couponCode, $userId, $cartTotal);
+        
+        if (!$validation['valid']) {
+            return redirect()->back()->with('coupon_error', $validation['message']);
+        }
+        
+        $coupon = $validation['coupon'];
+        
+        // Calculate discount
+        $discount = $this->calculateDiscount($coupon, $cartTotal);
+        
+        // Store coupon in session
+        session([
+            'applied_coupon' => [
+                'id' => $coupon->id,
+                'code' => $coupon->code,
+                'name' => $coupon->name,
+                'discount_type' => $coupon->discount_type,
+                'discount_value' => $coupon->discount_value,
+                'discount_amount' => $discount,
+                'max_discount' => $coupon->max_discount_amount,
+                'min_order' => $coupon->min_order_amount
+            ],
+            'applied_coupon_code' => $coupon->code,
+            'cart_discount' => $discount
+        ]);
+        
+        return redirect()->back()->with('coupon_success', 'Coupon applied successfully!');
+    }
+    
+    /**
+     * Remove coupon from cart
+     */
+    public function removeCoupon()
+    {
+        session()->forget([
+            'applied_coupon',
+            'applied_coupon_code',
+            'cart_discount'
+        ]);
+        
+        return redirect()->back()->with('coupon_success', 'Coupon removed successfully');
+    }
+    
+    /**
+     * Validate coupon (PUBLIC METHOD)
+     */
+    public function validateCoupon($couponCode, $userId, $cartTotal)
+    {
+        $coupon = Coupon::where('code', $couponCode)
+            ->where('status', 'active')
+            ->where('start_date', '<=', Carbon::now())
+            ->where('end_date', '>=', Carbon::now())
+            ->first();
+            
+        if (!$coupon) {
+            return ['valid' => false, 'message' => 'Invalid or expired coupon'];
+        }
+        
+        // Check minimum order amount
+        if ($coupon->min_order_amount > 0 && $cartTotal < $coupon->min_order_amount) {
+            return [
+                'valid' => false, 
+                'message' => 'Minimum order amount ₹' . $coupon->min_order_amount . ' required'
+            ];
+        }
+        
+        // Check usage limit
+        if ($coupon->usage_limit) {
+            $usedCount = CouponUsage::where('coupon_id', $coupon->id)->count();
+            if ($usedCount >= $coupon->usage_limit) {
+                return ['valid' => false, 'message' => 'Coupon usage limit reached'];
+            }
+        }
+        
+        // Check user-specific usage limit
+        if ($userId && $coupon->usage_limit_per_user) {
+            $userUsedCount = CouponUsage::where('coupon_id', $coupon->id)
+                ->where('user_id', $userId)
+                ->count();
+            if ($userUsedCount >= $coupon->usage_limit_per_user) {
+                return ['valid' => false, 'message' => 'You have already used this coupon'];
+            }
+        }
+        
+        // Check user scope
+        if ($coupon->user_scope == 'specific' && $userId) {
+            $allowed = DB::table('coupon_users')
+                ->where('coupon_id', $coupon->id)
+                ->where('user_id', $userId)
+                ->exists();
+            if (!$allowed) {
+                return ['valid' => false, 'message' => 'This coupon is not available for your account'];
+            }
+        }
+        
+        // Check category scope
+        if ($coupon->category_scope == 'specific') {
+            // Get cart categories
+            $cartCategories = $this->getCartCategories($userId, session()->getId());
+            
+            $allowedCategories = DB::table('coupon_categories')
+                ->where('coupon_id', $coupon->id)
+                ->pluck('category_id')
+                ->toArray();
+            
+            if (!array_intersect($cartCategories, $allowedCategories)) {
+                return ['valid' => false, 'message' => 'This coupon is not applicable to items in your cart'];
+            }
+        }
+        
+        // Check product scope
+        if ($coupon->product_scope == 'specific') {
+            // Get cart products
+            $cartProducts = $this->getCartProducts($userId, session()->getId());
+            
+            $allowedProducts = DB::table('coupon_products')
+                ->where('coupon_id', $coupon->id)
+                ->pluck('product_id')
+                ->toArray();
+            
+            if (!array_intersect($cartProducts, $allowedProducts)) {
+                return ['valid' => false, 'message' => 'This coupon is not applicable to items in your cart'];
+            }
+        }
+        
+        return ['valid' => true, 'coupon' => $coupon, 'message' => 'Coupon is valid'];
+    }
+    
+    /**
+     * Calculate discount amount (PUBLIC METHOD)
+     */
+    public function calculateDiscount($coupon, $cartTotal)
+    {
+        if ($coupon->discount_type == 'percentage') {
+            $discount = ($cartTotal * $coupon->discount_value) / 100;
+            
+            // Apply max discount limit
+            if ($coupon->max_discount_amount && $discount > $coupon->max_discount_amount) {
+                $discount = $coupon->max_discount_amount;
+            }
+        } else {
+            $discount = min($coupon->discount_value, $cartTotal); // Can't discount more than cart total
+        }
+        
+        return $discount;
+    }
+    
+    /**
+     * Calculate cart total (PUBLIC METHOD)
+     */
+    public function calculateCartTotal($userId, $sessionId)
+    {
+        $cartQuery = Cart::query();
+        
+        if ($userId) {
+            $cartQuery->where('user_id', $userId);
+        } else {
+            $cartQuery->where('session_id', $sessionId);
+        }
+        
+        $cartItems = $cartQuery->with('product')->get();
+        
+        $total = 0;
+        foreach ($cartItems as $item) {
+            $total += $item->price * $item->quantity;
+        }
+        
+        return $total;
+    }
+
+    /**
+     * Get cart categories for scope validation (PUBLIC METHOD)
+     */
+    public function getCartCategories($userId, $sessionId)
+    {
+        $cartQuery = Cart::query();
+        
+        if ($userId) {
+            $cartQuery->where('user_id', $userId);
+        } else {
+            $cartQuery->where('session_id', $sessionId);
+        }
+        
+        return $cartQuery->with('product')
+            ->get()
+            ->pluck('product.category_id')
+            ->unique()
+            ->toArray();
+    }
+
+    /**
+     * Get cart products for scope validation (PUBLIC METHOD)
+     */
+    public function getCartProducts($userId, $sessionId)
+    {
+        $cartQuery = Cart::query();
+        
+        if ($userId) {
+            $cartQuery->where('user_id', $userId);
+        } else {
+            $cartQuery->where('session_id', $sessionId);
+        }
+        
+        return $cartQuery->pluck('product_id')
+            ->unique()
+            ->toArray();
+    }
+    
+    /**
+     * Get available coupons for modal (PUBLIC METHOD)
+     */
+    public function getAvailableCoupons()
+    {
+        $user = Auth::user();
+        $userId = $user ? $user->id : null;
+        
+        $coupons = Coupon::where('status', 'active')
+            ->where('start_date', '<=', Carbon::now())
+            ->where('end_date', '>=', Carbon::now())
+            ->orderBy('discount_value', 'desc')
+            ->get()
+            ->filter(function($coupon) use ($userId) {
+                // Check user scope
+                if ($coupon->user_scope == 'specific' && $userId) {
+                    return DB::table('coupon_users')
+                        ->where('coupon_id', $coupon->id)
+                        ->where('user_id', $userId)
+                        ->exists();
+                }
+                return true;
+            })
+            ->map(function($coupon) use ($userId) {
+                // Add cart validation info
+                $cartTotal = $this->calculateCartTotal($userId, session()->getId());
+                $coupon->is_applicable = $this->validateCoupon($coupon->code, $userId, $cartTotal)['valid'];
+                return $coupon;
+            });
+            
+        return $coupons;
     }
 }

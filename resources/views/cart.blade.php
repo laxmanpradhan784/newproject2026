@@ -81,6 +81,90 @@
                 <!-- Left Column: Cart Items -->
                 <div class="col-lg-8">
                     @if ($cartItems->count() > 0)
+                        <!-- Coupon Section - FLIPKART STYLE -->
+                        <div class="card rounded-3 shadow-sm border-0 mb-4">
+                            <div class="card-header bg-white border-0 py-3 px-4">
+                                <h5 class="fw-bold mb-0 d-flex align-items-center">
+                                    <i class="fas fa-tag text-primary me-2"></i>
+                                    Apply Coupon Code
+                                </h5>
+                            </div>
+                            <div class="card-body p-4">
+                                @if(session('coupon_error'))
+                                    <div class="alert alert-danger alert-dismissible fade show rounded-2 mb-3 py-2 px-3" role="alert">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-exclamation-circle me-2"></i>
+                                            <div class="flex-grow-1">{{ session('coupon_error') }}</div>
+                                            <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+                                @endif
+                                
+                                @if(session('coupon_success'))
+                                    <div class="alert alert-success alert-dismissible fade show rounded-2 mb-3 py-2 px-3" role="alert">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-check-circle me-2"></i>
+                                            <div class="flex-grow-1">{{ session('coupon_success') }}</div>
+                                            <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <form action="{{ route('coupon.apply') }}" method="POST" class="row g-3 align-items-center">
+                                    @csrf
+                                    <div class="col-md-8">
+                                        <div class="input-group input-group-lg">
+                                            <input type="text" 
+                                                   name="coupon_code" 
+                                                   class="form-control border-end-0 rounded-start-3 py-2 px-3" 
+                                                   placeholder="Enter coupon code" 
+                                                   value="{{ session('applied_coupon_code') ?? old('coupon_code') }}"
+                                                   {{ session('applied_coupon_code') ? 'readonly' : '' }}
+                                                   style="height: 48px; border-color: #dee2e6;">
+                                            @if(session('applied_coupon_code'))
+                                                <a href="{{ route('coupon.remove') }}" class="btn btn-outline-danger border-start-0 rounded-end-3 px-4" style="height: 48px;">
+                                                    <i class="fas fa-times me-1"></i> Remove
+                                                </a>
+                                            @else
+                                                <button type="submit" class="btn btn-primary border-start-0 rounded-end-3 px-4" style="height: 48px;">
+                                                    <i class="fas fa-check me-1"></i> Apply
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-md-end">
+                                        <button type="button" class="btn btn-outline-primary rounded-3 px-4" data-bs-toggle="modal" data-bs-target="#couponModal" style="height: 48px;">
+                                            <i class="fas fa-eye me-1"></i> View All Coupons
+                                        </button>
+                                    </div>
+                                </form>
+
+                                @if($appliedCoupon)
+                                    <div class="mt-3 p-3 bg-light border border-success border-2 rounded-2">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <div class="d-flex align-items-center mb-1">
+                                                    <span class="badge bg-success rounded-pill me-2">APPLIED</span>
+                                                    <strong class="text-dark">{{ $appliedCoupon['code'] }}</strong>
+                                                </div>
+                                                <p class="text-muted small mb-0">{{ $appliedCoupon['name'] }}</p>
+                                            </div>
+                                            <div class="text-end">
+                                                <div class="text-success fw-bold fs-4">-₹{{ number_format($appliedCoupon['discount_amount'], 2) }}</div>
+                                                <small class="text-muted">
+                                                    @if($appliedCoupon['discount_type'] == 'percentage')
+                                                        {{ $appliedCoupon['discount_value'] }}% OFF
+                                                    @else
+                                                        Flat ₹{{ $appliedCoupon['discount_value'] }} OFF
+                                                    @endif
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
                         <!-- Cart Items -->
                         <div class="card rounded-3 shadow-sm border-0">
                             <div class="card-body p-0">
@@ -201,13 +285,6 @@
                                         <i class="fas fa-arrow-left me-2"></i> Continue Shopping
                                     </a>
                                     <div class="d-flex align-items-center gap-3">
-                                        {{-- <form action="{{ route('cart.clear') }}" method="POST" id="clearCartForm">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-outline-danger rounded-pill px-3" id="clearCartBtn">
-                                        <i class="fas fa-trash me-2"></i> Clear Cart
-                                    </button>
-                                </form> --}}
                                         <div class="text-end">
                                             <p class="mb-1 text-muted">Total ({{ $cartCount }} items)</p>
                                             <h4 class="text-dark fw-bold mb-0">₹{{ number_format($subtotal, 2) }}</h4>
@@ -257,42 +334,65 @@
                             <div class="card-body pt-0">
                                 <!-- Price Breakdown -->
                                 <div class="price-breakdown mb-4">
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>Price ({{ $cartCount }} items)</span>
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <span class="text-muted">Price ({{ $cartCount }} items)</span>
                                         <span>₹{{ number_format($subtotal, 2) }}</span>
                                     </div>
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>Delivery Charges</span>
-                                        <span class="text-success">
+                                    
+                                    @if($discountAmount > 0 && $appliedCoupon)
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <span class="text-muted">
+                                                <span class="badge bg-success me-1">{{ $appliedCoupon['code'] }}</span>
+                                                Discount Applied
+                                            </span>
+                                            <span class="text-success fw-bold">-₹{{ number_format($discountAmount, 2) }}</span>
+                                        </div>
+                                        
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <span class="text-muted">Discounted Price</span>
+                                            <span class="fw-bold">₹{{ number_format($discountedSubtotal, 2) }}</span>
+                                        </div>
+                                    @endif
+                                    
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <span class="text-muted">Delivery Charges</span>
+                                        <span class="{{ $shipping == 0 ? 'text-success' : '' }}">
                                             @if ($shipping == 0)
-                                                FREE
+                                                <span class="fw-bold">FREE</span>
                                             @else
                                                 ₹{{ number_format($shipping, 2) }}
                                             @endif
                                         </span>
                                     </div>
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>Tax (GST 18%)</span>
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <span class="text-muted">Tax (GST 18%)</span>
                                         <span>₹{{ number_format($tax, 2) }}</span>
                                     </div>
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>Discount</span>
-                                        <span class="text-success">-₹{{ number_format($cartCount * 99, 2) }}</span>
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <span class="text-muted">Platform Fee</span>
+                                        <span class="text-success">FREE</span>
                                     </div>
                                 </div>
 
-                                <hr>
+                                <hr class="my-4">
 
                                 <!-- Total Amount -->
                                 <div class="total-amount mb-4">
-                                    <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
                                         <span class="fw-bold fs-5">Total Amount</span>
                                         <span class="fw-bold fs-4 text-dark">₹{{ number_format($total, 2) }}</span>
                                     </div>
-                                    <p class="text-success small mb-0 mt-1">
-                                        <i class="fas fa-check-circle me-1"></i>You will save
-                                        ₹{{ number_format($cartCount * 99, 2) }} on this order
-                                    </p>
+                                    
+                                    @if($discountAmount > 0)
+                                        <p class="text-success small mb-0">
+                                            <i class="fas fa-check-circle me-1"></i>You saved ₹{{ number_format($discountAmount, 2) }} with coupon
+                                        </p>
+                                    @else
+                                        <p class="text-success small mb-0 mt-1">
+                                            <i class="fas fa-check-circle me-1"></i>You will save
+                                            ₹{{ number_format($cartCount * 99, 2) }} on this order
+                                        </p>
+                                    @endif
                                 </div>
 
                                 <!-- Checkout Button -->
@@ -315,7 +415,7 @@
                                 @guest
                                     <div class="card border-info mt-3">
                                         <div class="card-body p-3">
-                                            <h6 class="fw-bold mb-2"><i class="fas fa-user-plus me-2 text-info"></i>Benefits
+                                            {{-- <h6 class="fw-bold mb-2"><i class="fas fa-user-plus me-2 text-info"></i>Benefits
                                                 of Login</h6>
                                             <ul class="list-unstyled small mb-0">
                                                 <li class="mb-1"><i class="fas fa-check text-success me-1"></i> Save cart
@@ -330,7 +430,7 @@
                                                 <a href="{{ route('login') }}" class="btn btn-outline-info btn-sm w-100">
                                                     <i class="fas fa-sign-in-alt me-1"></i> Login Now
                                                 </a>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 @endguest
@@ -362,28 +462,8 @@
         </div>
     </section>
 
-    <!-- Clear Cart Modal -->
-    {{-- <div class="modal fade" id="clearCartModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-3">
-            <div class="modal-header border-0">
-                <h5 class="modal-title fw-bold">Clear Cart</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center py-4">
-                <div class="mb-4">
-                    <i class="fas fa-trash-alt fa-4x text-danger"></i>
-                </div>
-                <h5 class="fw-bold mb-3">Remove all items?</h5>
-                <p class="text-muted">Are you sure you want to remove all items from your shopping cart?</p>
-            </div>
-            <div class="modal-footer border-0 justify-content-center">
-                <button type="button" class="btn btn-outline-dark px-4 rounded-pill" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger px-4 rounded-pill" id="confirmClearCart">Remove All</button>
-            </div>
-        </div>
-    </div>
-</div> --}}
+    <!-- Include Coupon Modal -->
+    @include('partials.coupon-modal', ['availableCoupons' => $availableCoupons])
 
 @endsection
 
@@ -498,6 +578,37 @@
         .input-group .btn-outline-secondary:hover {
             background-color: #f8f9fa;
         }
+
+        /* Coupon specific styles */
+        .coupon-input {
+            border: 2px solid #2874f0;
+            border-right: none;
+        }
+        
+        .coupon-input:focus {
+            border-color: #2874f0;
+            box-shadow: none;
+        }
+        
+        .coupon-apply-btn {
+            background: linear-gradient(135deg, #2874f0, #1b5fc1);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .coupon-apply-btn:hover {
+            background: linear-gradient(135deg, #1b5fc1, #2874f0);
+        }
+        
+        .coupon-applied-badge {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
     </style>
 @endpush
 
@@ -589,25 +700,24 @@
                 });
             });
 
-            // Clear cart with confirmation
-            const clearCartBtn = document.getElementById('clearCartBtn');
-            const clearCartForm = document.getElementById('clearCartForm');
-            const confirmClearCart = document.getElementById('confirmClearCart');
-
-            if (clearCartBtn) {
-                clearCartBtn.addEventListener('click', function() {
-                    const modal = new bootstrap.Modal(document.getElementById('clearCartModal'));
-                    modal.show();
+            // Copy coupon code functionality
+            document.querySelectorAll('.copy-coupon').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const code = this.getAttribute('data-code');
+                    navigator.clipboard.writeText(code).then(() => {
+                        const originalText = this.innerHTML;
+                        this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                        this.classList.add('btn-success');
+                        this.classList.remove('btn-outline-primary');
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.classList.remove('btn-success');
+                            this.classList.add('btn-outline-primary');
+                        }, 2000);
+                    });
                 });
-            }
-
-            if (confirmClearCart) {
-                confirmClearCart.addEventListener('click', function() {
-                    if (clearCartForm) {
-                        clearCartForm.submit();
-                    }
-                });
-            }
+            });
 
             // Show notification
             function showNotification(message, type = 'info') {
@@ -642,37 +752,6 @@
                     setTimeout(() => notification.remove(), 300);
                 }, 3000);
             }
-
-            // Update cart count in real-time
-            function updateCartCount() {
-                fetch('{{ route('cart.count') }}')
-                    .then(response => response.json())
-                    .then(data => {
-                        // Update all cart count elements in navbar (if any)
-                        document.querySelectorAll('[data-cart-count]').forEach(el => {
-                            el.textContent = data.count;
-                            if (data.count > 0) {
-                                el.style.display = 'inline-block';
-                            } else {
-                                el.style.display = 'none';
-                            }
-                        });
-
-                        // Update page title if cart is empty
-                        if (data.count === 0 && window.location.pathname.includes('cart')) {
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 1000);
-                        }
-                    })
-                    .catch(error => console.error('Error updating cart count:', error));
-            }
-
-            // Initialize cart animations
-            document.querySelectorAll('.cart-item').forEach((item, index) => {
-                item.style.animationDelay = `${index * 0.1}s`;
-                item.classList.add('animate__animated', 'animate__fadeIn');
-            });
 
             // Check for success messages
             @if (session('success'))
@@ -710,28 +789,28 @@
             const progressContainer = document.createElement('div');
             progressContainer.className = 'alert-progress';
             progressContainer.style.cssText = `
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: rgba(0,0,0,0.1);
-        border-radius: 0 0 0.375rem 0.375rem;
-        overflow: hidden;
-    `;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 3px;
+                background: rgba(0,0,0,0.1);
+                border-radius: 0 0 0.375rem 0.375rem;
+                overflow: hidden;
+            `;
 
             // Create progress bar
             const progressBar = document.createElement('div');
             progressBar.className = 'alert-progress-bar';
             progressBar.style.cssText = `
-        height: 100%;
-        width: 100%;
-        background: currentColor;
-        opacity: 0.3;
-        transform-origin: left;
-        transform: scaleX(1);
-        transition: transform ${totalTime}ms linear;
-    `;
+                height: 100%;
+                width: 100%;
+                background: currentColor;
+                opacity: 0.3;
+                transform-origin: left;
+                transform: scaleX(1);
+                transition: transform ${totalTime}ms linear;
+            `;
 
             progressContainer.appendChild(progressBar);
             alertElement.style.position = 'relative';
