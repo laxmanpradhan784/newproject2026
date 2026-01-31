@@ -48,283 +48,336 @@
 
 
     <!-- Featured Products -->
-    <section class="featured-products py-5">
+    <section class="featured-products py-5 bg-light">
         <div class="container">
-            <div class="section-title">
-                <h2>Featured Products</h2>
-                <p class="text-muted">Handpicked selection of our best products</p>
+            <div class="section-header text-center mb-5">
+                <h2 class="display-5 fw-bold mb-3">Featured Products</h2>
+                <p class="text-muted fs-5">Premium selection of our best-selling items</p>
             </div>
 
-            <div class="row">
+            <div class="row g-4">
                 @forelse($products as $product)
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="product-card">
-                            <div class="product-image position-relative">
-                                <a href="{{ route('product.show', $product->id) }}">
-                                    @if ($product->image)
-                                        <img src="{{ asset('uploads/products/' . $product->image) }}" class="img-fluid"
-                                            alt="{{ $product->name }}">
-                                    @else
-                                        <img src="https://via.placeholder.com/400x300?text=No+Image" class="img-fluid"
-                                            alt="{{ $product->name }}">
-                                    @endif
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <div class="card product-card border-0 shadow-sm h-100 overflow-hidden">
+                            <!-- Product Image with Badges -->
+                            <div class="product-img-wrapper position-relative">
+                                <a href="{{ route('product.show', $product->id) }}" class="d-block">
+                                    <div class="product-image position-relative" style="height: 280px; overflow: hidden;">
+                                        @if ($product->image)
+                                            <img src="{{ asset('uploads/products/' . $product->image) }}"
+                                                class="img-fluid w-100 h-100 object-fit-cover transition-transform"
+                                                alt="{{ $product->name }}">
+                                        @else
+                                            <img src="https://via.placeholder.com/400x280?text=No+Image"
+                                                class="img-fluid w-100 h-100 object-fit-cover transition-transform"
+                                                alt="{{ $product->name }}">
+                                        @endif
+                                    </div>
                                 </a>
 
-                                <div class="product-actions position-absolute top-0 end-0 p-3">
-                                    <button class="btn btn-light btn-sm rounded-circle mb-2">
-                                        <i class="fas fa-heart"></i>
+                                <!-- Top Badges -->
+                                <div class="position-absolute top-0 start-0 p-3">
+                                    @if ($product->stock <= 0)
+                                        <span class="badge bg-danger px-3 py-2 rounded-pill fw-normal">Sold Out</span>
+                                    @elseif ($product->is_new ?? true)
+                                        <span class="badge bg-success px-3 py-2 rounded-pill fw-normal">New</span>
+                                    @endif
+                                </div>
+
+                                <!-- Quick Actions -->
+                                <div class="product-actions position-absolute top-0 end-0 p-3 d-flex flex-column gap-2">
+                                    <button class="btn btn-light btn-icon rounded-circle shadow-sm" title="Add to Wishlist">
+                                        <i class="fas fa-heart text-danger"></i>
                                     </button>
-                                    <button class="btn btn-light btn-sm rounded-circle">
+                                    <button class="btn btn-light btn-icon rounded-circle shadow-sm" title="Quick View">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                 </div>
 
-                                <!-- Stock Badge -->
-                                @if ($product->stock <= 0)
-                                    <div class="position-absolute top-0 start-0 m-3">
-                                        <span class="badge bg-danger">Out of Stock</span>
-                                    </div>
-                                @endif
-                            </div>
-
-                            <div class="product-body p-4">
-                                <!-- Title and badge -->
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h5 class="mb-0">
-                                        <a href="{{ route('product.show', $product->id) }}"
-                                            class="text-decoration-none text-dark">
-                                            {{ $product->name }}
-                                        </a>
-                                    </h5>
-                                    @if ($product->is_new ?? true)
-                                        <span class="badge bg-success">New</span>
+                                <!-- Hover Add to Cart -->
+                                <div
+                                    class="product-hover-actions position-absolute bottom-0 start-0 w-100 p-3 bg-white bg-opacity-95 translate-y-100 transition-all">
+                                    @if ($product->stock > 0)
+                                        <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit"
+                                                class="btn btn-primary w-100 py-3 fw-semibold rounded-pill">
+                                                <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                                            </button>
+                                        </form>
                                     @endif
                                 </div>
+                            </div>
 
-                                <!-- Category name -->
+                            <!-- Product Info -->
+                            <div class="card-body p-4">
+                                <!-- Category -->
                                 @if ($product->category)
-                                    <p class="text-muted small mb-2">
-                                        Category:
+                                    <div class="mb-2">
                                         <a href="{{ route('category.products', $product->category->slug) }}"
-                                            class="text-decoration-none">
-                                            {{ $product->category->name }}
+                                            class="text-decoration-none text-muted small">
+                                            <i class="fas fa-tag me-1"></i>{{ $product->category->name }}
                                         </a>
-                                    </p>
+                                    </div>
                                 @endif
 
-                                <!-- Short description -->
-                                <p class="text-muted small mb-3">
-                                    {{ $product->short_description ?? Str::limit($product->description, 50, '...') }}
+                                <!-- Product Title -->
+                                <h5 class="card-title mb-2">
+                                    <a href="{{ route('product.show', $product->id) }}"
+                                        class="text-decoration-none text-dark fw-semibold hover-primary">
+                                        {{ $product->name }}
+                                    </a>
+                                </h5>
+
+                                <!-- Rating -->
+                                {{-- <div class="product-rating mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="star-rating">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <i class="fas fa-star {{ $i <= 4 ? 'text-warning' : 'text-light' }}"></i>
+                                            @endfor
+                                        </div>
+                                        <small class="text-muted ms-2">({{ rand(20, 500) }} reviews)</small>
+                                    </div>
+                                </div> --}}
+
+                                <!-- Short Description -->
+                                <p class="card-text text-muted small mb-3">
+                                    {{ $product->short_description ?? Str::limit($product->description, 60, '...') }}
                                 </p>
 
                                 <!-- Price -->
-                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="product-price d-flex align-items-center justify-content-between mb-3">
                                     <div>
-                                        <span class="h5 text-primary">₹{{ number_format($product->price, 2) }}</span>
+                                        <span
+                                            class="h4 fw-bold text-primary">₹{{ number_format($product->price, 2) }}</span>
                                         @if ($product->old_price)
                                             <span
                                                 class="text-muted text-decoration-line-through ms-2">₹{{ number_format($product->old_price, 2) }}</span>
                                         @endif
                                     </div>
                                     @if ($product->stock <= 0)
-                                        <span class="badge bg-danger">Out of Stock</span>
+                                        <span
+                                            class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-2 rounded-pill">Out
+                                            of Stock</span>
                                     @endif
                                 </div>
 
-                                <!-- Quantity Selector and Add to Cart -->
-                                @if ($product->stock > 0)
-                                    @if ($product->inCart())
+                                <!-- Stock Progress -->
+                                @if ($product->stock > 0 && $product->stock < 20)
+                                    <div class="mb-4">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <small class="text-muted">Hurry! Only {{ $product->stock }} left</small>
+                                            <small class="text-muted">{{ round(($product->stock / 50) * 100) }}%</small>
+                                        </div>
+                                        <div class="progress" style="height: 6px;">
+                                            <div class="progress-bar bg-warning"
+                                                style="width: {{ ($product->stock / 50) * 100 }}%"></div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <!-- In Cart Controls (if item already in cart) -->
+                                @if ($product->stock > 0 && $product->inCart())
+                                    <div class="cart-controls mt-3">
                                         <div class="d-flex align-items-center justify-content-between">
-                                            <div class="btn-group" role="group">
-                                                <form action="{{ route('cart.decrease', $product->id) }}" method="POST"
-                                                    class="d-inline">
+                                            <div class="btn-group shadow-sm">
+                                                <form action="{{ route('cart.decrease', $product->id) }}" method="POST">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-outline-secondary btn-sm">
+                                                    <button type="submit" class="btn btn-outline-secondary px-3 py-2">
                                                         <i class="fas fa-minus"></i>
                                                     </button>
                                                 </form>
 
-                                                <span class="px-3 fw-bold">{{ $product->cartQuantity() }}</span>
+                                                <span
+                                                    class="px-3 py-2 bg-light fw-bold min-w-40">{{ $product->cartQuantity() }}</span>
 
-                                                <form action="{{ route('cart.increase', $product->id) }}" method="POST"
-                                                    class="d-inline">
+                                                <form action="{{ route('cart.increase', $product->id) }}" method="POST">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-outline-secondary btn-sm"
+                                                    <button type="submit" class="btn btn-outline-secondary px-3 py-2"
                                                         {{ $product->cartQuantity() >= $product->stock ? 'disabled' : '' }}>
                                                         <i class="fas fa-plus"></i>
                                                     </button>
                                                 </form>
                                             </div>
 
-                                            <a href="{{ route('cart') }}" class="btn btn-success btn-sm">
+                                            <a href="{{ route('cart') }}" class="btn btn-success px-4 py-2">
                                                 <i class="fas fa-check me-1"></i> In Cart
                                             </a>
                                         </div>
-                                    @else
-                                        <form action="{{ route('cart.add', $product->id) }}" method="POST"
-                                            class="d-inline w-100">
+                                    </div>
+                                @elseif ($product->stock > 0)
+                                    <!-- Quantity Selector -->
+                                    <div class="mt-3">
+                                        <form action="{{ route('cart.add', $product->id) }}" method="POST">
                                             @csrf
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <button type="button" class="btn btn-outline-secondary quantity-minus"
-                                                        data-id="{{ $product->id }}">
-                                                        <i class="fas fa-minus"></i>
-                                                    </button>
-                                                </div>
+                                            <div class="input-group shadow-sm">
+                                                <button type="button"
+                                                    class="btn btn-outline-secondary quantity-minus px-3"
+                                                    data-id="{{ $product->id }}">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+
                                                 <input type="number" name="quantity"
-                                                    class="form-control text-center quantity-input" value="1"
-                                                    min="1" max="{{ $product->stock }}"
-                                                    data-id="{{ $product->id }}" style="max-width: 60px;">
-                                                <div class="input-group-append">
-                                                    <button type="button" class="btn btn-outline-secondary quantity-plus"
-                                                        data-id="{{ $product->id }}">
-                                                        <i class="fas fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="input-group-append">
-                                                    <button type="submit" class="btn btn-primary"
-                                                        style="margin-left: 160px;>
-                                                        <i class="fas
-                                                        fa-cart-plus me-1"></i> Add
-                                                    </button>
-                                                </div>
+                                                    class="form-control text-center quantity-input border-0 bg-light"
+                                                    value="1" min="1" max="{{ $product->stock }}"
+                                                    data-id="{{ $product->id }}">
+
+                                                <button type="button"
+                                                    class="btn btn-outline-secondary quantity-plus px-3"
+                                                    data-id="{{ $product->id }}">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+
+                                                <button type="submit" class="btn btn-primary px-4">
+                                                    <i class="fas fa-cart-plus me-2"></i>Add
+                                                </button>
                                             </div>
                                         </form>
-                                    @endif
-
-                                    <!-- Stock Information -->
-                                    <small class="text-muted d-block mt-2">
-                                        <i class="fas fa-box me-1"></i>
-                                        {{ $product->stock }} in stock
-                                    </small>
+                                    </div>
                                 @else
-                                    <button class="btn btn-secondary btn-block" disabled>
-                                        <i class="fas fa-times-circle me-1"></i> Out of Stock
+                                    <!-- Out of Stock -->
+                                    <button class="btn btn-outline-secondary w-100 mt-3 py-3" disabled>
+                                        <i class="fas fa-times-circle me-2"></i>Notify When Available
                                     </button>
                                 @endif
                             </div>
                         </div>
                     </div>
                 @empty
-                    <div class="col-12 text-center">
-                        <p class="text-muted">No products found.</p>
+                    <div class="col-12">
+                        <div class="text-center py-5">
+                            <div class="mb-4">
+                                <i class="fas fa-box-open display-1 text-muted opacity-25"></i>
+                            </div>
+                            <h4 class="fw-semibold text-muted mb-3">No Products Found</h4>
+                            <p class="text-muted mb-4">Check back soon for new arrivals!</p>
+                            <a href="{{ route('home') }}" class="btn btn-outline-primary px-4">
+                                Continue Shopping
+                            </a>
+                        </div>
                     </div>
                 @endforelse
             </div>
 
-            <!-- Add this JavaScript section to your home page or layout -->
-            @push('scripts')
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        // Quantity plus button
-                        document.querySelectorAll('.quantity-plus').forEach(button => {
-                            button.addEventListener('click', function() {
-                                const productId = this.getAttribute('data-id');
-                                const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
-                                const max = parseInt(input.getAttribute('max'));
-                                let value = parseInt(input.value) || 1;
-
-                                if (value < max) {
-                                    input.value = value + 1;
-                                }
-                            });
-                        });
-
-                        // Quantity minus button
-                        document.querySelectorAll('.quantity-minus').forEach(button => {
-                            button.addEventListener('click', function() {
-                                const productId = this.getAttribute('data-id');
-                                const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
-                                const min = parseInt(input.getAttribute('min'));
-                                let value = parseInt(input.value) || 1;
-
-                                if (value > min) {
-                                    input.value = value - 1;
-                                }
-                            });
-                        });
-
-                        // Input validation
-                        document.querySelectorAll('.quantity-input').forEach(input => {
-                            input.addEventListener('change', function() {
-                                const min = parseInt(this.getAttribute('min'));
-                                const max = parseInt(this.getAttribute('max'));
-                                let value = parseInt(this.value) || min;
-
-                                if (value < min) this.value = min;
-                                if (value > max) this.value = max;
-                            });
-                        });
-                    });
-                </script>
-                <style>
-                    .quantity-input {
-                        width: 60px;
-                        text-align: center;
-                        border-left: 0;
-                        border-right: 0;
-                    }
-
-                    .btn-group .btn {
-                        border-radius: 50% !important;
-                        width: 35px;
-                        height: 35px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        padding: 0;
-                    }
-
-                    .input-group .btn {
-                        border-radius: 0.375rem !important;
-                    }
-
-                    .input-group .btn-outline-secondary {
-                        border-color: #dee2e6;
-                    }
-
-                    .input-group .btn-outline-secondary:hover {
-                        background-color: #f8f9fa;
-                    }
-
-                    .product-card {
-                        border: 1px solid #e9ecef;
-                        border-radius: 10px;
-                        overflow: hidden;
-                        transition: all 0.3s ease;
-                        height: 100%;
-                    }
-
-                    .product-card:hover {
-                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-                        transform: translateY(-5px);
-                    }
-
-                    .product-image img {
-                        width: 100%;
-                        height: 200px;
-                        object-fit: cover;
-                    }
-
-                    .product-actions .btn {
-                        opacity: 0.8;
-                        transition: opacity 0.3s;
-                    }
-
-                    .product-actions .btn:hover {
-                        opacity: 1;
-                    }
-                </style>
-            @endpush
-
-            <div class="text-center mt-4">
-                <a href="{{ route('products') }}" class="btn btn-outline-primary px-5">
-                    View All Products
-                </a>
-            </div>
-
+            <!-- View All Button -->
+            @if ($products->count() > 0)
+                <div class="text-center mt-5 pt-3">
+                    <a href="{{ route('products') }}" class="btn btn-primary btn-lg px-5 py-3 rounded-pill">
+                        View All Products <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            @endif
         </div>
     </section>
+
+    <!-- Custom CSS -->
+    <style>
+        .product-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 16px;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .product-img-wrapper {
+            overflow: hidden;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .transition-transform {
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .transition-transform {
+            transform: scale(1.05);
+        }
+
+        .product-hover-actions {
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-hover-actions {
+            transform: translateY(0);
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .hover-primary:hover {
+            color: #0d6efd !important;
+        }
+
+        .star-rating i {
+            font-size: 0.875rem;
+        }
+
+        .min-w-40 {
+            min-width: 40px;
+        }
+
+        .translate-y-100 {
+            transform: translateY(100%);
+        }
+
+        /* Quantity Input Styling */
+        .quantity-input {
+            max-width: 60px;
+            font-weight: 600;
+        }
+
+        .quantity-input:focus {
+            box-shadow: none;
+            border-color: #dee2e6;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+        }
+
+        /* Badge Styles */
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* Progress Bar */
+        .progress {
+            border-radius: 3px;
+            background-color: #f1f3f5;
+        }
+
+        .progress-bar {
+            border-radius: 3px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .product-card {
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .product-image {
+                height: 220px !important;
+            }
+
+            .input-group .btn {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+        }
+    </style>
 
     <!-- Banner Section -->
     <section class="banner-section py-5">

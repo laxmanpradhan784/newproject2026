@@ -25,7 +25,7 @@ class HomeController extends Controller
                 $query->where('status', 'active'); // category active
             })
             ->orderBy('created_at', 'DESC')
-            ->limit(6)
+            ->limit(8)
             ->get();
 
         return view('home', compact('categories', 'sliders', 'products'));
