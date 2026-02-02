@@ -135,7 +135,6 @@
             </div>
 
             <!-- Order Status & Actions -->
-            <!-- Order Status & Actions -->
             <div class="col-lg-4 mb-4">
                 <div class="card shadow border-0 h-100">
                     <div class="card-header bg-warning text-dark py-3">
@@ -256,175 +255,348 @@
         <div class="row">
             <div class="col-12">
                 <div class="card shadow border-0">
-                    <div class="card-header bg-white py-3">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                         <h5 class="mb-0"><i class="fas fa-boxes me-2"></i> Order Items ({{ $order->items->count() }})
                         </h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                            <table class="table table-hover mb-0">
-                                <thead class="bg-light">
-                                    <tr class="bg-light bg-gradient border-bottom border-3">
-                                        <th class="ps-5 py-3 align-middle fw-semibold text-dark" width="5%">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="bg-primary bg-opacity-10 p-1 rounded-2">
-                                                    <i class="bi  text-primary fs-6">Sr</i>
-                                                </div>
-                                                <div class="d-flex flex-column">
-                                                    <span class="fw-semibold"></span>
-                                                    <small class="text-muted"> No</small>
-                                                </div>
-                                            </div>
-                                        </th>
-                                        <th class="py-3 align-middle fw-semibold text-dark" width="15%">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="bg-primary bg-opacity-10 p-1 rounded-2">
-                                                    <i class="bi bi-image text-primary fs-6"></i>
-                                                </div>
-                                                <div class="d-flex flex-column">
-                                                    <span class="fw-semibold">Image</span>
-                                                    <small class="text-muted">Preview</small>
-                                                </div>
-                                            </div>
-                                        </th>
-                                        <th class="py-3 align-middle fw-semibold text-dark">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="bg-primary bg-opacity-10 p-1 rounded-2">
-                                                    <i class="bi bi-box-seam text-primary fs-6"></i>
-                                                </div>
-                                                <div class="d-flex flex-column">
-                                                    <span class="fw-semibold">Product</span>
-                                                    <small class="text-muted">Details</small>
-                                                </div>
-                                            </div>
-                                        </th>
-                                        <th class="py-3 align-middle fw-semibold text-dark" width="15%">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="bg-primary bg-opacity-10 p-1 rounded-2">
-                                                    <i class="bi bi-tags text-primary fs-6"></i>
-                                                </div>
-                                                <div class="d-flex flex-column">
-                                                    <span class="fw-semibold">Category</span>
-                                                    <small class="text-muted">Type</small>
-                                                </div>
-                                            </div>
-                                        </th>
-                                        <th class="py-3 align-middle fw-semibold text-dark" width="10%">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="bg-primary bg-opacity-10 p-1 rounded-2">
-                                                    <i class="bi bi-currency-rupee text-primary fs-6"></i>
-                                                </div>
-                                                <div class="d-flex flex-column">
-                                                    <span class="fw-semibold">Price</span>
-                                                    <small class="text-muted">Unit</small>
-                                                </div>
-                                            </div>
-                                        </th>
-                                        <th class="py-3 align-middle fw-semibold text-dark" width="10%">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="bg-primary bg-opacity-10 p-1 rounded-2">
-                                                    <i class="bi bi-box text-primary fs-6"></i>
-                                                </div>
-                                                <div class="d-flex flex-column">
-                                                    <span class="fw-semibold">Quantity</span>
-                                                    <small class="text-muted">Qty</small>
-                                                </div>
-                                            </div>
-                                        </th>
-                                        <th class="py-3 align-middle fw-semibold text-dark" width="15%">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="bg-primary bg-opacity-10 p-1 rounded-2">
-                                                    <i class="bi bi-calculator text-primary fs-6"></i>
-                                                </div>
-                                                <div class="d-flex flex-column">
-                                                    <span class="fw-semibold">Total</span>
-                                                    <small class="text-muted">Amount</small>
-                                                </div>
-                                            </div>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($order->items as $item)
-                                        <tr>
-                                            <td class="ps-4 py-3 align-middle">
-                                                <span
-                                                    class="badge bg-primary bg-opacity-10 text-primary border border-primary rounded-pill px-3 py-1 fw-medium">
-                                                    {{ $loop->iteration }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                @if ($item->product->image)
-                                                    <img src="{{ asset('uploads/products/' . $item->product->image) }}"
-                                                        alt="{{ $item->product_name }}" class="img-fluid rounded"
-                                                        style="width: 60px; height: 60px; object-fit: cover;">
-                                                @else
-                                                    <div class="bg-light rounded d-flex align-items-center justify-content-center"
-                                                        style="width: 60px; height: 60px;">
-                                                        <i class="fas fa-box text-muted"></i>
-                                                    </div>
-                                                @endif
-                                            </td>
-                                            <td class="py-3 align-middle">
-                                                <div>
-                                                    <h6 class="fw-semibold text-dark mb-1">{{ $item->product_name }}</h6>
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <small class="text-muted">
-                                                            <i class="bi bi-upc-scan me-1"></i>
-                                                            SKU: {{ $item->product->id ?? 'N/A' }}
-                                                        </small>
-                                                        @if ($item->product->description ?? false)
-                                                            <small class="text-muted">
-                                                                <i class="bi bi-text-paragraph me-1"></i>
-                                                                {{ Str::limit($item->product->description, 30) }}
-                                                            </small>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <!-- Category -->
-                                            <td class="py-3 align-middle">
-                                                <span
-                                                    class="badge bg-primary bg-opacity-10 text-primary border border-primary py-2 px-3">
-                                                    <i class="bi bi-tag me-1"></i>
-                                                    {{ $item->category_name }}
-                                                </span>
-                                            </td>
-
-                                            <!-- Price -->
-                                            <td class="py-3 align-middle">
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <i class="bi bi-currency-rupee text-success"></i>
-                                                    <span
-                                                        class="fw-semibold text-dark">{{ number_format($item->price, 2) }}</span>
-                                                </div>
-                                            </td>
-
-                                            <!-- Quantity -->
-                                            <td class="py-3 align-middle text-center">
-                                                <span
-                                                    class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary py-2 px-3 fw-medium">
-                                                    {{ $item->quantity }}
-                                                </span>
-                                            </td>
-
-                                            <!-- Total -->
-                                            <td class="py-3 align-middle">
-                                                <div class="d-flex align-items-center gap-2 justify-content-end">
-                                                    <i class="bi bi-currency-rupee text-primary"></i>
-                                                    <span
-                                                        class="fw-bold text-primary fs-5">{{ number_format($item->total, 2) }}</span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#orderItemsModal">
+                            <i class="fas fa-expand-alt me-2"></i> View Details
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Order Items Modal -->
+        <div class="modal fade" id="orderItemsModal" tabindex="-1" aria-labelledby="orderItemsModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content border-0">
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-primary text-white px-4 py-3 border-0">
+                        <div class="d-flex align-items-center w-100">
+                            <div class="flex-grow-1">
+                                <h5 class="modal-title mb-0" id="orderItemsModalLabel">
+                                    <i class="fas fa-boxes me-2"></i> Order Items Details
+                                    <span class="badge bg-white text-primary ms-2">{{ $order->items->count() }}
+                                        items</span>
+                                </h5>
+                            </div>
+                            <button type="button" class="btn-close btn-close-white m-0" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="modal-body p-4">
+                        <!-- Order Summary -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-body p-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
+                                                <i class="bi bi-receipt text-primary fs-4"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-1 text-muted">Order Reference</h6>
+                                                <p class="fw-bold text-dark mb-0 fs-5">{{ $order->order_number ?? 'N/A' }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-body p-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-success bg-opacity-10 p-3 rounded-3 me-3">
+                                                <i class="bi bi-currency-rupee text-success fs-4"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-1 text-muted">Grand Total</h6>
+                                                <p class="fw-bold text-success mb-0 fs-5">
+                                                    ₹{{ number_format($order->items->sum('total'), 2) }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scrollable Table Container -->
+                        <div class="border rounded-3 shadow-sm overflow-hidden">
+                            <div class="table-responsive" style="max-height: 450px; overflow-y: auto;">
+                                <table class="table table-hover mb-0">
+                                    <thead class="bg-light sticky-top" style="top: 0; z-index: 1;">
+                                        <tr>
+                                            <th class="ps-4 py-3 align-middle fw-semibold text-dark border-bottom"
+                                                width="5%">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="bg-primary bg-opacity-10 p-1 rounded-2">
+                                                        <i class="bi bi-hash text-primary fs-6"></i>
+                                                    </div>
+                                                    <span>Sr</span>
+                                                </div>
+                                            </th>
+                                            <th class="py-3 align-middle fw-semibold text-dark border-bottom"
+                                                width="15%">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="bg-primary bg-opacity-10 p-1 rounded-2">
+                                                        <i class="bi bi-image text-primary fs-6"></i>
+                                                    </div>
+                                                    <span>Image</span>
+                                                </div>
+                                            </th>
+                                            <th class="py-3 align-middle fw-semibold text-dark border-bottom"
+                                                width="25%">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="bg-primary bg-opacity-10 p-1 rounded-2">
+                                                        <i class="bi bi-box-seam text-primary fs-6"></i>
+                                                    </div>
+                                                    <span>Product Details</span>
+                                                </div>
+                                            </th>
+                                            <th class="py-3 align-middle fw-semibold text-dark border-bottom"
+                                                width="15%">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="bg-primary bg-opacity-10 p-1 rounded-2">
+                                                        <i class="bi bi-tags text-primary fs-6"></i>
+                                                    </div>
+                                                    <span>Category</span>
+                                                </div>
+                                            </th>
+                                            <th class="py-3 align-middle fw-semibold text-dark border-bottom"
+                                                width="10%">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="bg-primary bg-opacity-10 p-1 rounded-2">
+                                                        <i class="bi bi-currency-rupee text-primary fs-6"></i>
+                                                    </div>
+                                                    <span>Price</span>
+                                                </div>
+                                            </th>
+                                            <th class="py-3 align-middle fw-semibold text-dark border-bottom text-center"
+                                                width="10%">
+                                                <div class="d-flex align-items-center gap-2 justify-content-center">
+                                                    <div class="bg-primary bg-opacity-10 p-1 rounded-2">
+                                                        <i class="bi bi-box text-primary fs-6"></i>
+                                                    </div>
+                                                    <span>Qty</span>
+                                                </div>
+                                            </th>
+                                            <th class="py-3 align-middle fw-semibold text-dark border-bottom text-end pe-4"
+                                                width="15%">
+                                                <div class="d-flex align-items-center gap-2 justify-content-end">
+                                                    <div class="bg-primary bg-opacity-10 p-1 rounded-2">
+                                                        <i class="bi bi-calculator text-primary fs-6"></i>
+                                                    </div>
+                                                    <span>Total</span>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($order->items as $item)
+                                            <tr class="border-bottom">
+                                                <!-- Serial Number -->
+                                                <td class="ps-4 py-3 align-middle">
+                                                    <div class="d-flex align-items-center justify-content-center">
+                                                        <span
+                                                            class="badge bg-primary bg-opacity-10 text-primary border border-primary rounded-circle d-flex align-items-center justify-content-center"
+                                                            style="width: 36px; height: 36px;">
+                                                            {{ $loop->iteration }}
+                                                        </span>
+                                                    </div>
+                                                </td>
+
+                                                <!-- Image -->
+                                                <td class="py-3 align-middle">
+                                                    <div class="d-flex justify-content-center">
+                                                        @if ($item->product->image)
+                                                            <div class="position-relative">
+                                                                <img src="{{ asset('uploads/products/' . $item->product->image) }}"
+                                                                    alt="{{ $item->product_name }}"
+                                                                    class="img-fluid rounded-3 shadow-sm"
+                                                                    style="width: 70px; height: 70px; object-fit: cover;">
+                                                                <span
+                                                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                                                                    {{ $item->quantity }}
+                                                                </span>
+                                                            </div>
+                                                        @else
+                                                            <div class="bg-light rounded-3 d-flex flex-column align-items-center justify-content-center shadow-sm p-2"
+                                                                style="width: 70px; height: 70px;">
+                                                                <i class="fas fa-box text-muted fs-4 mb-1"></i>
+                                                                <small class="text-muted">Qty:
+                                                                    {{ $item->quantity }}</small>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </td>
+
+                                                <!-- Product Details -->
+                                                <td class="py-3 align-middle">
+                                                    <div class="d-flex flex-column">
+                                                        <h6 class="fw-bold text-dark mb-1">{{ $item->product_name }}</h6>
+                                                        <div class="d-flex align-items-center gap-3 mb-2">
+                                                            <small class="text-muted">
+                                                                <i class="bi bi-upc-scan me-1"></i>
+                                                                <strong>SKU:</strong> {{ $item->product->id ?? 'N/A' }}
+                                                            </small>
+                                                            @if ($item->product->brand ?? false)
+                                                                <small class="text-muted">
+                                                                    <i class="bi bi-tag me-1"></i>
+                                                                    <strong>Brand:</strong> {{ $item->product->brand }}
+                                                                </small>
+                                                            @endif
+                                                        </div>
+                                                        @if ($item->product->description ?? false)
+                                                            <div class="mt-1">
+                                                                <small class="text-muted">
+                                                                    <i class="bi bi-text-paragraph me-1"></i>
+                                                                    {{ Str::limit($item->product->description, 80) }}
+                                                                </small>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </td>
+
+                                                <!-- Category -->
+                                                <td class="py-3 align-middle">
+                                                    <div class="d-flex justify-content-center">
+                                                        <span
+                                                            class="badge bg-primary bg-opacity-10 text-primary border border-primary py-2 px-3 rounded-pill">
+                                                            <i class="bi bi-tag me-1"></i>
+                                                            {{ $item->category_name }}
+                                                        </span>
+                                                    </div>
+                                                </td>
+
+                                                <!-- Price -->
+                                                <td class="py-3 align-middle">
+                                                    <div class="d-flex flex-column align-items-start">
+                                                        <div class="d-flex align-items-center gap-1">
+                                                            <i class="bi bi-currency-rupee text-success fs-6"></i>
+                                                            <span
+                                                                class="fw-bold text-dark fs-5">{{ number_format($item->price, 2) }}</span>
+                                                        </div>
+                                                        <small class="text-muted">per unit</small>
+                                                    </div>
+                                                </td>
+
+                                                <!-- Quantity -->
+                                                <td class="py-3 align-middle text-center">
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <span
+                                                            class="badge bg-secondary bg-opacity-25 text-secondary border border-secondary py-2 px-3 fw-bold fs-6 rounded-pill">
+                                                            {{ $item->quantity }}
+                                                        </span>
+                                                        <small class="text-muted mt-1">units</small>
+                                                    </div>
+                                                </td>
+
+                                                <!-- Total -->
+                                                <td class="py-3 align-middle text-end pe-4">
+                                                    <div class="d-flex flex-column align-items-end">
+                                                        <div class="d-flex align-items-center gap-1">
+                                                            <i class="bi bi-currency-rupee text-primary fs-5"></i>
+                                                            <span
+                                                                class="fw-bold text-primary fs-4">{{ number_format($item->total, 2) }}</span>
+                                                        </div>
+                                                        <small class="text-muted">item total</small>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Summary Card -->
+                        {{-- <div class="card border-0 shadow-sm bg-light mt-4">
+                            <div class="card-body p-3">
+                                <div class="row align-items-center">
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3">
+                                                <i class="bi bi-box-seam text-primary fs-4"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 text-muted">Total Items</h6>
+                                                <p class="fw-bold text-dark mb-0 fs-4">{{ $order->items->count() }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 text-end">
+                                        <div class="d-flex align-items-center justify-content-end">
+                                            <div class="me-3 text-end">
+                                                <h6 class="mb-1 text-muted">Grand Total</h6>
+                                                <p class="fw-bold text-success mb-0 fs-3">
+                                                    ₹{{ number_format($order->items->sum('total'), 2) }}
+                                                </p>
+                                            </div>
+                                            <div class="bg-success bg-opacity-10 p-3 rounded-3">
+                                                <i class="bi bi-currency-rupee text-success fs-3"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> --}}
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer bg-light px-4 py-3 border-top">
+                        <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i> Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            /* Custom scrollbar for table */
+            .table-responsive::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+
+            .table-responsive::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 10px;
+            }
+
+            .table-responsive::-webkit-scrollbar-thumb {
+                background: #c1c1c1;
+                border-radius: 10px;
+            }
+
+            .table-responsive::-webkit-scrollbar-thumb:hover {
+                background: #a1a1a1;
+            }
+
+            /* Sticky header styles */
+            .sticky-top {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Smooth hover effect */
+            .table-hover tbody tr:hover {
+                background-color: rgba(13, 110, 253, 0.04) !important;
+                transition: background-color 0.2s ease;
+            }
+        </style>
+
+        <script>
+            function printOrderItems() {
+                // You can implement print functionality here
+                window.print();
+            }
+        </script>
     </div>
 @endsection
 
