@@ -275,7 +275,7 @@
 
 <!-- Pagination Links -->
 @if ($products->hasPages())
-    <div class="d-flex justify-content-center mt-5 pt-4">
+    <div class="d-flex justify-content-center mt-1">
         <nav aria-label="Products navigation">
             <ul class="pagination pagination-lg shadow-sm rounded-4 overflow-hidden">
                 {{-- Previous Page --}}

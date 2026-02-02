@@ -229,13 +229,6 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- Pagination -->
-            @if ($coupons->hasPages())
-                <div class="d-flex justify-content-center mt-4">
-                    {{ $coupons->links() }}
-                </div>
-            @endif
         </div>
     </div>
 
