@@ -207,20 +207,19 @@
                                 <div class="d-flex justify-content-center gap-3 flex-wrap">
                                     @if (isset($category))
                                         <!-- Browse All Products Button -->
-                                        <a  href="{{ route('products') }}" class="btn btn-primary px-4 py-2">
+                                        <a href="{{ route('products') }}" class="btn btn-primary px-4 py-2">
                                             <i class="fas fa-th-large me-2"></i> Browse All Products
                                         </a>
 
                                         <!-- View Categories Button -->
                                         @if ($categories->count() > 0)
-                                            <a  href="{{ route('products') }}"
-                                                class="btn btn-outline-primary px-4 py-2">
+                                            <a href="{{ route('products') }}" class="btn btn-outline-primary px-4 py-2">
                                                 <i class="fas fa-tags me-2"></i> View Categories
                                             </a>
                                         @endif
                                     @else
                                         <!-- View All Products Button -->
-                                        <a  href="{{ route('products') }}" class="btn btn-primary px-4 py-2">
+                                        <a href="{{ route('products') }}" class="btn btn-primary px-4 py-2">
                                             <i class="fas fa-th-large me-2"></i> View All Products
                                         </a>
                                     @endif
@@ -271,16 +270,42 @@
                     }
                 </script>
         </div>
-
-        <!-- Pagination -->
-        @if ($products->hasPages())
-            <div class="mt-5">
-                {{ $products->links() }}
-            </div>
-        @endif
-
     </div>
 </section>
+
+<!-- Pagination Links -->
+@if ($products->hasPages())
+    <div class="d-flex justify-content-center mt-5 pt-4">
+        <nav aria-label="Products navigation">
+            <ul class="pagination pagination-lg shadow-sm rounded-4 overflow-hidden">
+                {{-- Previous Page --}}
+                <li class="page-item {{ $products->onFirstPage() ? 'disabled' : '' }}">
+                    <a class="page-link border-0 bg-light text-dark px-4 py-3"
+                        href="{{ $products->previousPageUrl() }}" aria-label="Previous">
+                        <i class="fas fa-chevron-left me-2"></i> Previous
+                    </a>
+                </li>
+
+                {{-- Page Numbers --}}
+                @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
+                    <li class="page-item {{ $page == $products->currentPage() ? 'active' : '' }}">
+                        <a class="page-link border-0 bg-light text-dark px-4 py-3" href="{{ $url }}">
+                            {{ $page }}
+                        </a>
+                    </li>
+                @endforeach
+
+                {{-- Next Page --}}
+                <li class="page-item {{ !$products->hasMorePages() ? 'disabled' : '' }}">
+                    <a class="page-link border-0 bg-light text-dark px-4 py-3" href="{{ $products->nextPageUrl() }}"
+                        aria-label="Next">
+                        Next <i class="fas fa-chevron-right ms-2"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+@endif
 
 <!-- JavaScript for Quantity Controls -->
 @push('scripts')
