@@ -376,7 +376,7 @@
 </section>
 
 <!-- CTA Section -->
-<section class="cta-section py-5 bg-primary text-white">
+<section class="cta-section mb-5 py-5 bg-primary text-white">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
@@ -397,6 +397,7 @@
         </div>
     </div>
 </section>
+
 @endsection @push('styles')
 <style>
     :root {

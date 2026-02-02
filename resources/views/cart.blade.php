@@ -81,78 +81,95 @@
                 <!-- Left Column: Cart Items -->
                 <div class="col-lg-8">
                     @if ($cartItems->count() > 0)
-                        <!-- Coupon Section - FLIPKART STYLE -->
+                        <!-- Modern Coupon Section -->
                         <div class="card rounded-3 shadow-sm border-0 mb-4">
                             <div class="card-header bg-white border-0 py-3 px-4">
-                                <h5 class="fw-bold mb-0 d-flex align-items-center">
+                                <h6 class="fw-bold mb-0 d-flex align-items-center">
                                     <i class="fas fa-tag text-primary me-2"></i>
                                     Apply Coupon Code
-                                </h5>
+                                </h6>
                             </div>
                             <div class="card-body p-4">
-                                @if(session('coupon_error'))
-                                    <div class="alert alert-danger alert-dismissible fade show rounded-2 mb-3 py-2 px-3" role="alert">
+                                <!-- Coupon Messages -->
+                                @if (session('coupon_error'))
+                                    <div class="alert alert-danger alert-dismissible fade show rounded-2 mb-3 p-2"
+                                        role="alert">
                                         <div class="d-flex align-items-center">
-                                            <i class="fas fa-exclamation-circle me-2"></i>
-                                            <div class="flex-grow-1">{{ session('coupon_error') }}</div>
-                                            <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"></button>
-                                        </div>
-                                    </div>
-                                @endif
-                                
-                                @if(session('coupon_success'))
-                                    <div class="alert alert-success alert-dismissible fade show rounded-2 mb-3 py-2 px-3" role="alert">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-check-circle me-2"></i>
-                                            <div class="flex-grow-1">{{ session('coupon_success') }}</div>
-                                            <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            <i class="fas fa-exclamation-circle me-2 fa-sm"></i>
+                                            <div class="small">{{ session('coupon_error') }}</div>
+                                            <button type="button" class="btn-close btn-close-sm ms-auto"
+                                                data-bs-dismiss="alert" aria-label="Close"></button>
                                         </div>
                                     </div>
                                 @endif
 
-                                <form action="{{ route('coupon.apply') }}" method="POST" class="row g-3 align-items-center">
-                                    @csrf
-                                    <div class="col-md-8">
-                                        <div class="input-group input-group-lg">
-                                            <input type="text" 
-                                                   name="coupon_code" 
-                                                   class="form-control border-end-0 rounded-start-3 py-2 px-3" 
-                                                   placeholder="Enter coupon code" 
-                                                   value="{{ session('applied_coupon_code') ?? old('coupon_code') }}"
-                                                   {{ session('applied_coupon_code') ? 'readonly' : '' }}
-                                                   style="height: 48px; border-color: #dee2e6;">
-                                            @if(session('applied_coupon_code'))
-                                                <a href="{{ route('coupon.remove') }}" class="btn btn-outline-danger border-start-0 rounded-end-3 px-4" style="height: 48px;">
-                                                    <i class="fas fa-times me-1"></i> Remove
-                                                </a>
-                                            @else
-                                                <button type="submit" class="btn btn-primary border-start-0 rounded-end-3 px-4" style="height: 48px;">
-                                                    <i class="fas fa-check me-1"></i> Apply
-                                                </button>
-                                            @endif
+                                @if (session('coupon_success'))
+                                    <div class="alert alert-success alert-dismissible fade show rounded-2 mb-3 p-2"
+                                        role="alert">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-check-circle me-2 fa-sm"></i>
+                                            <div class="small">{{ session('coupon_success') }}</div>
+                                            <button type="button" class="btn-close btn-close-sm ms-auto"
+                                                data-bs-dismiss="alert" aria-label="Close"></button>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 text-md-end">
-                                        <button type="button" class="btn btn-outline-primary rounded-3 px-4" data-bs-toggle="modal" data-bs-target="#couponModal" style="height: 48px;">
-                                            <i class="fas fa-eye me-1"></i> View All Coupons
-                                        </button>
-                                    </div>
-                                </form>
+                                @endif
 
-                                @if($appliedCoupon)
-                                    <div class="mt-3 p-3 bg-light border border-success border-2 rounded-2">
+                                <!-- Coupon Form -->
+                                <div class="coupon-form mb-3">
+                                    <form action="{{ route('coupon.apply') }}" method="POST"
+                                        class="row g-2 align-items-center">
+                                        @csrf
+                                        <div class="col-md-8">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" name="coupon_code"
+                                                    class="form-control border-end-0 rounded-start-2 py-2 px-3"
+                                                    placeholder="Enter coupon code"
+                                                    value="{{ session('applied_coupon_code') ?? old('coupon_code') }}"
+                                                    {{ session('applied_coupon_code') ? 'readonly' : '' }}
+                                                    style="height: 40px;">
+                                                @if (session('applied_coupon_code'))
+                                                    <a href="{{ route('coupon.remove') }}"
+                                                        class="btn btn-outline-danger border-start-0 rounded-end-2 px-3"
+                                                        style="height: 40px;">
+                                                        <i class="fas fa-times"></i>
+                                                    </a>
+                                                @else
+                                                    <button type="submit"
+                                                        class="btn btn-primary border-start-0 rounded-end-2 px-3"
+                                                        style="height: 40px;">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-outline-primary w-100 rounded-2 py-2"
+                                                data-bs-toggle="modal" data-bs-target="#couponModal">
+                                                <i class="fas fa-eye me-1 fa-sm"></i> View Coupons
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Applied Coupon Display -->
+                                @if ($appliedCoupon)
+                                    <div class="applied-coupon p-2 bg-light border border-success rounded-2">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <div class="d-flex align-items-center mb-1">
-                                                    <span class="badge bg-success rounded-pill me-2">APPLIED</span>
-                                                    <strong class="text-dark">{{ $appliedCoupon['code'] }}</strong>
+                                                    <span class="badge bg-success rounded-pill me-2"
+                                                        style="font-size: 0.7rem;">APPLIED</span>
+                                                    <strong class="text-dark small">{{ $appliedCoupon['code'] }}</strong>
                                                 </div>
-                                                <p class="text-muted small mb-0">{{ $appliedCoupon['name'] }}</p>
+                                                <p class="text-muted small mb-0" style="font-size: 0.8rem;">
+                                                    {{ $appliedCoupon['name'] }}</p>
                                             </div>
                                             <div class="text-end">
-                                                <div class="text-success fw-bold fs-4">-₹{{ number_format($appliedCoupon['discount_amount'], 2) }}</div>
-                                                <small class="text-muted">
-                                                    @if($appliedCoupon['discount_type'] == 'percentage')
+                                                <div class="text-success fw-bold">
+                                                    -₹{{ number_format($appliedCoupon['discount_amount'], 2) }}</div>
+                                                <small class="text-muted" style="font-size: 0.75rem;">
+                                                    @if ($appliedCoupon['discount_type'] == 'percentage')
                                                         {{ $appliedCoupon['discount_value'] }}% OFF
                                                     @else
                                                         Flat ₹{{ $appliedCoupon['discount_value'] }} OFF
@@ -164,6 +181,27 @@
                                 @endif
                             </div>
                         </div>
+
+                        <!-- Add this CSS for better spacing -->
+                        <style>
+                            .coupon-form .input-group {
+                                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+                            }
+
+                            .applied-coupon {
+                                border-left: 3px solid #28a745 !important;
+                            }
+
+                            .btn-close-sm {
+                                padding: 0.25rem;
+                                background-size: 0.75rem;
+                            }
+
+                            .form-control:focus {
+                                border-color: #86b7fe;
+                                box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+                            }
+                        </style>
 
                         <!-- Cart Items -->
                         <div class="card rounded-3 shadow-sm border-0">
@@ -211,7 +249,8 @@
                                                             <span class="text-muted small">25,000+ ratings</span>
                                                         </div>
                                                         <div class="d-flex align-items-center">
-                                                            <span class="fs-5 fw-bold text-dark">₹{{ $item->price }}</span>
+                                                            <span
+                                                                class="fs-5 fw-bold text-dark">₹{{ $item->price }}</span>
                                                             <span
                                                                 class="text-muted text-decoration-line-through ms-2">₹{{ $item->price + 99 }}</span>
                                                             <span
@@ -338,22 +377,23 @@
                                         <span class="text-muted">Price ({{ $cartCount }} items)</span>
                                         <span>₹{{ number_format($subtotal, 2) }}</span>
                                     </div>
-                                    
-                                    @if($discountAmount > 0 && $appliedCoupon)
+
+                                    @if ($discountAmount > 0 && $appliedCoupon)
                                         <div class="d-flex justify-content-between mb-3">
                                             <span class="text-muted">
                                                 <span class="badge bg-success me-1">{{ $appliedCoupon['code'] }}</span>
                                                 Discount Applied
                                             </span>
-                                            <span class="text-success fw-bold">-₹{{ number_format($discountAmount, 2) }}</span>
+                                            <span
+                                                class="text-success fw-bold">-₹{{ number_format($discountAmount, 2) }}</span>
                                         </div>
-                                        
+
                                         <div class="d-flex justify-content-between mb-3">
                                             <span class="text-muted">Discounted Price</span>
                                             <span class="fw-bold">₹{{ number_format($discountedSubtotal, 2) }}</span>
                                         </div>
                                     @endif
-                                    
+
                                     <div class="d-flex justify-content-between mb-3">
                                         <span class="text-muted">Delivery Charges</span>
                                         <span class="{{ $shipping == 0 ? 'text-success' : '' }}">
@@ -382,10 +422,11 @@
                                         <span class="fw-bold fs-5">Total Amount</span>
                                         <span class="fw-bold fs-4 text-dark">₹{{ number_format($total, 2) }}</span>
                                     </div>
-                                    
-                                    @if($discountAmount > 0)
+
+                                    @if ($discountAmount > 0)
                                         <p class="text-success small mb-0">
-                                            <i class="fas fa-check-circle me-1"></i>You saved ₹{{ number_format($discountAmount, 2) }} with coupon
+                                            <i class="fas fa-check-circle me-1"></i>You saved
+                                            ₹{{ number_format($discountAmount, 2) }} with coupon
                                         </p>
                                     @else
                                         <p class="text-success small mb-0 mt-1">
@@ -584,23 +625,23 @@
             border: 2px solid #2874f0;
             border-right: none;
         }
-        
+
         .coupon-input:focus {
             border-color: #2874f0;
             box-shadow: none;
         }
-        
+
         .coupon-apply-btn {
             background: linear-gradient(135deg, #2874f0, #1b5fc1);
             color: white;
             border: none;
             transition: all 0.3s ease;
         }
-        
+
         .coupon-apply-btn:hover {
             background: linear-gradient(135deg, #1b5fc1, #2874f0);
         }
-        
+
         .coupon-applied-badge {
             background: linear-gradient(45deg, #28a745, #20c997);
             color: white;

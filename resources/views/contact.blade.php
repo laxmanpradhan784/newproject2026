@@ -366,7 +366,7 @@
             </section>
             <!-- End Map Section -->
 
-            <div class="row mt-5">
+            {{-- <div class="row mt-5">
                 <div class="col-md-4">
                     <div class="text-center p-4">
                         <div class="icon-wrapper mb-3">
@@ -410,12 +410,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </section>
 
     <!-- Social Media -->
-    <section class="social-media py-5">
+    {{-- <section class="social-media py-5">
         <div class="container">
             <div class="section-title text-center mb-5">
                 <h2>Connect With Us</h2>
@@ -474,7 +474,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 @endsection
 
 @push('styles')

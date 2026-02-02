@@ -39,33 +39,33 @@
                     <form action="{{ route('checkout.store') }}" method="POST" id="checkoutForm">
                         @csrf
 
-                        <!-- Coupon Section -->
+                        <!-- Modern Coupon Section -->
                         @if (!session('applied_coupon_code'))
                             <div class="card rounded-3 shadow-sm border-0 mb-4">
-                                <div class="card-header bg-white border-0 py-3">
-                                    <h4 class="mb-0 d-flex align-items-center">
-                                        <i class="fas fa-tag text-primary me-2"></i>
+                                <div class="card-header bg-white border-0 py-2">
+                                    <h5 class="mb-0 d-flex align-items-center">
+                                        <i class="fas fa-tag text-primary me-2 fa-sm"></i>
                                         Have a Coupon Code?
-                                    </h4>
+                                    </h5>
                                 </div>
-                                <div class="card-body">
-                                    <div class="row g-3 align-items-center">
+                                <div class="card-body p-3">
+                                    <div class="row g-2 align-items-center">
                                         <div class="col-md-8">
-                                            <div class="input-group">
+                                            <div class="input-group input-group-sm">
                                                 <input type="text" name="coupon_code"
-                                                    class="form-control rounded-start-3 py-2 px-3"
+                                                    class="form-control rounded-start-2 py-2 px-3"
                                                     placeholder="Enter coupon code" id="checkoutCouponInput"
-                                                    style="height: 48px; border-color: #dee2e6;">
-                                                <button type="button" class="btn btn-primary rounded-end-3 px-4"
-                                                    id="applyCouponBtn" style="height: 48px;">
-                                                    <i class="fas fa-check me-1"></i> Apply
+                                                    style="height: 40px;">
+                                                <button type="button" class="btn btn-primary rounded-end-2 px-3"
+                                                    id="applyCouponBtn" style="height: 40px;">
+                                                    <i class="fas fa-check"></i>
                                                 </button>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 text-md-end">
-                                            <button type="button" class="btn btn-outline-primary rounded-3 px-4"
-                                                data-bs-toggle="modal" data-bs-target="#couponModal" style="height: 48px;">
-                                                <i class="fas fa-eye me-1"></i> View All Coupons
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-outline-primary w-100 rounded-2 py-2"
+                                                data-bs-toggle="modal" data-bs-target="#couponModal">
+                                                <i class="fas fa-eye me-1 fa-sm"></i> View All
                                             </button>
                                         </div>
                                     </div>
@@ -73,27 +73,33 @@
                             </div>
                         @else
                             <!-- Applied Coupon Display -->
-                            <div class="card rounded-3 shadow-sm border-0 mb-4 border-success border-2">
-                                <div class="card-header bg-white border-0 py-3">
+                            <div class="card rounded-3 shadow-sm border-0 mb-4 border-success">
+                                <div class="card-header bg-white border-0 py-2">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <h4 class="mb-0 d-flex align-items-center">
-                                            <i class="fas fa-tag text-success me-2"></i>
+                                        <h5 class="mb-0 d-flex align-items-center">
+                                            <i class="fas fa-tag text-success me-2 fa-sm"></i>
                                             Coupon Applied
-                                        </h4>
-                                        <a href="{{ route('coupon.remove') }}" class="btn btn-sm btn-outline-danger">
-                                            <i class="fas fa-times me-1"></i> Remove
+                                        </h5>
+                                        <a href="{{ route('coupon.remove') }}"
+                                            class="btn btn-sm btn-outline-danger px-2 py-1">
+                                            <i class="fas fa-times"></i>
                                         </a>
                                     </div>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body p-3">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <div class="d-flex align-items-center mb-1">
-                                                <span class="badge bg-success rounded-pill me-2">APPLIED</span>
-                                                <strong class="text-dark">{{ session('applied_coupon_code') }}</strong>
+                                                <span class="badge bg-success rounded-pill me-2" style="font-size: 0.7rem;">
+                                                    APPLIED
+                                                </span>
+                                                <strong
+                                                    class="text-dark small">{{ session('applied_coupon_code') }}</strong>
                                             </div>
-                                            <p class="text-muted small mb-0">{{ session('applied_coupon.name') }}</p>
-                                            <small class="text-success">
+                                            <p class="text-muted small mb-0" style="font-size: 0.85rem;">
+                                                {{ session('applied_coupon.name') }}
+                                            </p>
+                                            <small class="text-success d-block mt-1" style="font-size: 0.8rem;">
                                                 @if (session('applied_coupon.discount_type') == 'percentage')
                                                     {{ session('applied_coupon.discount_value') }}% OFF
                                                 @else
@@ -102,7 +108,7 @@
                                             </small>
                                         </div>
                                         <div class="text-end">
-                                            <div class="text-success fw-bold fs-4">
+                                            <div class="text-success fw-bold fs-5">
                                                 -₹{{ number_format(session('cart_discount'), 2) }}
                                             </div>
                                         </div>
@@ -110,6 +116,38 @@
                                 </div>
                             </div>
                         @endif
+
+                        <!-- Add compact styling -->
+                        <style>
+                            .card {
+                                transition: all 0.2s ease;
+                            }
+
+                            .card:hover {
+                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+                            }
+
+                            .input-group-sm .form-control {
+                                border-color: #ced4da;
+                            }
+
+                            .input-group-sm .btn {
+                                border-left: none;
+                            }
+
+                            .badge {
+                                padding: 0.25em 0.6em;
+                            }
+
+                            .btn-outline-danger {
+                                border-width: 1px;
+                            }
+
+                            .border-success {
+                                border-width: 2px !important;
+                                border-left: 4px solid #198754 !important;
+                            }
+                        </style>
 
                         <!-- Shipping Information -->
                         <div class="card rounded-3 shadow-sm border-0 mb-4">

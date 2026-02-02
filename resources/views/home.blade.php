@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- Hero Slider -->
-    <section class="hero-section position-relative overflow-hidden mt-5 pt-4">
+    <section class="hero-section position-relative overflow-hidden mt-3 pt-5">
         <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
             <!-- Indicators -->
             <div class="carousel-indicators position-absolute bottom-0 mb-5">

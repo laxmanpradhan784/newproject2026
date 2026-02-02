@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 31, 2026 at 12:22 PM
+-- Generation Time: Feb 02, 2026 at 07:49 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -69,7 +69,9 @@ CREATE TABLE `carts` (
 --
 
 INSERT INTO `carts` (`id`, `user_id`, `session_id`, `guest_token`, `is_guest`, `product_id`, `quantity`, `price`, `created_at`, `updated_at`) VALUES
-(141, NULL, 'IzILGB0hZDdNeocj2l52dtKpPYTLgnkrLZRmbx0x', 'ngj0Kiym8WJMruGpxUdec0zu8p6GkonQ', 1, 62, 1, 10.00, '2026-01-31 02:01:11', '2026-01-31 02:01:11');
+(141, NULL, 'IzILGB0hZDdNeocj2l52dtKpPYTLgnkrLZRmbx0x', 'ngj0Kiym8WJMruGpxUdec0zu8p6GkonQ', 1, 62, 1, 10.00, '2026-01-31 02:01:11', '2026-01-31 02:01:11'),
+(161, 9, NULL, NULL, 0, 7, 1, 999.00, '2026-02-02 01:06:47', '2026-02-02 01:06:47'),
+(163, 11, NULL, NULL, 0, 9, 1, 349.00, '2026-02-02 01:18:47', '2026-02-02 01:18:47');
 
 -- --------------------------------------------------------
 
@@ -224,6 +226,20 @@ CREATE TABLE `coupon_usages` (
   `used_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `coupon_usages`
+--
+
+INSERT INTO `coupon_usages` (`id`, `coupon_id`, `user_id`, `order_id`, `discount_amount`, `original_total`, `final_total`, `used_at`) VALUES
+(1, 2, 9, 16, 500.00, 5997.00, 6636.46, '2026-01-31 12:34:33'),
+(2, 2, 9, 17, 500.00, 5997.00, 6636.46, '2026-01-31 12:34:36'),
+(3, 5, 9, 18, 50.00, 3998.00, 4808.64, '2026-01-31 13:20:54'),
+(4, 1, 9, 19, 399.80, 3998.00, 4395.88, '2026-01-31 13:24:32'),
+(5, 8, 9, 20, 22.00, 4497.00, 5430.50, '2026-01-31 13:26:10'),
+(6, 8, 9, 21, 22.00, 4497.00, 5430.50, '2026-01-31 13:26:14'),
+(7, 8, 9, 22, 22.00, 648.00, 888.68, '2026-02-02 05:18:50'),
+(8, 2, 11, 24, 500.00, 3646.00, 3862.28, '2026-02-02 06:48:24');
+
 -- --------------------------------------------------------
 
 --
@@ -372,7 +388,16 @@ INSERT INTO `orders` (`id`, `order_number`, `user_id`, `subtotal`, `shipping`, `
 (11, 'ORD-260126-130557-0095327', 9, 648.00, 150.00, 116.64, 914.64, 'processing', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-26 07:35:57', '2026-01-28 06:18:05', NULL, NULL, NULL, NULL, NULL, NULL, 0.00),
 (13, 'ORD-260127-094000-0094389', 9, 999.00, 50.00, 179.82, 1228.82, 'shipped', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-27 04:10:00', '2026-01-28 07:21:05', NULL, NULL, NULL, NULL, NULL, NULL, 0.00),
 (14, 'ORD-260128-062903-0098880', 9, 3798.00, 0.00, 683.64, 4481.64, 'delivered', 'cod', NULL, 'pending', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-01-28 00:59:03', '2026-01-29 05:00:45', '2026-01-29 05:00:45', NULL, NULL, NULL, NULL, NULL, 0.00),
-(15, 'ORD-260130-100006-0099821', 9, 999.00, 150.00, 179.82, 1328.82, 'processing', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-30 04:30:06', '2026-01-30 06:07:31', NULL, NULL, NULL, NULL, NULL, NULL, 0.00);
+(15, 'ORD-260130-100006-0099821', 9, 999.00, 150.00, 179.82, 1328.82, 'processing', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-30 04:30:06', '2026-01-30 06:07:31', NULL, NULL, NULL, NULL, NULL, NULL, 0.00),
+(16, 'ORD-260131-123433-0092218', 9, 5997.00, 150.00, 989.46, 6636.46, 'pending', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', 'svfsdx', 'grdgb', 'sgbfr', '394221', 'India', 'express', '2026-01-31 07:04:33', '2026-01-31 07:04:33', NULL, NULL, NULL, NULL, 2, 'FLAT500', 500.00),
+(17, 'ORD-260131-123436-0098307', 9, 5997.00, 150.00, 989.46, 6636.46, 'pending', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', 'svfsdx', 'grdgb', 'sgbfr', '394221', 'India', 'express', '2026-01-31 07:04:36', '2026-01-31 07:04:36', NULL, NULL, NULL, NULL, 2, 'FLAT500', 500.00),
+(18, 'ORD-260131-132054-0096832', 9, 3998.00, 150.00, 710.64, 4808.64, 'pending', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-31 07:50:54', '2026-01-31 07:50:54', NULL, NULL, NULL, NULL, 5, 'FREESHIP', 50.00),
+(19, 'ORD-260131-132432-0099989', 9, 3998.00, 150.00, 647.68, 4395.88, 'pending', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-31 07:54:32', '2026-01-31 07:54:32', NULL, NULL, NULL, NULL, 1, 'WELCOME10', 399.80),
+(20, 'ORD-260131-132610-0091100', 9, 4497.00, 150.00, 805.50, 5430.50, 'pending', 'upi', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-31 07:56:10', '2026-01-31 07:56:10', NULL, NULL, NULL, NULL, 8, 'fbhfd', 22.00),
+(21, 'ORD-260131-132614-0099182', 9, 4497.00, 150.00, 805.50, 5430.50, 'pending', 'upi', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-01-31 07:56:14', '2026-01-31 07:56:14', NULL, NULL, NULL, NULL, 8, 'fbhfd', 22.00),
+(22, 'ORD-260202-051850-0091495', 9, 648.00, 150.00, 112.68, 888.68, 'pending', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-02-01 23:48:50', '2026-02-01 23:48:50', NULL, NULL, NULL, NULL, 8, 'fbhfd', 22.00),
+(23, 'ORD-260202-052549-0095799', 9, 598.00, 50.00, 107.64, 755.64, 'pending', 'cod', NULL, 'pending', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-02-01 23:55:49', '2026-02-01 23:55:49', NULL, NULL, NULL, NULL, NULL, NULL, 0.00),
+(24, 'ORD-260202-064824-0116334', 11, 3646.00, 150.00, 566.28, 3862.28, 'pending', 'cod', NULL, 'pending', 'Litu Nayak', 'Litu123@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-02-02 01:18:24', '2026-02-02 01:18:24', NULL, NULL, NULL, NULL, 2, 'FLAT500', 500.00);
 
 -- --------------------------------------------------------
 
@@ -422,7 +447,19 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `product_name`, `quan
 (31, 13, 7, 'Educational Building Blocks', 1, 999.00, 999.00, 7, 'Toys & Games', '2026-01-27 04:10:00', '2026-01-27 04:10:00'),
 (32, 14, 3, 'Non-Stick Cookware Set', 1, 2499.00, 2499.00, 3, 'Home & Kitchen', '2026-01-28 00:59:03', '2026-01-28 00:59:03'),
 (33, 14, 2, 'Men\'s Casual Shirt', 1, 1299.00, 1299.00, 2, 'Fashion', '2026-01-28 00:59:03', '2026-01-28 00:59:03'),
-(34, 15, 7, 'Educational Building Blocks', 1, 999.00, 999.00, 7, 'Toys & Games', '2026-01-30 04:30:06', '2026-01-30 04:30:06');
+(34, 15, 7, 'Educational Building Blocks', 1, 999.00, 999.00, 7, 'Toys & Games', '2026-01-30 04:30:06', '2026-01-30 04:30:06'),
+(35, 16, 8, 'Car Air Purifier', 3, 1999.00, 5997.00, 8, 'Automotive', '2026-01-31 07:04:33', '2026-01-31 07:04:33'),
+(36, 17, 8, 'Car Air Purifier', 3, 1999.00, 5997.00, 8, 'Automotive', '2026-01-31 07:04:36', '2026-01-31 07:04:36'),
+(37, 18, 8, 'Car Air Purifier', 2, 1999.00, 3998.00, 8, 'Automotive', '2026-01-31 07:50:54', '2026-01-31 07:50:54'),
+(38, 19, 8, 'Car Air Purifier', 2, 1999.00, 3998.00, 8, 'Automotive', '2026-01-31 07:54:32', '2026-01-31 07:54:32'),
+(39, 20, 6, 'Yoga Mat Premium', 3, 1499.00, 4497.00, 6, 'Sports & Fitness', '2026-01-31 07:56:10', '2026-01-31 07:56:10'),
+(40, 21, 6, 'Yoga Mat Premium', 3, 1499.00, 4497.00, 6, 'Sports & Fitness', '2026-01-31 07:56:14', '2026-01-31 07:56:14'),
+(41, 22, 9, 'Organic Green Tea', 1, 349.00, 349.00, 9, 'Groceries', '2026-02-01 23:48:50', '2026-02-01 23:48:50'),
+(42, 22, 10, 'Digital Thermometer', 1, 299.00, 299.00, 10, 'Healthcare', '2026-02-01 23:48:50', '2026-02-01 23:48:50'),
+(43, 23, 10, 'Digital Thermometer', 2, 299.00, 598.00, 10, 'Healthcare', '2026-02-01 23:55:49', '2026-02-01 23:55:49'),
+(44, 24, 10, 'Digital Thermometer', 1, 299.00, 299.00, 10, 'Healthcare', '2026-02-02 01:18:24', '2026-02-02 01:18:24'),
+(45, 24, 9, 'Organic Green Tea', 1, 349.00, 349.00, 9, 'Groceries', '2026-02-02 01:18:24', '2026-02-02 01:18:24'),
+(46, 24, 6, 'Yoga Mat Premium', 2, 1499.00, 2998.00, 6, 'Sports & Fitness', '2026-02-02 01:18:24', '2026-02-02 01:18:24');
 
 -- --------------------------------------------------------
 
@@ -486,12 +523,12 @@ INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `image`, `descripti
 (3, 3, 'Non-Stick Cookware Set', 'non-stick-cookware-set', 'product_1769234603_Nb4pjAqd9m.jpg', '5-piece non-stick cookware set including frying pan, saucepan, and kadai with glass lids.', 2499.00, 35, 0.00, 0, 'active', '2024-01-17 07:15:00', '2026-01-30 02:48:55'),
 (4, 4, 'Vitamin C Face Serum', 'vitamin-c-face-serum', 'product_1769234603_Nb4pjAqd9m.jpg', 'Anti-aging vitamin C serum with hyaluronic acid for brightening and reducing dark spots. 30ml bottle.', 899.00, 78, 0.00, 0, 'active', '2024-01-18 08:50:00', '2026-01-26 07:09:54'),
 (5, 5, 'The Psychology of Money', 'psychology-of-money', 'product_1769234603_Nb4pjAqd9m.jpg', 'Bestselling book on personal finance and investment psychology by Morgan Housel. Hardcover edition.', 499.00, 200, 0.00, 0, 'active', '2024-01-19 09:40:00', '2026-01-29 06:56:24'),
-(6, 6, 'Yoga Mat Premium', 'yoga-mat-premium', 'product_1769234603_Nb4pjAqd9m.jpg', '6mm thick non-slip yoga mat with carrying strap. Eco-friendly TPE material in multiple colors.', 1499.00, 57, 0.00, 0, 'active', '2024-01-20 11:00:00', '2026-01-28 07:28:49'),
-(7, 7, 'Educational Building Blocks', 'educational-building-blocks', 'product_1769234603_Nb4pjAqd9m.jpg', '500-piece building blocks set for kids ages 5+. Promotes creativity and motor skills development.', 999.00, 68, 0.00, 0, 'active', '2024-01-21 12:15:00', '2026-01-30 04:30:06'),
-(8, 8, 'Car Air Purifier', 'car-air-purifier', 'product_1769234603_Nb4pjAqd9m.jpg', 'Compact HEPA filter car air purifier with ionizer. USB powered with adjustable fan speed.', 1999.00, 32, 0.00, 0, 'active', '2024-01-22 03:45:00', '2026-01-28 01:42:08'),
-(9, 9, 'Organic Green Tea', 'organic-green-tea', 'product_1769234603_Nb4pjAqd9m.jpg', '100% organic green tea leaves packed in airtight container. 250g pack with antioxidant benefits.', 349.00, 134, 0.00, 0, 'active', '2024-01-23 07:55:00', '2026-01-30 07:17:31'),
-(10, 10, 'Digital Thermometer', 'digital-thermometer', 'product_1769234603_Nb4pjAqd9m.jpg', 'Fast and accurate digital thermometer with beep alert and fever indicator. Battery included.', 299.00, 283, 0.00, 0, 'active', '2024-01-24 12:30:00', '2026-01-30 07:18:30'),
-(62, 1, 'Operations', 'operations', 'product_1769258578_rWP0gdhIvh.jpg', 'testing', 10.00, 67, 0.00, 0, 'active', '2026-01-24 07:12:58', '2026-01-31 02:01:11');
+(6, 6, 'Yoga Mat Premium', 'yoga-mat-premium', 'product_1769234603_Nb4pjAqd9m.jpg', '6mm thick non-slip yoga mat with carrying strap. Eco-friendly TPE material in multiple colors.', 1499.00, 44, 0.00, 0, 'active', '2024-01-20 11:00:00', '2026-02-02 01:18:24'),
+(7, 7, 'Educational Building Blocks', 'educational-building-blocks', 'product_1769234603_Nb4pjAqd9m.jpg', '500-piece building blocks set for kids ages 5+. Promotes creativity and motor skills development.', 999.00, 67, 0.00, 0, 'active', '2024-01-21 12:15:00', '2026-02-02 01:06:47'),
+(8, 8, 'Car Air Purifier', 'car-air-purifier', 'product_1769234603_Nb4pjAqd9m.jpg', 'Compact HEPA filter car air purifier with ionizer. USB powered with adjustable fan speed.', 1999.00, 15, 0.00, 0, 'active', '2024-01-22 03:45:00', '2026-02-02 00:01:31'),
+(9, 9, 'Organic Green Tea', 'organic-green-tea', 'product_1769234603_Nb4pjAqd9m.jpg', '100% organic green tea leaves packed in airtight container. 250g pack with antioxidant benefits.', 349.00, 130, 0.00, 0, 'active', '2024-01-23 07:55:00', '2026-02-02 01:18:47'),
+(10, 10, 'Digital Thermometer', 'digital-thermometer', 'product_1769234603_Nb4pjAqd9m.jpg', 'Fast and accurate digital thermometer with beep alert and fever indicator. Battery included.', 299.00, 275, 0.00, 0, 'active', '2024-01-24 12:30:00', '2026-02-02 01:18:24'),
+(62, 1, 'Operations', 'operations', 'product_1769258578_rWP0gdhIvh.jpg', 'testing', 10.00, 67, 0.00, 0, 'active', '2026-01-24 07:12:58', '2026-02-01 23:57:49');
 
 -- --------------------------------------------------------
 
@@ -546,7 +583,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('wBcr1WRYhzCOSuFcEExeEzgfb1YSU9qYLJrOaaVq', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiNHRkc2gwcFY4TWhuU1dDSk1zSUZLY1hHZENZenlvbEsybGZpTVZjeSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6IkxRZ0JsTzZaU0JGcG9DTlowSzJVZ1FiSXRlNVNvbUxIIjtzOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo0OToiaHR0cDovL2xvY2FsaG9zdC9lLWNvbW1tZXJjZS9wdWJsaWMvYWRtaW4vY291cG9ucyI7czo1OiJyb3V0ZSI7czoxOToiYWRtaW4uY291cG9ucy5pbmRleCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1769858433);
+('xFtINAdqi72dcpS96Xia0BhkKY5o6T2YtN0MGvll', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiazFTQnQ2cWJIN3FLRVBWSkR3TEpJNUk4VmFkdUNyeXZ4MXgxc3RWQSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6IlFkTzdiNVdnTFlTMVJQbkIxb2ZhTjAwdENwWDc2U3cwIjtzOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo0MToiaHR0cDovL2xvY2FsaG9zdC9lLWNvbW1tZXJjZS9wdWJsaWMvbG9naW4iO3M6NToicm91dGUiO3M6NToibG9naW4iO319', 1770014959);
 
 -- --------------------------------------------------------
 
@@ -637,7 +674,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `name`, `email`, `phone`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`, `google_id`) VALUES
 (1, 'Admin User', 'admin@example.com', '1234567890', NULL, '$2y$12$aGSDTCEDK7do1Rk5lxH74uL6B7auOqExL.anLNbXvzxwD8k3jqAC2', 'admin', NULL, '2026-01-22 10:56:12', '2026-01-24 03:31:44', NULL),
 (2, 'Regular Users', 'user@example.com', '0987654321', NULL, '$2y$12$r4EOdHojsEaSS4y6EYqtBu3QYRk2BBoV6S0i.rGriYNxJx8kYQqQW', 'user', NULL, '2026-01-22 10:56:12', '2026-01-23 03:51:41', NULL),
-(9, 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', NULL, '$2y$12$Of5BvP9xEQFq9tNMNwwjjems1ya9WK7Z6Ec8R4uPmR98exIq6UULa', 'user', NULL, '2026-01-26 06:34:07', '2026-01-26 06:34:07', NULL);
+(9, 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', NULL, '$2y$12$Of5BvP9xEQFq9tNMNwwjjems1ya9WK7Z6Ec8R4uPmR98exIq6UULa', 'user', NULL, '2026-01-26 06:34:07', '2026-01-26 06:34:07', NULL),
+(11, 'Litu Nayak', 'Litu123@gmail.com', '09978767202', NULL, '$2y$12$SBgByioIYBFlrZqV9zeWWu3foMXksu1TrYz1wZ6Gek9Y81Y2e1Sda', 'user', NULL, '2026-02-02 00:02:09', '2026-02-02 00:02:09', NULL);
 
 --
 -- Indexes for dumped tables
@@ -843,7 +881,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -879,7 +917,7 @@ ALTER TABLE `coupon_products`
 -- AUTO_INCREMENT for table `coupon_usages`
 --
 ALTER TABLE `coupon_usages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `coupon_users`
@@ -909,13 +947,13 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `payment_logs`
@@ -951,7 +989,7 @@ ALTER TABLE `sliders`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables
