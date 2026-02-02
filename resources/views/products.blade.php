@@ -182,66 +182,150 @@
                     </div>
 
                 @empty
-                    <div class="col-12 text-center">
-                        <p class="text-muted">No products found{{ isset($category) ? ' in this category' : '' }}.</p>
+                    <div class="col-12">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body text-center py-5">
+                                <!-- Empty State Icon -->
+                                <div class="mb-4">
+                                    <div
+                                        class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center p-4">
+                                        <i class="fas fa-box-open text-muted fa-3x"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Message -->
+                                <h5 class="text-muted mb-3">
+                                    No products found{{ isset($category) ? ' in ' . $category->name : '' }}.
+                                </h5>
+
+                                <!-- Suggestions/Help Text -->
+                                <p class="text-muted mb-4">
+                                    {{ isset($category) ? 'Try browsing other categories or check back later for new arrivals.' : 'Try adjusting your search or filter criteria.' }}
+                                </p>
+
+                                <!-- Action Buttons -->
+                                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                                    @if (isset($category))
+                                        <!-- Browse All Products Button -->
+                                        <a  href="{{ route('products') }}" class="btn btn-primary px-4 py-2">
+                                            <i class="fas fa-th-large me-2"></i> Browse All Products
+                                        </a>
+
+                                        <!-- View Categories Button -->
+                                        @if ($categories->count() > 0)
+                                            <a  href="{{ route('products') }}"
+                                                class="btn btn-outline-primary px-4 py-2">
+                                                <i class="fas fa-tags me-2"></i> View Categories
+                                            </a>
+                                        @endif
+                                    @else
+                                        <!-- View All Products Button -->
+                                        <a  href="{{ route('products') }}" class="btn btn-primary px-4 py-2">
+                                            <i class="fas fa-th-large me-2"></i> View All Products
+                                        </a>
+                                    @endif
+
+                                    <!-- Continue Shopping Button -->
+                                    <a href="{{ route('home') }}" class="btn btn-outline-secondary px-4 py-2">
+                                        <i class="fas fa-shopping-bag me-2"></i> Continue Shopping
+                                    </a>
+                                </div>
+
+                                <!-- Optional: Contact Information -->
+                                <div class="mt-4 pt-3 border-top">
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Can't find what you're looking for?
+                                        <a href="{{ route('contact') }}" class="text-decoration-none">Contact our support
+                                            team</a>.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                @endforelse
-            </div>
+                @endempty
 
-            <!-- Pagination -->
-            @if ($products->hasPages())
-                <div class="mt-5">
-                    {{ $products->links() }}
-                </div>
-            @endif
+                <script>
+                    function clearFilters() {
+                        // Clear search input
+                        const searchInput = document.querySelector('input[name="search"]');
+                        if (searchInput) searchInput.value = '';
 
+                        // Clear category filter if exists
+                        const categorySelect = document.querySelector('select[name="category"]');
+                        if (categorySelect) categorySelect.value = '';
+
+                        // Clear price filters if exist
+                        const minPrice = document.querySelector('input[name="min_price"]');
+                        const maxPrice = document.querySelector('input[name="max_price"]');
+                        if (minPrice) minPrice.value = '';
+                        if (maxPrice) maxPrice.value = '';
+
+                        // Clear sort if exists
+                        const sortSelect = document.querySelector('select[name="sort"]');
+                        if (sortSelect) sortSelect.value = 'newest';
+
+                        // Submit the form to refresh results
+                        const form = document.querySelector('form[method="get"]');
+                        if (form) form.submit();
+                    }
+                </script>
         </div>
-    </section>
 
-    <!-- JavaScript for Quantity Controls -->
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Quantity plus button
-                document.querySelectorAll('.quantity-plus').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const productId = this.getAttribute('data-id');
-                        const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
-                        const max = parseInt(input.getAttribute('max'));
-                        let value = parseInt(input.value) || 1;
+        <!-- Pagination -->
+        @if ($products->hasPages())
+            <div class="mt-5">
+                {{ $products->links() }}
+            </div>
+        @endif
 
-                        if (value < max) {
-                            input.value = value + 1;
-                        }
-                    });
-                });
+    </div>
+</section>
 
-                // Quantity minus button
-                document.querySelectorAll('.quantity-minus').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const productId = this.getAttribute('data-id');
-                        const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
-                        const min = parseInt(input.getAttribute('min'));
-                        let value = parseInt(input.value) || 1;
+<!-- JavaScript for Quantity Controls -->
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Quantity plus button
+            document.querySelectorAll('.quantity-plus').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-id');
+                    const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
+                    const max = parseInt(input.getAttribute('max'));
+                    let value = parseInt(input.value) || 1;
 
-                        if (value > min) {
-                            input.value = value - 1;
-                        }
-                    });
-                });
-
-                // Input validation
-                document.querySelectorAll('.quantity-input').forEach(input => {
-                    input.addEventListener('change', function() {
-                        const min = parseInt(this.getAttribute('min'));
-                        const max = parseInt(this.getAttribute('max'));
-                        let value = parseInt(this.value) || min;
-
-                        if (value < min) this.value = min;
-                        if (value > max) this.value = max;
-                    });
+                    if (value < max) {
+                        input.value = value + 1;
+                    }
                 });
             });
-        </script>
-    @endpush
+
+            // Quantity minus button
+            document.querySelectorAll('.quantity-minus').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-id');
+                    const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
+                    const min = parseInt(input.getAttribute('min'));
+                    let value = parseInt(input.value) || 1;
+
+                    if (value > min) {
+                        input.value = value - 1;
+                    }
+                });
+            });
+
+            // Input validation
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.addEventListener('change', function() {
+                    const min = parseInt(this.getAttribute('min'));
+                    const max = parseInt(this.getAttribute('max'));
+                    let value = parseInt(this.value) || min;
+
+                    if (value < min) this.value = min;
+                    if (value > max) this.value = max;
+                });
+            });
+        });
+    </script>
+@endpush
 @endsection
