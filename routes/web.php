@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\AUserController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\UserSide\WishlistController;
+use App\Http\Controllers\UserSide\AReturnController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,18 @@ Route::middleware(['auth'])->prefix('wishlist')->name('wishlist.')->group(functi
 
     // DELETE route - for removing items
     Route::delete('/{id}', [WishlistController::class, 'destroy'])->name('destroy');
+});
+
+
+// Returns Routes (User Side)
+Route::prefix('returns')->name('user.returns.')->group(function () {
+    Route::get('/', [AReturnController::class, 'index'])->name('index');
+    Route::get('/create/{order}', [AReturnController::class, 'create'])->name('create');
+    Route::post('/store/{order}', [AReturnController::class, 'store'])->name('store');
+    Route::get('/{id}', [AReturnController::class, 'show'])->name('show');
+    Route::post('/{id}/cancel', [AReturnController::class, 'cancel'])->name('cancel');
+    Route::get('/policy', [AReturnController::class, 'policy'])->name('policy');
+    Route::get('/check-eligibility/{order}', [AReturnController::class, 'checkEligibility'])->name('check-eligibility');
 });
 
 
