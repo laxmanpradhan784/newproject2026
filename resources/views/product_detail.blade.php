@@ -45,6 +45,19 @@
                                             <i class="fas fa-times-circle me-1"></i> Out of Stock
                                         </span>
                                     @endif
+                                    
+                                    <!-- Wishlist Button (Top Right) -->
+                                    <button class="btn btn-light btn-icon position-absolute top-0 end-0 m-3 rounded-circle shadow-sm wishlist-btn"
+                                            onclick="toggleWishlist(this, {{ $product->id }})"
+                                            title="{{ auth()->check() && $product->isInWishlist() ? 'Remove from Wishlist' : 'Add to Wishlist' }}"
+                                            data-product-id="{{ $product->id }}"
+                                            style="width: 50px; height: 50px; background: rgba(255,255,255,0.9);">
+                                        @if(auth()->check() && $product->isInWishlist())
+                                            <i class="fas fa-heart text-danger fs-5"></i>
+                                        @else
+                                            <i class="far fa-heart fs-5"></i>
+                                        @endif
+                                    </button>
                                 </div>
                             </div>
 
@@ -811,11 +824,163 @@
     .admin-avatar {
         background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
     }
+    
+    /* Wishlist Button Styling */
+    .wishlist-btn {
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+    
+    .wishlist-btn:hover {
+        background: rgba(255, 255, 255, 1) !important;
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .wishlist-btn.active {
+        background: rgba(255, 255, 255, 1) !important;
+    }
 </style>
 @endpush
 
 @push('scripts')
 <script>
+    // Wishlist toggle function
+    function toggleWishlist(button, productId) {
+        @if(auth()->check())
+            fetch('{{ route("wishlist.toggle") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    product_id: productId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update button icon
+                    const icon = button.querySelector('i');
+                    if (data.action === 'added') {
+                        icon.className = 'fas fa-heart text-danger fs-5';
+                        button.title = 'Remove from Wishlist';
+                        button.classList.add('active');
+                        showToast('Added to wishlist!', 'success');
+                    } else {
+                        icon.className = 'far fa-heart fs-5';
+                        button.title = 'Add to Wishlist';
+                        button.classList.remove('active');
+                        showToast('Removed from wishlist', 'info');
+                    }
+
+                    // Update wishlist count in navbar if function exists
+                    if (typeof updateWishlistCount === 'function') {
+                        updateWishlistCount();
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Something went wrong', 'error');
+            });
+        @else
+            // If user is not logged in, redirect to login
+            showToast('Please login to add items to wishlist', 'warning');
+            setTimeout(() => {
+                window.location.href = '{{ route("login") }}';
+            }, 1500);
+        @endif
+    }
+
+    // Buy Now function
+    function buyNow(productId) {
+        const quantity = document.querySelector('.quantity-input')?.value || 1;
+        
+        fetch('/cart/add', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    quantity: parseInt(quantity)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Added to cart! Redirecting to checkout...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '{{ route("checkout") }}';
+                    }, 1000);
+                } else {
+                    showToast(data.message || 'Failed to add to cart', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Something went wrong', 'error');
+            });
+    }
+
+    // Toast notification function
+    function showToast(message, type = 'info') {
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = `toast align-items-center text-white bg-${type} border-0`;
+        toast.setAttribute('role', 'alert');
+        toast.setAttribute('aria-live', 'assertive');
+        toast.setAttribute('aria-atomic', 'true');
+
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        `;
+
+        // Add to container
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+            container.style.zIndex = '1060';
+            document.body.appendChild(container);
+        }
+
+        container.appendChild(toast);
+
+        // Initialize and show
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
+
+        // Remove after hide
+        toast.addEventListener('hidden.bs.toast', () => {
+            toast.remove();
+        });
+    }
+
+    // Update wishlist count in navbar
+    function updateWishlistCount() {
+        fetch('{{ route("wishlist.count") }}')
+            .then(response => response.json())
+            .then(data => {
+                const countElement = document.querySelector('.wishlist-count');
+                if (countElement) {
+                    countElement.textContent = data.count;
+                }
+            });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         // Quantity buttons
         document.querySelectorAll('.quantity-btn.plus').forEach(btn => {

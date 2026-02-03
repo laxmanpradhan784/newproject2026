@@ -103,106 +103,106 @@
                                 0
                             </span>
                         @endif
-                        </a>
+                    </a>
 
 
-                        <!-- Cart Icon with Count (Number of Products) -->
-                        <a class="btn btn-float btn-cart me-3" href="{{ route('cart') }}">
-                            <i class="fas fa-shopping-cart"></i>
+                    <!-- Cart Icon with Count (Number of Products) -->
+                    <a class="btn btn-float btn-cart me-3" href="{{ route('cart') }}">
+                        <i class="fas fa-shopping-cart"></i>
 
-                            <!-- Cart Count Badge (Number of Products) -->
-                            @php
-                                use App\Models\Cart;
+                        <!-- Cart Count Badge (Number of Products) -->
+                        @php
+                            use App\Models\Cart;
 
-                                if (auth()->check()) {
-                                    // For logged-in users: count distinct products (not quantity)
-                                    $cartProductCount = Cart::where('user_id', auth()->id())
-                                        ->where('is_guest', false)
-                                        ->count();
-                                } else {
-                                    // For guest users: count distinct products
-                                    $cartProductCount = Cart::where(function ($query) {
-                                        if (session()->has('guest_token')) {
-                                            $query->where('guest_token', session('guest_token'));
-                                        }
-                                        $query->orWhere('session_id', session()->getId());
-                                    })
-                                        ->where('is_guest', true)
-                                        ->count();
-                                }
-                            @endphp
+                            if (auth()->check()) {
+                                // For logged-in users: count distinct products (not quantity)
+                                $cartProductCount = Cart::where('user_id', auth()->id())
+                                    ->where('is_guest', false)
+                                    ->count();
+                            } else {
+                                // For guest users: count distinct products
+                                $cartProductCount = Cart::where(function ($query) {
+                                    if (session()->has('guest_token')) {
+                                        $query->where('guest_token', session('guest_token'));
+                                    }
+                                    $query->orWhere('session_id', session()->getId());
+                                })
+                                    ->where('is_guest', true)
+                                    ->count();
+                            }
+                        @endphp
 
-                            @if ($cartProductCount > 0)
-                                <span
-                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count-badge"
-                                    style="font-size: 10px; padding: 3px 6px; min-width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center;"
-                                    id="navbarCartCount"
-                                    title="{{ $cartProductCount }} item{{ $cartProductCount > 1 ? 's' : '' }} in cart">
-                                    {{ $cartProductCount }}
-                                </span>
-                            @else
-                                <!-- Hidden badge for JavaScript updates -->
-                                <span
-                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count-badge"
-                                    style="font-size: 10px; padding: 3px 6px; min-width: 18px; height: 18px; display: none;"
-                                    id="navbarCartCount" title="Cart is empty">
-                                    0
-                                </span>
-                            @endif
-                        </a>
+                        @if ($cartProductCount > 0)
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count-badge"
+                                style="font-size: 10px; padding: 3px 6px; min-width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center;"
+                                id="navbarCartCount"
+                                title="{{ $cartProductCount }} item{{ $cartProductCount > 1 ? 's' : '' }} in cart">
+                                {{ $cartProductCount }}
+                            </span>
+                        @else
+                            <!-- Hidden badge for JavaScript updates -->
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count-badge"
+                                style="font-size: 10px; padding: 3px 6px; min-width: 18px; height: 18px; display: none;"
+                                id="navbarCartCount" title="Cart is empty">
+                                0
+                            </span>
+                        @endif
+                    </a>
 
-                        @auth
-                            <!-- User with avatar -->
-                            <div class="dropdown user-dropdown">
-                                <a class="dropdown-toggle user-avatar" data-bs-toggle="dropdown">
-                                    <div class="avatar-initials">
-                                        {{ substr(Auth::user()->first_name, 0, 1) }}{{ substr(Auth::user()->last_name ?? '', 0, 1) }}
-                                    </div>
-                                    <span class="user-name ms-2">{{ Auth::user()->first_name }}</span>
-                                    <i class="fas fa-chevron-down ms-1"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-animate">
-                                    <li>
-                                        <a class="dropdown-item dropdown-hover" href="{{ route('profile') }}">
-                                            <i class="fas fa-user me-2"></i> Profile
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item dropdown-hover" href="{{ route('orders') }}">
-                                            <i class="fas fa-user me-2"></i> My Orders
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item dropdown-hover" href="{{ route('reviews.my') }}">
-                                            <i class="fas fa-user me-2"></i> My Reviews
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                        <form action="{{ route('logout') }}" method="POST">
-                                            @csrf
-                                            <button class="dropdown-item dropdown-hover text-danger">
-                                                <i class="fas fa-sign-out-alt me-2"></i> Logout
-                                            </button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
-                        @endauth
+                    @auth
+                        <!-- User with avatar -->
+                        <div class="dropdown user-dropdown rounded-border">
+                            <a class="dropdown-toggle user-avatar" data-bs-toggle="dropdown">
+                                <div class="avatar-initials">
+                                    {{ substr(Auth::user()->first_name, 0, 1) }}{{ substr(Auth::user()->last_name ?? '', 0, 1) }}
+                                </div>
+                                <span class="user-name ms-2">{{ Auth::user()->first_name }}</span>
+                                <i class="fas fa-chevron-down ms-1"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-animate">
+                                <li>
+                                    <a class="dropdown-item dropdown-hover" href="{{ route('profile') }}">
+                                        <i class="fas fa-user me-2"></i> Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item dropdown-hover" href="{{ route('orders') }}">
+                                        <i class="fas fa-user me-2"></i> My Orders
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item dropdown-hover" href="{{ route('reviews.my') }}">
+                                        <i class="fas fa-user me-2"></i> My Reviews
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST">
+                                        @csrf
+                                        <button class="dropdown-item dropdown-hover text-danger">
+                                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    @endauth
 
-                        @guest
-                            <!-- Auth buttons with hover effects -->
-                            <div class="auth-buttons">
-                                <a href="{{ route('login') }}" class="btn btn-outline-primary me-2 btn-hover">
-                                    <i class="fas fa-sign-in-alt me-1"></i> Login
-                                </a>
-                                <a href="{{ route('register') }}" class="btn btn-primary btn-gradient me-2 btn-hover">
-                                    <i class="fas fa-user-plus me-1"></i> Register
-                                </a>
-                            </div>
-                        @endguest
+                    @guest
+                        <!-- Auth buttons with hover effects -->
+                        <div class="auth-buttons">
+                            <a href="{{ route('login') }}" class="btn btn-outline-primary me-2 btn-hover">
+                                <i class="fas fa-sign-in-alt me-1"></i> Login
+                            </a>
+                            <a href="{{ route('register') }}" class="btn btn-primary btn-gradient me-2 btn-hover">
+                                <i class="fas fa-user-plus me-1"></i> Register
+                            </a>
+                        </div>
+                    @endguest
 
                 </div>
             </div>
@@ -226,6 +226,21 @@
         --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
         --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
+  .rounded-border {
+    border: 1px solid rgba(0, 0, 0, 0.12);   /* soft invisible border */
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.6);   /* light glass effect */
+    backdrop-filter: blur(6px);
+    transition: all 0.25s ease;
+}
+
+.rounded-border:hover {
+    border-color: rgba(0, 0, 0, 0.25);       /* visible on hover */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+
 
     /* Brand Gradient */
     .gradient-text {

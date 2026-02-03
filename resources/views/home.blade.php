@@ -86,12 +86,23 @@
 
                                 <!-- Quick Actions -->
                                 <div class="product-actions position-absolute top-0 end-0 p-3 d-flex flex-column gap-2">
-                                    <button class="btn btn-light btn-icon rounded-circle shadow-sm" title="Add to Wishlist">
-                                        <i class="fas fa-heart text-danger"></i>
+                                    <!-- Wishlist Button -->
+                                    <button class="btn btn-light btn-icon rounded-circle shadow-sm wishlist-btn"
+                                        onclick="toggleWishlist(this, {{ $product->id }})"
+                                        title="{{ auth()->check() && $product->isInWishlist() ? 'Remove from Wishlist' : 'Add to Wishlist' }}"
+                                        data-product-id="{{ $product->id }}">
+                                        @if(auth()->check() && $product->isInWishlist())
+                                            <i class="fas fa-heart text-danger"></i>
+                                        @else
+                                            <i class="far fa-heart"></i>
+                                        @endif
                                     </button>
-                                    <button class="btn btn-light btn-icon rounded-circle shadow-sm" title="Quick View">
+                                    
+                                    <!-- Quick View Button -->
+                                    {{-- <button class="btn btn-light btn-icon rounded-circle shadow-sm" title="Quick View"
+                                            onclick="quickView({{ $product->id }})">
                                         <i class="fas fa-eye"></i>
-                                    </button>
+                                    </button> --}}
                                 </div>
 
                                 <!-- Hover Add to Cart -->
@@ -128,18 +139,6 @@
                                         {{ $product->name }}
                                     </a>
                                 </h5>
-
-                                <!-- Rating -->
-                                {{-- <div class="product-rating mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="star-rating">
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                <i class="fas fa-star {{ $i <= 4 ? 'text-warning' : 'text-light' }}"></i>
-                                            @endfor
-                                        </div>
-                                        <small class="text-muted ms-2">({{ rand(20, 500) }} reviews)</small>
-                                    </div>
-                                </div> --}}
 
                                 <!-- Short Description -->
                                 <p class="card-text text-muted small mb-3">
@@ -271,6 +270,71 @@
         </div>
     </section>
 
+    <!-- Banner Section -->
+    <section class="banner-section py-5">
+        <div class="container">
+            <div class="row align-items-center bg-primary rounded-3 p-5 text-white">
+                <div class="col-md-8">
+                    <h2 class="display-6 fw-bold">Limited Time Offer!</h2>
+                    <p class="lead">Get 30% off on all electronics. Use code: TECH30</p>
+                    <p class="small mb-0">Offer valid until December 31, 2024</p>
+                </div>
+                <div class="col-md-4 text-center text-md-end">
+                    <a href="#" class="btn btn-light btn-lg px-5">Shop Electronics</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Categories -->
+    <section class="categories py-5">
+        <div class="container">
+            <div class="section-title text-center mb-4">
+                <h2>Popular Categories</h2>
+                <p class="text-muted">Browse through our top categories</p>
+            </div>
+
+            <div class="row justify-content-center">
+                @php
+                    // Fetch only 6 active categories
+                    $allCategories = \App\Models\Category::where('status', 'active')->take(6)->get();
+                @endphp
+
+                @forelse($allCategories as $category)
+                    <div class="col-md-4 col-lg-2 mb-4">
+                        <a href="{{ route('category.products', $category->slug) }}"
+                            class="text-decoration-none text-dark">
+                            <div class="category-card text-center border rounded p-3 h-100 shadow-sm">
+                                <div class="category-icon bg-light rounded-circle p-4 mb-3 mx-auto"
+                                    style="width: 100px; height: 100px;">
+                                    @php
+                                        // Choose icon based on category name
+                                        $icon = match ($category->name) {
+                                            'Electronics' => 'tv',
+                                            'Fashion' => 'tshirt',
+                                            'Home & Kitchen' => 'home',
+                                            'Books' => 'book',
+                                            'Sports' => 'futbol',
+                                            'Beauty' => 'spa',
+                                            default => 'layer-group',
+                                        };
+                                    @endphp
+                                    <i class="fas fa-{{ $icon }} fa-2x text-primary"></i>
+                                </div>
+                                <h5 class="mb-1">{{ $category->name }}</h5>
+                                <p class="text-muted small mb-0">{{ $category->products()->count() }} Products</p>
+                            </div>
+                        </a>
+                    </div>
+                @empty
+                    <div class="col-12 text-center">
+                        <p class="text-muted">No categories found.</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </section>
+
     <!-- Custom CSS -->
     <style>
         .product-card {
@@ -361,6 +425,20 @@
             border-radius: 3px;
         }
 
+        /* Wishlist Button Styling */
+        .wishlist-btn {
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-btn:hover {
+            background: rgba(255, 255, 255, 0.9) !important;
+            transform: scale(1.1);
+        }
+
+        .wishlist-btn.active {
+            background: rgba(255, 255, 255, 0.9) !important;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .product-card {
@@ -378,74 +456,6 @@
             }
         }
     </style>
-
-    <!-- Banner Section -->
-    <section class="banner-section py-5">
-        <div class="container">
-            <div class="row align-items-center bg-primary rounded-3 p-5 text-white">
-                <div class="col-md-8">
-                    <h2 class="display-6 fw-bold">Limited Time Offer!</h2>
-                    <p class="lead">Get 30% off on all electronics. Use code: TECH30</p>
-                    <p class="small mb-0">Offer valid until December 31, 2024</p>
-                </div>
-                <div class="col-md-4 text-center text-md-end">
-                    <a href="#" class="btn btn-light btn-lg px-5">Shop Electronics</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Popular Categories -->
-    <section class="categories py-5">
-        <div class="container">
-            <div class="section-title text-center mb-4">
-                <h2>Popular Categories</h2>
-                <p class="text-muted">Browse through our top categories</p>
-            </div>
-
-            <div class="row justify-content-center">
-                @php
-                    // Fetch only 6 active categories
-                    $allCategories = \App\Models\Category::where('status', 'active')->take(6)->get();
-                @endphp
-
-                @forelse($allCategories as $category)
-                    <div class="col-md-4 col-lg-2 mb-4">
-                        <a href="{{ route('category.products', $category->slug) }}"
-                            class="text-decoration-none text-dark">
-                            <div class="category-card text-center border rounded p-3 h-100 shadow-sm">
-                                <div class="category-icon bg-light rounded-circle p-4 mb-3 mx-auto"
-                                    style="width: 100px; height: 100px;">
-                                    @php
-                                        // Choose icon based on category name
-                                        $icon = match ($category->name) {
-                                            'Electronics' => 'tv',
-                                            'Fashion' => 'tshirt',
-                                            'Home & Kitchen' => 'home',
-                                            'Books' => 'book',
-                                            'Sports' => 'futbol',
-                                            'Beauty' => 'spa',
-                                            default => 'layer-group',
-                                        };
-                                    @endphp
-                                    <i class="fas fa-{{ $icon }} fa-2x text-primary"></i>
-                                </div>
-                                <h5 class="mb-1">{{ $category->name }}</h5>
-                                <p class="text-muted small mb-0">{{ $category->products()->count() }} Products</p>
-                            </div>
-                        </a>
-                    </div>
-                @empty
-                    <div class="col-12 text-center">
-                        <p class="text-muted">No categories found.</p>
-                    </div>
-                @endforelse
-            </div>
-        </div>
-    </section>
-
-
-
 @endsection
 
 @push('styles')
@@ -583,26 +593,184 @@
 
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        // Wishlist toggle function
+        function toggleWishlist(button, productId) {
+            @if(auth()->check())
+                fetch('{{ route("wishlist.toggle") }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        product_id: productId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update button icon
+                        const icon = button.querySelector('i');
+                        if (data.action === 'added') {
+                            icon.className = 'fas fa-heart text-danger';
+                            button.title = 'Remove from Wishlist';
+                            button.classList.add('active');
+                        } else {
+                            icon.className = 'far fa-heart';
+                            button.title = 'Add to Wishlist';
+                            button.classList.remove('active');
+                        }
+
+                        // Update wishlist count in navbar if function exists
+                        if (typeof updateWishlistCount === 'function') {
+                            updateWishlistCount();
+                        }
+
+                        // Show toast notification
+                        showToast(data.message, data.action === 'added' ? 'success' : 'info');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Something went wrong', 'error');
+                });
+            @else
+                // If user is not logged in, redirect to login
+                showToast('Please login to add items to wishlist', 'warning');
+                setTimeout(() => {
+                    window.location.href = '{{ route("login") }}';
+                }, 1500);
+            @endif
+        }
+
+        // Quick View function (placeholder - implement as needed)
+        function quickView(productId) {
+            // You can implement a modal for quick view
+            console.log('Quick view for product:', productId);
+            showToast('Quick view feature coming soon!', 'info');
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type} border-0`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+
+            // Add to container
+            let container = document.getElementById('toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'toast-container';
+                container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+                container.style.zIndex = '1060';
+                document.body.appendChild(container);
+            }
+
+            container.appendChild(toast);
+
+            // Initialize and show
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+
+            // Remove after hide
+            toast.addEventListener('hidden.bs.toast', () => {
+                toast.remove();
+            });
+        }
+
+        // Update wishlist count in navbar (if you have a counter)
+        function updateWishlistCount() {
+            fetch('{{ route("wishlist.count") }}')
+                .then(response => response.json())
+                .then(data => {
+                    const countElement = document.querySelector('.wishlist-count');
+                    if (countElement) {
+                        countElement.textContent = data.count;
+                    }
+                });
+        }
+
+        // Quantity controls
+        document.addEventListener('DOMContentLoaded', function() {
+            // Quantity plus button
+            document.querySelectorAll('.quantity-plus').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-id');
+                    const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
+                    const max = parseInt(input.getAttribute('max'));
+                    let value = parseInt(input.value) || 1;
+
+                    if (value < max) {
+                        input.value = value + 1;
+                    }
+                });
+            });
+
+            // Quantity minus button
+            document.querySelectorAll('.quantity-minus').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-id');
+                    const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
+                    const min = parseInt(input.getAttribute('min'));
+                    let value = parseInt(input.value) || 1;
+
+                    if (value > min) {
+                        input.value = value - 1;
+                    }
+                });
+            });
+
+            // Input validation
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.addEventListener('change', function() {
+                    const min = parseInt(this.getAttribute('min'));
+                    const max = parseInt(this.getAttribute('max'));
+                    let value = parseInt(this.value) || min;
+
+                    if (value < min) this.value = min;
+                    if (value > max) this.value = max;
+                });
+            });
+
             // Auto-play carousel
             $('#heroCarousel').carousel({
                 interval: 5000
             });
 
             // Add to cart animation
-            $('.btn-primary').on('click', function() {
-                const cartCount = $('.badge.bg-danger');
+            $('.btn-primary[type="submit"]').on('click', function(e) {
+                // Prevent default form submission for animation
+                e.preventDefault();
+                
+                const form = $(this).closest('form');
+                const cartCount = $('.cart-count-badge');
                 let count = parseInt(cartCount.text()) || 0;
                 cartCount.text(count + 1);
 
                 // Animation
+                const originalText = $(this).html();
                 $(this).html('<i class="fas fa-check me-1"></i> Added');
                 $(this).removeClass('btn-primary').addClass('btn-success');
+                $(this).prop('disabled', true);
 
                 setTimeout(() => {
-                    $(this).html('<i class="fas fa-cart-plus me-1"></i> Add to Cart');
-                    $(this).removeClass('btn-success').addClass('btn-primary');
-                }, 1500);
+                    // Actually submit the form
+                    form.submit();
+                }, 500);
             });
         });
     </script>

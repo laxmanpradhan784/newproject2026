@@ -61,6 +61,17 @@
                                 @endif
                             </a>
 
+                            <!-- Wishlist Button (Top Right Corner) -->
+                            <button class="btn btn-sm position-absolute top-0 end-0 m-2 p-2 wishlist-btn"
+                                data-product-id="{{ $product->id }}" onclick="toggleWishlist(this, {{ $product->id }})"
+                                style="background: rgba(255,255,255,0.8); border-radius: 50%;">
+                                @if (auth()->check() && $product->isInWishlist(auth()->id()))
+                                    <i class="fas fa-heart text-danger"></i>
+                                @else
+                                    <i class="far fa-heart"></i>
+                                @endif
+                            </button>
+
                             <div class="product-body p-4">
                                 <!-- Title and badge -->
                                 <div class="d-flex justify-content-between align-items-start mb-2">
@@ -435,4 +446,134 @@
         });
     </script>
 @endpush
+
+
+<script>
+    // Wishlist Toggle Function
+    function toggleWishlist(button, productId) {
+        // Check if user is logged in
+        @if (auth()->check())
+            fetch('{{ route('wishlist.toggle') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        product_id: productId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update button icon
+                        const icon = button.querySelector('i');
+                        if (data.action === 'added') {
+                            icon.className = 'fas fa-heart text-danger';
+                            button.classList.add('active');
+                        } else {
+                            icon.className = 'far fa-heart';
+                            button.classList.remove('active');
+                        }
+
+                        // Update wishlist count in navbar if function exists
+                        if (typeof updateWishlistCount === 'function') {
+                            updateWishlistCount();
+                        }
+
+                        // Show toast notification
+                        showToast(data.message, data.action === 'added' ? 'success' : 'info');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Something went wrong', 'error');
+                });
+        @else
+            // If user is not logged in, redirect to login
+            showToast('Please login to add items to wishlist', 'warning');
+            setTimeout(() => {
+                window.location.href = '{{ route('login') }}';
+            }, 1500);
+        @endif
+    }
+
+    // Toast Notification Function
+    function showToast(message, type = 'info') {
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = `toast align-items-center text-white bg-${type} border-0`;
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        `;
+
+        // Add to container
+        const container = document.getElementById('toast-container') || createToastContainer();
+        container.appendChild(toast);
+
+        // Show toast
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
+
+        // Remove after hide
+        toast.addEventListener('hidden.bs.toast', () => {
+            toast.remove();
+        });
+    }
+
+    function createToastContainer() {
+        const container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+        container.style.zIndex = '1060';
+        document.body.appendChild(container);
+        return container;
+    }
+
+    // Function to update wishlist count in navbar (if you have one)
+    function updateWishlistCount() {
+        fetch('{{ route('wishlist.count') }}')
+            .then(response => response.json())
+            .then(data => {
+                const countElement = document.querySelector('.wishlist-count');
+                if (countElement) {
+                    countElement.textContent = data.count;
+                }
+            });
+    }
+</script>
+<style>
+    .wishlist-btn {
+        transition: all 0.3s ease;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .wishlist-btn:hover {
+        background: rgba(255, 255, 255, 0.9) !important;
+        transform: scale(1.1);
+    }
+
+    .wishlist-btn i {
+        font-size: 1.2rem;
+    }
+
+    .wishlist-btn.active {
+        background: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    /* Toast container styling */
+    .toast-container {
+        z-index: 9999;
+    }
+</style>
 @endsection

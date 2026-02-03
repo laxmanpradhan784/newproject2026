@@ -131,4 +131,20 @@ class Order extends Model
 
         return $badges[$this->payment_status] ?? 'secondary';
     }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class, 'order_id');
+    }
+
+    // Or if you want both
+    public function order_items()
+    {
+        return $this->hasMany(OrderItem::class, 'order_id');
+    }
+
+    public function getOrderItemsAttribute()
+    {
+        return $this->order_items; // Alias for compatibility
+    }
 }

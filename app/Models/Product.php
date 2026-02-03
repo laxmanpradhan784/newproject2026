@@ -153,4 +153,16 @@ class Product extends Model
             'review_count' => $reviewCount
         ]);
     }
+
+    // In app/Models/Product.php
+    public function isInWishlist()
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+
+        return \App\Models\Wishlist::where('user_id', auth()->id())
+            ->where('product_id', $this->id)
+            ->exists();
+    }
 }

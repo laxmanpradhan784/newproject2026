@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UserSide;
 use App\Http\Controllers\Controller;
 use App\Models\Wishlist;
 use App\Models\Product;
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +19,7 @@ class WishlistController extends Controller
         $wishlists = Wishlist::with(['product.category'])
             ->where('user_id', Auth::id())
             ->latest()
-            ->paginate(8); // Show 8 items per page
+            ->paginate(8);
 
         return view('wishlist.index', compact('wishlists'));
     }
@@ -33,7 +34,9 @@ class WishlistController extends Controller
         ]);
 
         // Check if already in wishlist
-        $exists = Wishlist::isInWishlist(Auth::id(), $request->product_id);
+        $exists = Wishlist::where('user_id', Auth::id())
+            ->where('product_id', $request->product_id)
+            ->exists();
 
         if ($exists) {
             return response()->json([
@@ -65,7 +68,7 @@ class WishlistController extends Controller
 
         $wishlist->delete();
 
-        if (request()->ajax()) {
+        if (request()->ajax() || request()->wantsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Product removed from wishlist',
@@ -104,7 +107,9 @@ class WishlistController extends Controller
             'product_id' => 'required|exists:products,id'
         ]);
 
-        $exists = Wishlist::isInWishlist(Auth::id(), $request->product_id);
+        $exists = Wishlist::where('user_id', Auth::id())
+            ->where('product_id', $request->product_id)
+            ->exists();
 
         if ($exists) {
             // Remove from wishlist
@@ -149,6 +154,14 @@ class WishlistController extends Controller
     {
         Wishlist::where('user_id', Auth::id())->delete();
 
+        if (request()->ajax() || request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Wishlist cleared successfully',
+                'count' => 0
+            ]);
+        }
+
         return redirect()->route('wishlist.index')
             ->with('success', 'Wishlist cleared successfully');
     }
@@ -158,9 +171,138 @@ class WishlistController extends Controller
      */
     public function moveToCart($id)
     {
-        // You'll need to implement cart logic here
-        // This is a placeholder method
+        $wishlist = Wishlist::where('user_id', Auth::id())
+            ->where('id', $id)
+            ->firstOrFail();
+
+        // Check if product exists and is in stock
+        $product = Product::find($wishlist->product_id);
+        
+        if (!$product) {
+            return redirect()->route('wishlist.index')
+                ->with('error', 'Product not found or has been removed.');
+        }
+
+        if ($product->stock <= 0) {
+            return redirect()->route('wishlist.index')
+                ->with('error', 'Product is out of stock.');
+        }
+
+        // Check if product already in cart
+        $cartItem = Cart::where('user_id', Auth::id())
+            ->where('product_id', $wishlist->product_id)
+            ->first();
+
+        if ($cartItem) {
+            // Update quantity if already in cart
+            $cartItem->increment('quantity');
+        } else {
+            // Add to cart
+            Cart::create([
+                'user_id' => Auth::id(),
+                'product_id' => $wishlist->product_id,
+                'quantity' => 1,
+                'price' => $product->price
+            ]);
+        }
+
+        // Remove from wishlist
+        $wishlist->delete();
+
         return redirect()->route('cart.index')
-            ->with('info', 'Please implement cart logic');
+            ->with('success', 'Product moved to cart successfully!');
+    }
+
+    /**
+     * Move all wishlist items to cart
+     */
+    public function moveAllToCart()
+    {
+        $wishlists = Wishlist::where('user_id', Auth::id())
+            ->with('product')
+            ->get();
+
+        $addedCount = 0;
+        $outOfStockCount = 0;
+        $removedCount = 0;
+
+        foreach ($wishlists as $wishlist) {
+            if (!$wishlist->product) {
+                // Product no longer exists
+                $wishlist->delete();
+                $removedCount++;
+                continue;
+            }
+
+            if ($wishlist->product->stock > 0) {
+                // Check if product already in cart
+                $cartItem = Cart::where('user_id', Auth::id())
+                    ->where('product_id', $wishlist->product_id)
+                    ->first();
+
+                if ($cartItem) {
+                    // Update quantity if already in cart
+                    $cartItem->increment('quantity');
+                } else {
+                    // Add to cart
+                    Cart::create([
+                        'user_id' => Auth::id(),
+                        'product_id' => $wishlist->product_id,
+                        'quantity' => 1,
+                        'price' => $wishlist->product->price
+                    ]);
+                }
+                $addedCount++;
+            } else {
+                $outOfStockCount++;
+            }
+
+            // Remove from wishlist
+            $wishlist->delete();
+        }
+
+        $message = "{$addedCount} item(s) moved to cart.";
+        
+        if ($outOfStockCount > 0) {
+            $message .= " {$outOfStockCount} item(s) were out of stock.";
+        }
+        
+        if ($removedCount > 0) {
+            $message .= " {$removedCount} item(s) were removed as products no longer exist.";
+        }
+
+        return redirect()->route('cart.index')
+            ->with('success', $message);
+    }
+
+    /**
+     * Check if product is in wishlist
+     */
+    public function check($productId)
+    {
+        $inWishlist = Wishlist::where('user_id', Auth::id())
+            ->where('product_id', $productId)
+            ->exists();
+
+        return response()->json([
+            'in_wishlist' => $inWishlist
+        ]);
+    }
+
+    /**
+     * Get wishlist items summary (for sidebar/mini-wishlist)
+     */
+    public function summary()
+    {
+        $wishlists = Wishlist::with('product')
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return response()->json([
+            'items' => $wishlists,
+            'count' => Wishlist::where('user_id', Auth::id())->count()
+        ]);
     }
 }

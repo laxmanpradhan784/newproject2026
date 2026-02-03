@@ -19,22 +19,31 @@ use App\Http\Controllers\Admin\AContactController;
 use App\Http\Controllers\Admin\AUserController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\UserSide\WishlistController;
 
 /*
 |--------------------------------------------------------------------------
 | User Side Routes
 |--------------------------------------------------------------------------
 */
-// Wishlist Routes
-// Individual wishlist routes
-Route::get('wishlist/index', [\App\Http\Controllers\UserSide\WishlistController::class, 'index'])->name('wishlist.index');
-Route::post('wishlist/add', [\App\Http\Controllers\UserSide\WishlistController::class, 'store'])->name('wishlist.store');
-Route::post('wishlist/toggle', [\App\Http\Controllers\UserSide\WishlistController::class, 'toggle'])->name('wishlist.toggle');
-Route::delete('wishlist/remove/{id}', [\App\Http\Controllers\UserSide\WishlistController::class, 'destroy'])->name('wishlist.destroy');
-Route::delete('wishlist/remove-product/{productId}', [\App\Http\Controllers\UserSide\WishlistController::class, 'removeByProduct'])->name('wishlist.remove-by-product');
-Route::get('wishlist/count', [\App\Http\Controllers\UserSide\WishlistController::class, 'count'])->name('wishlist.count');
-Route::post('wishlist/clear', [\App\Http\Controllers\UserSide\WishlistController::class, 'clear'])->name('wishlist.clear');
-Route::post('wishlist/move-to-cart/{id}', [\App\Http\Controllers\UserSide\WishlistController::class, 'moveToCart'])->name('wishlist.move-to-cart');
+// Wishlist Routes - CORRECT VERSION (keep this)
+Route::middleware(['auth'])->prefix('wishlist')->name('wishlist.')->group(function () {
+    // GET routes - for viewing pages
+    Route::get('/', [WishlistController::class, 'index'])->name('index');
+    Route::get('/count', [WishlistController::class, 'count'])->name('count');
+    Route::get('/summary', [WishlistController::class, 'summary'])->name('summary');
+
+    // POST routes - for actions
+    Route::post('/store', [WishlistController::class, 'store'])->name('store');
+    Route::post('/toggle', [WishlistController::class, 'toggle'])->name('toggle');
+    Route::post('/clear', [WishlistController::class, 'clear'])->name('clear');
+    Route::post('/move-all-to-cart', [WishlistController::class, 'moveAllToCart'])->name('move-all-to-cart');
+    Route::post('/move-to-cart/{id}', [WishlistController::class, 'moveToCart'])->name('move-to-cart');
+
+    // DELETE route - for removing items
+    Route::delete('/{id}', [WishlistController::class, 'destroy'])->name('destroy');
+});
+
 
 // Coupon Routes
 Route::middleware(['web'])->group(function () {
@@ -131,15 +140,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/razorpay/callback', [CheckoutController::class, 'razorpayCallback'])->name('checkout.razorpay.callback');
         Route::get('/failed', [CheckoutController::class, 'paymentFailed'])->name('payment.failed');
     });
-
-    // Pages (for authenticated users)
-    Route::get('/wishlist', function () {
-        return view('wishlist');
-    })->name('wishlist');
-
-    Route::get('/deals', function () {
-        return view('deals');
-    })->name('deals');
 });
 
 /*
@@ -245,4 +245,38 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/coupons/generate-code', [CouponController::class, 'generateCode'])->name('coupons.generate-code');
     Route::post('/coupons/{coupon}/status', [CouponController::class, 'updateStatus'])->name('coupons.status');
     Route::post('/coupons/update-expired', [CouponController::class, 'updateExpired'])->name('coupons.update-expired');
+});
+
+use App\Http\Controllers\Admin\ReturnController;
+
+// Admin Routes Group
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // ... existing routes ...
+
+    // Return Management Routes
+    Route::prefix('returns')->name('returns.')->group(function () {
+        Route::get('/', [ReturnController::class, 'index'])->name('index');
+        Route::get('/{id}', [ReturnController::class, 'show'])->name('show');
+        Route::put('/{id}/status', [ReturnController::class, 'updateStatus'])->name('update-status');
+        Route::post('/{id}/refund', [ReturnController::class, 'processRefund'])->name('process-refund');
+        Route::delete('/{id}', [ReturnController::class, 'destroy'])->name('destroy');
+
+        // Policies
+        Route::get('/policies', [ReturnController::class, 'policies'])->name('policies');
+        Route::get('/policies/create', [ReturnController::class, 'createPolicy'])->name('policies.create');
+        Route::post('/policies', [ReturnController::class, 'storePolicy'])->name('policies.store');
+        Route::get('/policies/{id}/edit', [ReturnController::class, 'editPolicy'])->name('policies.edit');
+        Route::put('/policies/{id}', [ReturnController::class, 'updatePolicy'])->name('policies.update');
+
+        // Reasons
+        Route::get('/reasons', [ReturnController::class, 'reasons'])->name('reasons');
+        Route::get('/reasons/create', [ReturnController::class, 'createReason'])->name('reasons.create');
+        Route::post('/reasons', [ReturnController::class, 'storeReason'])->name('reasons.store');
+        Route::get('/reasons/{id}/edit', [ReturnController::class, 'editReason'])->name('reasons.edit');
+        Route::put('/reasons/{id}', [ReturnController::class, 'updateReason'])->name('reasons.update');
+        Route::post('/reasons/{id}/status', [ReturnController::class, 'updateReasonStatus'])->name('reasons.status');
+
+        // Reports
+        Route::get('/reports', [ReturnController::class, 'reports'])->name('reports');
+    });
 });

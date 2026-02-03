@@ -251,7 +251,23 @@
                     </div>
                 </a>
             </li>
-            
+
+            <!-- Returns with Badge -->
+            <li class="nav-item mb-2">
+                <a href="{{ route('admin.returns.index') }}"
+                    class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3">
+                    <div class="nav-icon me-3">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="nav-text">RETURNS</div>
+                    <div class="ms-auto">
+                        <span class="badge police-badge-alert bg-warning">
+                            {{ \App\Models\ReturnRequest::where('status', 'pending')->where('created_at', '>=', now()->subDays(7))->count() }}
+                        </span>
+                    </div>
+                </a>
+            </li>
+
             <!-- Coupons with Badge -->
             <li class="nav-item mb-2">
                 <a href="{{ route('admin.coupons.index') }}"
