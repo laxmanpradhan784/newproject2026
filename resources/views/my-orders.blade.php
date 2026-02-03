@@ -138,7 +138,7 @@
                                 </div>
 
                                 <!-- Pagination with improved styling -->
-                                @if ($orders->hasPages())
+                                {{-- @if ($orders->hasPages())
                                     <div class="card-footer bg-white border-0 py-4">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="text-muted small">
@@ -149,7 +149,7 @@
                                             </nav>
                                         </div>
                                     </div>
-                                @endif
+                                @endif --}}
                             </div>
                         </div>
                     </div>

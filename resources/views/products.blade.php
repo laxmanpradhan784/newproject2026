@@ -271,6 +271,88 @@
                 </script>
         </div>
     </div>
+
+    <!-- Add this button to your product cards -->
+    <button class="btn btn-outline-danger btn-sm wishlist-btn" data-product-id="{{ $product->id }}"
+        onclick="toggleWishlist(this, {{ $product->id }})">
+        <i class="far fa-heart"></i>
+    </button>
+
+    <script>
+        function toggleWishlist(button, productId) {
+            fetch('/wishlist/toggle', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        product_id: productId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update button icon
+                        const icon = button.querySelector('i');
+                        if (data.action === 'added') {
+                            icon.className = 'fas fa-heart text-danger';
+                            button.classList.add('active');
+                        } else {
+                            icon.className = 'far fa-heart';
+                            button.classList.remove('active');
+                        }
+
+                        // Update wishlist count in navbar
+                        updateWishlistCount();
+
+                        // Show toast notification
+                        showToast(data.message, 'success');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Something went wrong', 'error');
+                });
+        }
+
+        function showToast(message, type = 'info') {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type} border-0`;
+            toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">
+                ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    `;
+
+            // Add to container
+            const container = document.getElementById('toast-container') || createToastContainer();
+            container.appendChild(toast);
+
+            // Show toast
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+
+            // Remove after hide
+            toast.addEventListener('hidden.bs.toast', () => {
+                toast.remove();
+            });
+        }
+
+        function createToastContainer() {
+            const container = document.createElement('div');
+            container.id = 'toast-container';
+            container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+            container.style.zIndex = '1060';
+            document.body.appendChild(container);
+            return container;
+        }
+    </script>
 </section>
 
 <!-- Pagination Links -->

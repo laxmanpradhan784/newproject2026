@@ -25,13 +25,22 @@ use App\Http\Controllers\Admin\ReviewController;
 | User Side Routes
 |--------------------------------------------------------------------------
 */
-
+// Wishlist Routes
+// Individual wishlist routes
+Route::get('wishlist/index', [\App\Http\Controllers\UserSide\WishlistController::class, 'index'])->name('wishlist.index');
+Route::post('wishlist/add', [\App\Http\Controllers\UserSide\WishlistController::class, 'store'])->name('wishlist.store');
+Route::post('wishlist/toggle', [\App\Http\Controllers\UserSide\WishlistController::class, 'toggle'])->name('wishlist.toggle');
+Route::delete('wishlist/remove/{id}', [\App\Http\Controllers\UserSide\WishlistController::class, 'destroy'])->name('wishlist.destroy');
+Route::delete('wishlist/remove-product/{productId}', [\App\Http\Controllers\UserSide\WishlistController::class, 'removeByProduct'])->name('wishlist.remove-by-product');
+Route::get('wishlist/count', [\App\Http\Controllers\UserSide\WishlistController::class, 'count'])->name('wishlist.count');
+Route::post('wishlist/clear', [\App\Http\Controllers\UserSide\WishlistController::class, 'clear'])->name('wishlist.clear');
+Route::post('wishlist/move-to-cart/{id}', [\App\Http\Controllers\UserSide\WishlistController::class, 'moveToCart'])->name('wishlist.move-to-cart');
 
 // Coupon Routes
 Route::middleware(['web'])->group(function () {
     Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon'])->name('coupon.apply');
     Route::get('/cart/remove-coupon', [CartController::class, 'removeCoupon'])->name('coupon.remove');
-    
+
     // For modal coupons
     Route::get('/coupons/available', [CartController::class, 'getAvailableCoupons'])->name('coupons.available');
 });
@@ -222,7 +231,7 @@ use App\Http\Controllers\Admin\CouponController;
 
 // Admin Routes Group
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    
+
     // Coupon Management Routes
     Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
     Route::get('/coupons/create', [CouponController::class, 'create'])->name('coupons.create');
@@ -231,7 +240,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/coupons/{coupon}/edit', [CouponController::class, 'edit'])->name('coupons.edit');
     Route::put('/coupons/{coupon}', [CouponController::class, 'update'])->name('coupons.update');
     Route::delete('/coupons/{coupon}', [CouponController::class, 'destroy'])->name('coupons.destroy');
-    
+
     // Additional coupon routes
     Route::get('/coupons/generate-code', [CouponController::class, 'generateCode'])->name('coupons.generate-code');
     Route::post('/coupons/{coupon}/status', [CouponController::class, 'updateStatus'])->name('coupons.status');

@@ -3,7 +3,7 @@
 @section('title', 'My Reviews')
 
 @section('content')
-    <div class="container py-5">
+    <div class="container mt-5 pt-5">
         <!-- Page Header -->
         <div class="d-flex justify-content-between align-items-center mb-5">
             <div>
