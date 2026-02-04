@@ -45,15 +45,25 @@ Route::middleware(['auth'])->prefix('wishlist')->name('wishlist.')->group(functi
     Route::delete('/{id}', [WishlistController::class, 'destroy'])->name('destroy');
 });
 
-
-// Returns Routes (User Side)
-Route::prefix('returns')->name('user.returns.')->group(function () {
+/*
+|--------------------------------------------------------------------------
+| Return Request Routes (User Side)
+|--------------------------------------------------------------------------
+*/
+Route::prefix('returns')->name('returns.')->group(function () {
+    // Main return routes
     Route::get('/', [AReturnController::class, 'index'])->name('index');
+    Route::get('/policy', [AReturnController::class, 'policy'])->name('policy');
+    
+    // Create return request
     Route::get('/create/{order}', [AReturnController::class, 'create'])->name('create');
     Route::post('/store/{order}', [AReturnController::class, 'store'])->name('store');
-    Route::get('/{id}', [AReturnController::class, 'show'])->name('show');
-    Route::post('/{id}/cancel', [AReturnController::class, 'cancel'])->name('cancel');
-    Route::get('/policy', [AReturnController::class, 'policy'])->name('policy');
+    
+    // View and manage return
+    Route::get('/{id}', [AReturnController::class, 'show'])->where('id', '[0-9]+')->name('show');
+    Route::post('/{id}/cancel', [AReturnController::class, 'cancel'])->where('id', '[0-9]+')->name('cancel');
+    
+    // Check eligibility
     Route::get('/check-eligibility/{order}', [AReturnController::class, 'checkEligibility'])->name('check-eligibility');
 });
 

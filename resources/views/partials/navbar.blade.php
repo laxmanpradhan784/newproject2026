@@ -164,12 +164,17 @@
                             <ul class="dropdown-menu dropdown-menu-end dropdown-animate">
                                 <li>
                                     <a class="dropdown-item dropdown-hover" href="{{ route('profile') }}">
-                                        <i class="fas fa-user me-2"></i> Profile
+                                        <i class="fas fa-user me-2"></i> My Profile
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item dropdown-hover" href="{{ route('orders') }}">
                                         <i class="fas fa-user me-2"></i> My Orders
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item dropdown-hover" href="{{ route('returns.index') }}">
+                                        <i class="fas fa-user me-2"></i> My Return 
                                     </a>
                                 </li>
                                 <li>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
@@ -31,25 +32,17 @@ class Order extends Model
         'coupon_id',
         'coupon_code',
         'discount_amount',
+        'delivered_at', // Add this if you need return tracking
     ];
-
-    // Add relationship
-    public function coupon()
-    {
-        return $this->belongsTo(Coupon::class, 'coupon_id');
-    }
-
-    // Add accessor for discounted total
-    public function getDiscountedTotalAttribute(): float
-    {
-        return $this->total + $this->discount_amount;
-    }
 
     protected $casts = [
         'subtotal' => 'decimal:2',
         'shipping' => 'decimal:2',
         'tax' => 'decimal:2',
         'total' => 'decimal:2',
+        'delivered_at' => 'datetime', // Add this
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     // Relationships
@@ -58,9 +51,116 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function items()
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class, 'coupon_id');
+    }
+
+    /**
+     * Get all items for this order.
+     * Using order_items for consistency.
+     */
+    public function order_items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * Alias for order_items (backward compatibility).
+     */
+    public function items(): HasMany
+    {
+        return $this->order_items();
+    }
+
+    /**
+     * Alias for order_items (another alternative).
+     */
+    public function orderItems(): HasMany
+    {
+        return $this->order_items();
+    }
+
+    /**
+     * Check if the order can be returned.
+     */
+    public function canBeReturned(): bool
+    {
+        try {
+            // Only delivered/completed orders can be returned
+            if (!in_array($this->status, ['delivered', 'completed'])) {
+                return false;
+            }
+            
+            // Check if within return window (30 days from creation)
+            $returnDeadline = $this->created_at->addDays(30);
+            
+            return now()->lte($returnDeadline);
+            
+        } catch (\Exception $e) {
+            // Log error for debugging
+            \Log::error('Error in canBeReturned for order ' . $this->id . ': ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Get return deadline date.
+     */
+    public function getReturnDeadlineAttribute()
+    {
+        return $this->created_at->addDays(30);
+    }
+
+    /**
+     * Get formatted return deadline.
+     */
+    public function getFormattedReturnDeadlineAttribute()
+    {
+        return $this->return_deadline->format('F d, Y');
+    }
+
+    /**
+     * Get remaining return days.
+     */
+    public function getRemainingReturnDaysAttribute()
+    {
+        $deadline = $this->return_deadline;
+        $now = now();
+        
+        if ($now->gt($deadline)) {
+            return 0;
+        }
+        
+        return $now->diffInDays($deadline);
+    }
+
+    /**
+     * Get return requests for this order.
+     */
+    public function returnRequests(): HasMany
+    {
+        return $this->hasMany(ReturnRequest::class);
+    }
+
+    /**
+     * Check if order has any active return requests.
+     */
+    public function hasActiveReturnRequests(): bool
+    {
+        return $this->returnRequests()
+            ->whereIn('status', ['pending', 'approved', 'processing'])
+            ->exists();
+    }
+
+    /**
+     * Get total returned quantity for this order.
+     */
+    public function getTotalReturnedQuantityAttribute(): int
+    {
+        return $this->returnRequests()
+            ->whereNotIn('status', ['cancelled', 'rejected'])
+            ->sum('quantity');
     }
 
     // Generate order number with timestamp and user ID
@@ -101,7 +201,9 @@ class Order extends Model
             'processing' => 'info',
             'shipped' => 'primary',
             'delivered' => 'success',
-            'cancelled' => 'danger'
+            'completed' => 'success',
+            'cancelled' => 'danger',
+            'refunded' => 'secondary'
         ];
 
         return $badges[$this->status] ?? 'secondary';
@@ -132,19 +234,22 @@ class Order extends Model
         return $badges[$this->payment_status] ?? 'secondary';
     }
 
-    public function orderItems()
+    // Add accessor for discounted total
+    public function getDiscountedTotalAttribute(): float
     {
-        return $this->hasMany(OrderItem::class, 'order_id');
+        return $this->total + $this->discount_amount;
     }
 
-    // Or if you want both
-    public function order_items()
-    {
-        return $this->hasMany(OrderItem::class, 'order_id');
-    }
-
-    public function getOrderItemsAttribute()
-    {
-        return $this->order_items; // Alias for compatibility
-    }
+    /**
+     * REMOVED: getOrderItemsAttribute() method
+     * This method was causing the error. Laravel automatically handles
+     * the $order->order_items property through the order_items() relationship.
+     * 
+     * REMOVE THIS METHOD OR COMMENT IT OUT:
+     * 
+     * public function getOrderItemsAttribute()
+     * {
+     *     return $this->order_items; // Alias for compatibility
+     * }
+     */
 }
