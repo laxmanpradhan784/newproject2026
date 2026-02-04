@@ -461,102 +461,121 @@
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content border-0 rounded-4">
-                <div class="modal-header border-0 pb-0">
-                    <div class="w-100">
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="bg-primary bg-opacity-10 rounded-circle p-3">
-                                <i class="fas fa-shopping-bag text-primary fs-4"></i>
-                            </div>
-                            <div>
-                                <h4 class="modal-title fw-bold" id="orderItemsModalLabel">Order Items
-                                    ({{ $order->items->count() }})</h4>
-                                <p class="text-muted small mb-0">Order #{{ $order->order_number }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
                 <div class="modal-body py-4">
-                    <div class="order-items-grid">
-                        @foreach ($order->items->chunk(3) as $chunk)
-                            <div class="row g-4 mb-4">
-                                @foreach ($chunk as $item)
-                                    <div class="col-md-4">
-                                        <div class="card border-0 bg-light bg-opacity-50 h-100">
-                                            <div class="card-body">
-                                                <div class="position-relative mb-3">
-                                                    @if ($item->product->image)
-                                                        <img src="{{ asset('uploads/products/' . $item->product->image) }}"
-                                                            alt="{{ $item->product_name }}"
-                                                            class="img-fluid rounded-3 w-100"
-                                                            style="height: 180px; object-fit: cover;">
-                                                    @else
-                                                        <div class="bg-light bg-opacity-50 rounded-3 d-flex align-items-center justify-content-center"
-                                                            style="height: 180px;">
-                                                            <i class="fas fa-box text-muted fa-3x"></i>
+                    <div class="card border-0 shadow-sm">
+                        <!-- Modified header with flex layout -->
+                        <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fas fa-shopping-bag me-2 text-primary"></i>Order Items</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="ps-4 py-3" style="min-width: 300px;">PRODUCT</th>
+                                            <th class="py-3 text-center">PRICE</th>
+                                            <th class="py-3 text-center">QTY</th>
+                                            <th class="py-3 text-center">TOTAL</th>
+                                            <th class="pe-4 py-3 text-center" style="min-width: 150px;">ACTIONS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($order->items as $item)
+                                            <tr class="border-bottom">
+                                                <!-- Product Column -->
+                                                <td class="ps-4 py-4">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="flex-shrink-0 me-3">
+                                                            @if ($item->product->image)
+                                                                <img src="{{ asset('uploads/products/' . $item->product->image) }}"
+                                                                    alt="{{ $item->product_name }}"
+                                                                    class="rounded-3 border"
+                                                                    style="width: 80px; height: 80px; object-fit: cover;">
+                                                            @else
+                                                                <div class="bg-light bg-opacity-50 rounded-3 border d-flex align-items-center justify-content-center"
+                                                                    style="width: 80px; height: 80px;">
+                                                                    <i class="fas fa-box text-muted"></i>
+                                                                </div>
+                                                            @endif
                                                         </div>
+                                                        <div class="flex-grow-1">
+                                                            <h6 class="fw-bold mb-1">{{ $item->product_name }}</h6>
+                                                            <div class="text-muted small mb-1">
+                                                                <i class="fas fa-tag me-1"></i>
+                                                                {{ $item->category_name }}
+                                                            </div>
+                                                            @if ($item->product->sku)
+                                                                <div class="text-muted small">
+                                                                    <i class="fas fa-barcode me-1"></i>
+                                                                    SKU: {{ $item->product->sku }}
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                <!-- Price Column -->
+                                                <td class="text-center py-4">
+                                                    <div class="fw-medium">₹{{ number_format($item->price, 2) }}</div>
+                                                    <div class="text-muted small">Unit Price</div>
+                                                </td>
+
+                                                <!-- Quantity Column -->
+                                                <td class="text-center py-4">
+                                                    <div
+                                                        class="quantity-badge d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-1">
+                                                        <i class="fas fa-times me-1 small"></i>
+                                                        <span class="fw-bold">{{ $item->quantity }}</span>
+                                                    </div>
+                                                </td>
+
+                                                <!-- Total Column -->
+                                                <td class="text-center py-4">
+                                                    <div class="h5 fw-bold text-primary mb-0">
+                                                        ₹{{ number_format($item->total, 2) }}</div>
+                                                    <div class="text-muted small">Item Total</div>
+                                                </td>
+
+                                                <!-- Actions Column -->
+                                                <td class="pe-4 py-4 text-center">
+                                                    @if ($item->product->stock_status == 'in_stock')
+                                                        <a href="{{ route('product.show', $item->product_id) }}"
+                                                            class="btn btn-sm btn-outline-primary d-inline-flex align-items-center">
+                                                            <i class="fas fa-shopping-cart me-1"></i>
+                                                            <span>Buy Again</span>
+                                                        </a>
+                                                    @else
+                                                        <span
+                                                            class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2">
+                                                            <i class="fas fa-ban me-1"></i>Out of Stock
+                                                        </span>
                                                     @endif
-                                                    <span
-                                                        class="position-absolute top-0 start-0 translate-middle badge bg-primary rounded-pill px-3 py-2 m-3">
-                                                        {{ $item->quantity }} ×
-                                                    </span>
-                                                </div>
-                                                <h6 class="fw-bold mb-2 text-dark">{{ $item->product_name }}</h6>
-                                                <p class="text-muted small mb-3">
-                                                    <i class="fas fa-tag me-1"></i>
-                                                    {{ $item->category_name }}
-                                                </p>
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <div>
-                                                        <div class="text-muted small">Unit Price</div>
-                                                        <div class="fw-medium">₹{{ number_format($item->price, 2) }}</div>
-                                                    </div>
-                                                    <div class="text-end">
-                                                        <div class="text-muted small">Item Total</div>
-                                                        <div class="h5 fw-bold text-primary">
-                                                            ₹{{ number_format($item->total, 2) }}</div>
-                                                    </div>
-                                                </div>
-                                                @if ($item->product->stock_status == 'in_stock')
-                                                    <div class="mt-3">
-                                                        <a href="{{ route('product.details', $item->product_id) }}"
-                                                            class="btn btn-outline-primary btn-sm w-100 rounded-3">
-                                                            <i class="fas fa-shopping-cart me-1"></i>Buy Again
+                                                    <div class="mt-2">
+                                                        <a href="{{ route('product.show', $item->product_id) }}"
+                                                            class="btn btn-sm btn-outline-secondary">
+                                                            <i class="fas fa-eye me-1"></i>View
                                                         </a>
                                                     </div>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <!-- Order Summary in Modal -->
-                    <div class="bg-light bg-opacity-25 rounded-4 p-4 mt-4">
-                        <div class="row g-3">
-                            <div class="col-md-8">
-                                <h6 class="fw-bold mb-3">Order Summary</h6>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="text-muted">Subtotal ({{ $order->items->count() }} items)</span>
-                                    <span class="fw-medium">₹{{ number_format($order->subtotal, 2) }}</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="text-muted">Shipping & Handling</span>
-                                    <span class="fw-medium">₹{{ number_format($order->shipping, 2) }}</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="text-muted">Tax (GST 18%)</span>
-                                    <span class="fw-medium">₹{{ number_format($order->tax, 2) }}</span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="bg-white rounded-3 p-4 h-100">
-                                    <h6 class="fw-bold mb-1">Total Amount</h6>
-                                    <div class="h2 fw-bold text-primary mb-0">₹{{ number_format($order->total, 2) }}</div>
-                                    <div class="small text-muted mt-2">Inclusive of all taxes</div>
-                                </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        @if ($order->items->count() > 0)
+                                            <tr class="bg-light">
+                                                <td colspan="3" class="text-end ps-4 py-3">
+                                                    <div class="fw-bold">Order Total:</div>
+                                                </td>
+                                                <td class="text-end pe-4 py-3">
+                                                    <div class="fw-bold"> ₹{{ number_format($order->total, 2) }}</div>
+                                                </td>
+                                                <td class="pe-4 py-3"></td>
+                                            </tr>
+                                        @endif
+                                    </tfoot>
+                                </table>
                             </div>
                         </div>
                     </div>
