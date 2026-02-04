@@ -3,7 +3,7 @@
 @section('title', 'My Profile')
 
 @section('content')
-    <section class="py-5 bg-light">
+    <section class="py-5 ">
         <div class="container pt-5">
             <!-- Success/Error Messages -->
             @if (session('success'))

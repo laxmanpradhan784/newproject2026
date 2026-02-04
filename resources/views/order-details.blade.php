@@ -3,7 +3,7 @@
 @section('title', 'Order #' . $order->order_number)
 
 @section('content')
-    <section class="order-details-page py-5 bg-light">
+    <section class="order-details-page py-5">
         <div class="container pt-5">
             <!-- Header Section -->
             <div class="row mb-5">
@@ -553,20 +553,13 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="bg-white rounded-3 p-4 h-100">
-                                    <h6 class="fw-bold mb-3">Total Amount</h6>
+                                    <h6 class="fw-bold mb-1">Total Amount</h6>
                                     <div class="h2 fw-bold text-primary mb-0">₹{{ number_format($order->total, 2) }}</div>
                                     <div class="small text-muted mt-2">Inclusive of all taxes</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-outline-secondary px-4 rounded-3"
-                        data-bs-dismiss="modal">Close</button>
-                    <a href="{{ route('products') }}" class="btn btn-primary px-4 rounded-3">
-                        <i class="fas fa-shopping-cart me-2"></i>Continue Shopping
-                    </a>
                 </div>
             </div>
         </div>

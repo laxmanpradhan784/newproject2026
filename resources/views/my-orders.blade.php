@@ -3,7 +3,7 @@
 @section('title', 'My Orders')
 
 @section('content')
-    <section class="my-orders py-5 bg-light">
+    <section class="my-orders py-5">
         <div class="container">
             <!-- Breadcrumb with improved styling -->
             <div class="row mb-5">
