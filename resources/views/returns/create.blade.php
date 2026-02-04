@@ -119,56 +119,71 @@
                 </div>
             @endif
 
+            <!-- Main Content -->
             <div class="row">
+                <!-- Return Form -->
                 <div class="col-lg-8">
-                    <div class="card border-0 shadow-sm rounded-3">
-                        <div class="card-header bg-white border-0 py-3 px-4">
+                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                        <div class="card-header bg-white border-0 py-4 px-4">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h5 class="mb-0 fw-bold">Return Request</h5>
-                                    <p class="text-muted small mb-0">Submit your return request below</p>
+                                    <h4 class="mb-1 fw-bold">Return Request Form</h4>
+                                    <p class="text-muted mb-0">Fill in the details below to submit your return request</p>
                                 </div>
-                                <span class="badge bg-light text-dark border small">
-                                    <i class="fas fa-asterisk text-danger me-1 small"></i>Required fields
-                                </span>
+                                <div
+                                    class="badge bg-info bg-opacity-10 text-info fs-6 px-3 py-2 rounded-pill border border-info">
+                                    <i class="fas fa-info-circle me-1"></i> Required fields are marked with *
+                                </div>
                             </div>
                         </div>
 
                         <div class="card-body p-4">
                             <form action="{{ route('returns.store', $order->id) }}" method="POST"
-                                enctype="multipart/form-data">
+                                enctype="multipart/form-data" id="returnForm">
                                 @csrf
 
-                                <!-- Product Selection - Compact -->
+                                <!-- Product Selection -->
                                 <div class="mb-4">
-                                    <label class="form-label fw-bold small">Select Product <span
+                                    <label class="form-label fw-bold">Select Product to Return <span
                                             class="text-danger">*</span></label>
-                                    <div class="mb-2">
+                                    <div class="mb-3">
                                         @foreach ($order->order_items as $item)
-                                            <div class="form-check mb-2">
+                                            <div class="form-check product-option mb-3">
                                                 <input class="form-check-input" type="radio" name="order_item_id"
                                                     id="item_{{ $item->id }}" value="{{ $item->id }}"
+                                                    data-product-id="{{ $item->product_id }}"
                                                     data-max-quantity="{{ $item->quantity }}"
+                                                    data-price="{{ $item->price }}"
                                                     {{ old('order_item_id') == $item->id ? 'checked' : ($loop->first ? 'checked' : '') }}
                                                     required>
-                                                <label class="form-check-label small" for="item_{{ $item->id }}">
-                                                    <div class="d-flex align-items-center">
-                                                        @if ($item->product->image)
-                                                            <img src="{{ asset('uploads/products/' . $item->product->image) }}"
-                                                                alt="{{ $item->product->name }}" class="rounded me-2"
-                                                                width="40" height="40">
-                                                        @else
-                                                            <div class="bg-light rounded d-flex align-items-center justify-content-center me-2"
-                                                                style="width: 40px; height: 40px;">
-                                                                <i class="fas fa-box text-muted small"></i>
-                                                            </div>
-                                                        @endif
-                                                        <div>
-                                                            <div class="fw-medium">
-                                                                {{ Str::limit($item->product->name, 30) }}</div>
-                                                            <div class="text-muted">
-                                                                Qty: {{ $item->quantity }} •
-                                                                ₹{{ number_format($item->price, 2) }}
+                                                <label class="form-check-label w-100" for="item_{{ $item->id }}">
+                                                    <div class="card border">
+                                                        <div class="card-body">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-auto">
+                                                                    @if ($item->product->image)
+                                                                        <img src="{{ asset('uploads/products/' . $item->product->image) }}"
+                                                                            alt="{{ $item->product->name }}"
+                                                                            class="rounded" width="60"
+                                                                            height="60">
+                                                                    @else
+                                                                        <div class="bg-light rounded d-flex align-items-center justify-content-center"
+                                                                            style="width: 60px; height: 60px;">
+                                                                            <i class="fas fa-box text-muted"></i>
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                                <div class="col">
+                                                                    <h6 class="mb-1">{{ $item->product->name }}</h6>
+                                                                    <div class="d-flex flex-wrap gap-3">
+                                                                        <small class="text-muted">Quantity:
+                                                                            {{ $item->quantity }}</small>
+                                                                        <small class="text-muted">Price:
+                                                                            ₹{{ number_format($item->price, 2) }}</small>
+                                                                        <small class="text-muted">Total:
+                                                                            ₹{{ number_format($item->total, 2) }}</small>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -178,25 +193,29 @@
                                     </div>
                                     <input type="hidden" name="product_id" id="product_id"
                                         value="{{ $order->order_items->first()->product_id }}">
+                                    @error('order_item_id')
+                                        <div class="text-danger small mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
-                                <!-- Quantity & Type - Side by side -->
-                                <div class="row g-3 mb-4">
+                                <!-- Quantity & Type -->
+                                <div class="row mb-4">
                                     <div class="col-md-6">
-                                        <label for="quantity" class="form-label fw-bold small">Quantity <span
+                                        <label for="quantity" class="form-label fw-bold">Return Quantity <span
                                                 class="text-danger">*</span></label>
-                                        <input type="number"
-                                            class="form-control form-control-sm @error('quantity') is-invalid @enderror"
+                                        <input type="number" class="form-control @error('quantity') is-invalid @enderror"
                                             id="quantity" name="quantity" min="1"
                                             value="{{ old('quantity', 1) }}" required>
-                                        <div class="form-text small" id="maxQuantityText">Max:
-                                            {{ $order->order_items->first()->quantity }}</div>
+                                        <div class="form-text" id="maxQuantityText">Maximum:
+                                            {{ $order->order_items->first()->quantity }} units</div>
+                                        @error('quantity')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-bold small">Return Type <span
+                                        <label class="form-label fw-bold">Return Type <span
                                                 class="text-danger">*</span></label>
-                                        <select
-                                            class="form-select form-select-sm @error('return_type') is-invalid @enderror"
+                                        <select class="form-select @error('return_type') is-invalid @enderror"
                                             name="return_type" required>
                                             <option value="">Select Type</option>
                                             <option value="refund" {{ old('return_type') == 'refund' ? 'selected' : '' }}>
@@ -208,16 +227,19 @@
                                                 {{ old('return_type') == 'store_credit' ? 'selected' : '' }}>Store Credit
                                             </option>
                                         </select>
+                                        @error('return_type')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
 
                                 <!-- Reason -->
                                 <div class="mb-4">
-                                    <label for="reason" class="form-label fw-bold small">Reason <span
+                                    <label for="reason" class="form-label fw-bold">Reason for Return <span
                                             class="text-danger">*</span></label>
-                                    <select class="form-select form-select-sm @error('reason') is-invalid @enderror"
-                                        id="reason" name="reason" required>
-                                        <option value="">Select reason...</option>
+                                    <select class="form-select @error('reason') is-invalid @enderror" id="reason"
+                                        name="reason" required>
+                                        <option value="">Select a reason...</option>
                                         @foreach ($returnReasons as $reason)
                                             <option value="{{ $reason->name }}"
                                                 {{ old('reason') == $reason->name ? 'selected' : '' }}>
@@ -227,67 +249,85 @@
                                         <option value="Other" {{ old('reason') == 'Other' ? 'selected' : '' }}>Other
                                         </option>
                                     </select>
+                                    @error('reason')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
-                                <!-- Description - Smaller -->
+                                <!-- Description -->
                                 <div class="mb-4">
-                                    <label for="description" class="form-label fw-bold small">Description <span
+                                    <label for="description" class="form-label fw-bold">Detailed Description <span
                                             class="text-danger">*</span></label>
-                                    <textarea class="form-control form-control-sm @error('description') is-invalid @enderror" id="description"
-                                        name="description" rows="3" placeholder="Describe the issue..." required>{{ old('description') }}</textarea>
-                                    <div class="form-text small">Minimum 10 characters</div>
+                                    <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description"
+                                        rows="4" placeholder="Please provide detailed information about why you're returning this product..."
+                                        required>{{ old('description') }}</textarea>
+                                    <div class="form-text">Minimum 10 characters. Please be specific about any issues.
+                                    </div>
+                                    @error('description')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
-                                <!-- Image Upload - Compact -->
+                                <!-- Image Upload -->
                                 <div class="mb-4">
-                                    <label class="form-label fw-bold small">Images (Optional)</label>
-                                    <p class="text-muted small mb-2">Max 3 images, 2MB each</p>
-                                    <div class="d-flex gap-2">
+                                    <label class="form-label fw-bold">Upload Images (Optional)</label>
+                                    <p class="text-muted small mb-3">Upload clear photos showing the product condition (max
+                                        3 images, 2MB each)</p>
+
+                                    <div class="row g-3" id="imageUploads">
                                         @for ($i = 1; $i <= 3; $i++)
-                                            <div class="flex-fill">
-                                                <div class="border rounded p-2 text-center">
-                                                    <div class="image-preview mb-1" id="preview{{ $i }}"
-                                                        style="height: 60px;">
-                                                        <i class="fas fa-image text-muted"></i>
+                                            <div class="col-md-4">
+                                                <div class="card border">
+                                                    <div class="card-body text-center p-3">
+                                                        <div class="image-preview mb-2" id="preview{{ $i }}">
+                                                            <i class="fas fa-image fa-2x text-muted"></i>
+                                                        </div>
+                                                        <input type="file" class="d-none image-upload"
+                                                            name="image{{ $i }}"
+                                                            id="image{{ $i }}" accept="image/*">
+                                                        <label for="image{{ $i }}"
+                                                            class="btn btn-sm btn-outline-secondary w-100">
+                                                            <i class="fas fa-upload me-1"></i>Add Image
+                                                        </label>
                                                     </div>
-                                                    <input type="file" class="d-none image-upload"
-                                                        name="image{{ $i }}" id="image{{ $i }}"
-                                                        accept="image/*">
-                                                    <label for="image{{ $i }}"
-                                                        class="btn btn-sm btn-light w-100 small">
-                                                        <i class="fas fa-plus me-1 small"></i>Add
-                                                    </label>
                                                 </div>
                                             </div>
                                         @endfor
                                     </div>
                                 </div>
 
-                                <!-- Terms - Compact -->
+                                <!-- Terms -->
                                 <div class="mb-4">
                                     <div class="form-check">
                                         <input class="form-check-input @error('terms') is-invalid @enderror"
                                             type="checkbox" id="terms" name="terms" required>
-                                        <label class="form-check-label small" for="terms">
+                                        <label class="form-check-label" for="terms">
                                             I agree to the <a href="{{ route('returns.policy') }}" target="_blank"
                                                 class="text-decoration-none">Return Policy</a> <span
                                                 class="text-danger">*</span>
                                         </label>
-                                    </div>
-                                    <div class="small text-muted mt-1 ps-4">
-                                        • Original condition with tags<br>
-                                        • Within {{ $returnPolicy->return_window_days ?? 30 }} days<br>
-                                        • Refund in 5-7 business days
+                                        @error('terms')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                        <div class="small text-muted mt-2 ps-4">
+                                            <ul class="mb-0">
+                                                <li>The item must be in original condition with all tags attached</li>
+                                                <li>Returns must be initiated within
+                                                    {{ $returnPolicy->return_window_days ?? 30 }} days of delivery</li>
+                                                <li>Refunds will be processed within 5-7 business days after approval</li>
+                                                <li>Shipping fees may be deducted for non-defective items</li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Submit Buttons - Compact -->
+                                <!-- Submit -->
                                 <div class="d-flex justify-content-between pt-3 border-top">
-                                    <a href="{{ route('returns.index') }}" class="btn btn-outline-secondary btn-sm px-3">
-                                        <i class="fas fa-times me-1"></i>Cancel
+                                    <a href="{{ route('returns.index') }}" class="btn btn-outline-secondary btn-lg px-4">
+                                        <i class="fas fa-arrow-left me-2"></i>Cancel
                                     </a>
-                                    <button type="submit" class="btn btn-primary btn-sm px-4">
-                                        <i class="fas fa-paper-plane me-1"></i>Submit Request
+                                    <button type="submit" class="btn btn-primary btn-lg px-4">
+                                        <i class="fas fa-paper-plane me-2"></i>Submit Return Request
                                     </button>
                                 </div>
                             </form>

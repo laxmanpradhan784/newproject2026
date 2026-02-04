@@ -295,7 +295,7 @@
                                             <span class="badge badge-light text-primary">Qty:
                                                 {{ $return->quantity }}</span>
                                             @if ($return->product->image)
-                                                <img src="{{ asset('uploads/products/' . $return->product->image) }}"
+                                                <img src="{{ asset('storage/returns' . $return->product->image) }}"
                                                     alt="{{ $return->product->name }}" class="img-thumbnail ml-1"
                                                     width="30">
                                             @endif
