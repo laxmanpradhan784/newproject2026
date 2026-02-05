@@ -57,7 +57,7 @@
                                 </div>
                             </div>
                             <div class="card-body p-0">
-                                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                                <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
                                     <table class="table table-hover align-middle mb-0">
                                         <thead class="bg-light bg-opacity-50 position-sticky top-0">
                                             <tr class="bg-gradient">

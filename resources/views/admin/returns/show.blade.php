@@ -222,30 +222,30 @@
 
                                         @if ($return->image1)
                                             <div class="col-md-4">
-                                                <a href="{{ asset('uploads/products/' . $return->image1) }}"
-                                                    target="_blank">
-                                                    <img src="{{ asset('uploads/products/' . $return->image1) }}"
-                                                        class="img-fluid img-thumbnail" alt="Image 1">
+                                                <a href="{{ asset('storage/' . $return->image1) }}" target="_blank">
+                                                    <img src="{{ asset('storage/' . $return->image1) }}"
+                                                        class="img-fluid img-thumbnail" alt="Image 1"
+                                                        style="max-height: 140px; object-fit: cover;">
                                                 </a>
                                             </div>
                                         @endif
 
                                         @if ($return->image2)
                                             <div class="col-md-4">
-                                                <a href="{{ asset('uploads/products/' . $return->image2) }}"
-                                                    target="_blank">
-                                                    <img src="{{ asset('uploads/products/' . $return->image2) }}"
-                                                        class="img-fluid img-thumbnail" alt="Image 2">
+                                                <a href="{{ asset('storage/' . $return->image2) }}" target="_blank">
+                                                    <img src="{{ asset('storage/' . $return->image2) }}"
+                                                        class="img-fluid img-thumbnail" alt="Image 2"
+                                                        style="max-height: 140px; object-fit: cover;">
                                                 </a>
                                             </div>
                                         @endif
 
                                         @if ($return->image3)
                                             <div class="col-md-4">
-                                                <a href="{{ asset('uploads/products/' . $return->image3) }}"
-                                                    target="_blank">
-                                                    <img src="{{ asset('uploads/products/' . $return->image3) }}"
-                                                        class="img-fluid img-thumbnail" alt="Image 3">
+                                                <a href="{{ asset('storage/' . $return->image3) }}" target="_blank">
+                                                    <img src="{{ asset('storage/' . $return->image3) }}"
+                                                        class="img-fluid img-thumbnail" alt="Image 3"
+                                                        style="max-height: 140px; object-fit: cover;">
                                                 </a>
                                             </div>
                                         @endif
@@ -253,7 +253,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         @endif
                     </div>
                 </div>
