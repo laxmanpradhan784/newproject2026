@@ -5,7 +5,7 @@
 
 @section('content')
     <!-- Flipkart Style Cart Page -->
-    <section class="cart-page py-4 bg-light">
+    <section class="cart-page py-4">
         <div class="container pt-5">
             <!-- Breadcrumb -->
             <div class="row mb-4">
@@ -83,7 +83,7 @@
                     @if ($cartItems->count() > 0)
                         <!-- Modern Coupon Section -->
                         <div class="card rounded-3 shadow-sm border-0 mb-4">
-                            <div class="card-header bg-white border-0 py-3 px-4">
+                            <div class="card-header border-0 py-3 px-4">
                                 <h6 class="fw-bold mb-0 d-flex align-items-center">
                                     <i class="fas fa-tag text-primary me-2"></i>
                                     Apply Coupon Code
@@ -154,7 +154,7 @@
 
                                 <!-- Applied Coupon Display -->
                                 @if ($appliedCoupon)
-                                    <div class="applied-coupon p-2 bg-light border border-success rounded-2">
+                                    <div class="applied-coupon p-2 border border-success rounded-2">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <div class="d-flex align-items-center mb-1">
