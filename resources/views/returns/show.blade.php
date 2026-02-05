@@ -3,9 +3,9 @@
 @section('title', 'Return Request Details')
 
 @section('content')
-    <div class="container mt-5 pt-5 py-5">
+    <div class="container">
         <!-- Page Header -->
-        <div class="page-header mb-5">
+        <div class="page-header">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <!-- Title Section -->
                 <div>

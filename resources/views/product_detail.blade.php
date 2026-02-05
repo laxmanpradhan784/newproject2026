@@ -4,60 +4,80 @@
 
 @section('content')
 
-<section class="py-5">
+<section>
     <div class="container">
-        <!-- Breadcrumb -->
-        <nav aria-label="breadcrumb" class="mb-4">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-decoration-none">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('category.products', $product->category->slug) }}" class="text-decoration-none">{{ $product->category->name }}</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ Str::limit($product->name, 30) }}</li>
-            </ol>
+        <!-- Modern Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-5">
+            <div class="d-flex align-items-center">
+                <a href="{{ route('home') }}" class="text-decoration-none text-muted d-flex align-items-center">
+                    <i class="fas fa-home me-2"></i> Home
+                </a>
+                <span class="mx-2 text-muted">/</span>
+                <a href="{{ route('category.products', $product->category->slug) }}" 
+                   class="text-decoration-none text-muted d-flex align-items-center">
+                    <i class="fas fa-folder me-1"></i> {{ $product->category->name }}
+                </a>
+                <span class="mx-2 text-muted">/</span>
+                <span class="text-dark fw-semibold">{{ Str::limit($product->name, 25) }}</span>
+            </div>
         </nav>
 
         <div class="row g-4">
             <!-- Product Images & Details -->
             <div class="col-lg-8">
-                <div class="card border-0 shadow-sm rounded-3">
-                    <div class="card-body p-4">
-                        <div class="row g-4">
-                            <!-- Product Image -->
+                <!-- Main Product Card -->
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="card-body p-4 p-md-5" style="background: white;">
+                        <div class="row g-5 align-items-start">
+                            <!-- Product Image Gallery -->
                             <div class="col-md-6">
-                                <div class="product-image-container position-relative">
-                                    @if ($product->image)
-                                        <img src="{{ asset('uploads/products/' . $product->image) }}"
-                                            class="img-fluid rounded-3 shadow-sm product-main-image" 
-                                            alt="{{ $product->name }}"
-                                            style="max-height: 500px; width: 100%; object-fit: contain;">
-                                    @else
-                                        <div class="bg-light d-flex align-items-center justify-content-center rounded-3 shadow-sm"
-                                            style="height: 500px;">
-                                            <i class="fas fa-box fa-6x text-muted"></i>
-                                        </div>
-                                    @endif
-                                    
-                                    @if ($product->stock > 0)
-                                        <span class="position-absolute top-0 start-0 m-3 badge bg-success bg-opacity-90 fs-6">
-                                            <i class="fas fa-check-circle me-1"></i> In Stock
-                                        </span>
-                                    @else
-                                        <span class="position-absolute top-0 start-0 m-3 badge bg-danger bg-opacity-90 fs-6">
-                                            <i class="fas fa-times-circle me-1"></i> Out of Stock
-                                        </span>
-                                    @endif
-                                    
-                                    <!-- Wishlist Button (Top Right) -->
-                                    <button class="btn btn-light btn-icon position-absolute top-0 end-0 m-3 rounded-circle shadow-sm wishlist-btn"
-                                            onclick="toggleWishlist(this, {{ $product->id }})"
-                                            title="{{ auth()->check() && $product->isInWishlist() ? 'Remove from Wishlist' : 'Add to Wishlist' }}"
-                                            data-product-id="{{ $product->id }}"
-                                            style="width: 50px; height: 50px; background: rgba(255,255,255,0.9);">
-                                        @if(auth()->check() && $product->isInWishlist())
-                                            <i class="fas fa-heart text-danger fs-5"></i>
+                                <div class="position-relative">
+                                    <!-- Main Image Container -->
+                                    <div class="product-image-main rounded-3 overflow-hidden bg-light mb-3" 
+                                         style="height: 400px; display: flex; align-items: center; justify-content: center;">
+                                        @if ($product->image)
+                                            <img src="{{ asset('uploads/products/' . $product->image) }}"
+                                                class="img-fluid h-100 w-auto product-main-image" 
+                                                alt="{{ $product->name }}"
+                                                style="object-fit: contain; max-width: 100%;">
                                         @else
-                                            <i class="far fa-heart fs-5"></i>
+                                            <div class="d-flex flex-column align-items-center">
+                                                <i class="fas fa-box-open fa-5x text-muted mb-3"></i>
+                                                <span class="text-muted">No Image Available</span>
+                                            </div>
                                         @endif
-                                    </button>
+                                        
+                                        <!-- Stock Badge -->
+                                        @if ($product->stock > 0)
+                                            <span class="position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill bg-success text-white fw-medium shadow-sm">
+                                                <i class="fas fa-check-circle me-1"></i> In Stock
+                                            </span>
+                                        @else
+                                            <span class="position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill bg-danger text-white fw-medium shadow-sm">
+                                                <i class="fas fa-times-circle me-1"></i> Out of Stock
+                                            </span>
+                                        @endif
+                                        
+                                        <!-- Discount Badge -->
+                                        @if ($product->old_price && $product->old_price > $product->price)
+                                            <span class="position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill bg-primary text-white fw-bold shadow-sm">
+                                                {{ number_format((($product->old_price - $product->price) / $product->old_price) * 100, 0) }}% OFF
+                                            </span>
+                                        @endif
+                                        
+                                        <!-- Wishlist Button -->
+                                        <button class="btn btn-light btn-lg position-absolute bottom-0 end-0 m-3 rounded-circle shadow-lg wishlist-btn"
+                                                onclick="toggleWishlist(this, {{ $product->id }})"
+                                                title="{{ auth()->check() && $product->isInWishlist() ? 'Remove from Wishlist' : 'Add to Wishlist' }}"
+                                                data-product-id="{{ $product->id }}"
+                                                style="width: 56px; height: 56px;">
+                                            @if(auth()->check() && $product->isInWishlist())
+                                                <i class="fas fa-heart text-danger fs-5"></i>
+                                            @else
+                                                <i class="far fa-heart fs-5"></i>
+                                            @endif
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 

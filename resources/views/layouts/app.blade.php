@@ -39,7 +39,7 @@
         
         main {
             flex: 1;
-            padding-top: 30px;
+            padding-top: 10px;
             padding-bottom: 30px;
             animation: fadeIn 0.5s ease-in;
         }

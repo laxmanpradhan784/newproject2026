@@ -81,33 +81,36 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle nav-hover" href="#" data-bs-toggle="dropdown"
+                        <a class="nav-link dropdown-toggle nav-hover py-2 px-3" href="#" data-bs-toggle="dropdown"
                             aria-expanded="false" role="button">
-                            <i class="fas fa-th-large me-1 d-lg-none"></i>
                             <span class="nav-text">Categories</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-animate" aria-labelledby="categoriesDropdown">
-                            @foreach (\App\Models\Category::where('status', 'active')->get() as $cat)
+                        <ul class="dropdown-menu dropdown-animate shadow border-0 p-0" style="min-width: 180px;"
+                            aria-labelledby="categoriesDropdown">
+                            @php
+                                $categories = \App\Models\Category::where('status', 'active')->get();
+                            @endphp
+
+                            @foreach ($categories as $cat)
                                 <li>
-                                    <a class="dropdown-item dropdown-hover"
+                                    <a class="dropdown-item dropdown-hover px-3 py-2 d-flex align-items-center border-bottom"
                                         href="{{ route('category.products', $cat->slug) }}">
-                                        <span class="category-icon me-2">
-                                            <i class="fas fa-{{ $cat->icon ?? 'tag' }}"></i>
-                                        </span>
-                                        {{ $cat->name }}
+                                        <i
+                                            class="fas fa-{{ $cat->icon ?? 'chevron-right' }} fa-xs me-2 text-primary"></i>
+                                        <span class="flex-grow-1">{{ $cat->name }}</span>
                                         @if ($cat->product_count > 0)
-                                            <span class="badge bg-primary float-end">{{ $cat->product_count }}</span>
+                                            <span
+                                                class="badge bg-primary bg-opacity-10 text-primary px-1 py-0">{{ $cat->product_count }}</span>
                                         @endif
                                     </a>
                                 </li>
                             @endforeach
+
                             <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <a class="dropdown-item dropdown-hover text-primary fw-semibold"
+                                <a class="dropdown-item dropdown-hover px-3 py-2 d-flex align-items-center text-primary fw-semibold border-top"
                                     href="{{ route('products') }}">
-                                    <i class="fas fa-eye me-2"></i> View All Products
+                                    <i class="fas fa-list me-2"></i>
+                                    <span>View All</span>
                                 </a>
                             </li>
                         </ul>
@@ -137,16 +140,21 @@
 
                     <!-- Search with animation (Desktop Only) -->
                     <div class="search-container me-3 d-none d-lg-block">
-                        <form class="d-flex search-form" action="{{ route('product.search') }}" role="search">
+                        <form class="d-flex search-form" action="{{ route('product.search') }}" method="GET"
+                            role="search">
+
                             <button class="search-btn" type="submit" aria-label="Search">
                                 <i class="fas fa-search"></i>
                             </button>
-                            <input class="search-input" type="search" placeholder="Search products..."
+
+                            <input class="search-input" type="search" name="q" placeholder="Search products..."
                                 aria-label="Search products" autocomplete="off">
                         </form>
+
                         <!-- Search suggestions dropdown -->
                         <div class="search-suggestions dropdown-menu" id="searchSuggestions"></div>
                     </div>
+
 
                     <!-- Desktop Wishlist -->
                     <a class="btn btn-float btn-wishlist me-2" href="{{ route('wishlist.index') }}"
@@ -177,12 +185,12 @@
                                 <i class="fas fa-chevron-down ms-1"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end dropdown-animate" aria-labelledby="userDropdown">
-                                <li>
+                                {{-- <li>
                                     <h6 class="dropdown-header">
                                         <i class="fas fa-user-circle me-2"></i>
                                         {{ Auth::user()->first_name }} {{ Auth::user()->last_name ?? '' }}
                                     </h6>
-                                </li>
+                                </li> --}}
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>

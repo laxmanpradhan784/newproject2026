@@ -3,7 +3,7 @@
 @section('title', 'My Return Requests')
 
 @section('content')
-    <section class="checkout-page mt-5 pt-5">
+    <section class="checkout-page ">
         <div class="container">
             <div class="row">
                 <div class="col-12">

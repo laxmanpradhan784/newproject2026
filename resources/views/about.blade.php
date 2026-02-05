@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="about-hero position-relative overflow-hidden py-5 py-lg-6">
+<section class="about-hero position-relative overflow-hidden py-5 py-lg-6 style="background: #f5f7fa;">
     <div class="container pt-5 pt-lg-6">
         <div class="row align-items-center">
             <div class="col-lg-6 mb-5 mb-lg-0 animate-fade-in">

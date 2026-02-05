@@ -3,10 +3,10 @@
 @section('title', 'Order #' . $order->order_number)
 
 @section('content')
-    <section class="order-details-page py-5">
-        <div class="container pt-5">
+    <section class="order-details-page">
+        <div class="container">
             <!-- Header Section -->
-            <div class="row mb-5">
+            <div class="row">
                 <div class="col-12">
                     <div class="d-flex flex-column gap-3">
                         <!-- Breadcrumb -->

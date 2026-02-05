@@ -3,10 +3,10 @@
 @section('title', 'Create Return Request')
 
 @section('content')
-    <div class="container-fluid mt-5 pt-5 py-4">
+    <div class="container-fluid">
         <div class="container">
             <!-- Page Header -->
-            <div class="row mb-4">
+            <div class="row">
                 <div class="col-12">
                     <div class="d-flex align-items-center justify-content-between mb-3">
                         <div>

@@ -3,9 +3,9 @@
 @section('title', 'My Reviews')
 
 @section('content')
-    <div class="container mt-5 pt-5">
+    <div class="container">
         <!-- Page Header -->
-        <div class="d-flex justify-content-between align-items-center mb-5">
+        <div class="d-flex justify-content-between align-items-center">
             <div>
                 <h1 class="h2 fw-bold text-dark mb-2">My Reviews</h1>
                 <p class="text-muted mb-0">Manage and track all your product reviews in one place</p>

@@ -3,9 +3,9 @@
 @section('title', 'My Wishlist')
 
 @section('content')
-    <div class="container mt-5 pt-5">
+    <div class="container">
         <!-- Modern Header -->
-        <div class="card border-0 shadow-sm bg-gradient-primary-light mb-4">
+        <div class="card border-0 shadow-sm bg-gradient-primary-light mb-2">
             <div class="card-body p-4">
                 <div class="row align-items-center">
                     <div class="col-md-8">
