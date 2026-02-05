@@ -1,6 +1,6 @@
 @extends('layouts.app') @section('title', 'About Us') @section('content')
 <!-- Hero Section -->
-<section class="contact-hero py-5 bg-light">
+<section class="contact-hero py-5">
     <div class="container pt-5">
         <div class="row align-items-center">
             <div class="col-lg-6">
@@ -34,7 +34,7 @@
 </section>
 
 <!-- Mission & Vision -->
-<section class="mission-vision py-5 bg-light">
+<section class="mission-vision py-5">
     <div class="container">
         <div class="row">
             <div class="col-lg-6 mb-5 mb-lg-0">
@@ -216,7 +216,7 @@
 </section>
 
 <!-- Timeline -->
-<section class="timeline py-5 bg-light">
+<section class="timeline py-5">
     <div class="container">
         <div class="section-title text-center mb-5">
             <h2>Our Journey</h2>

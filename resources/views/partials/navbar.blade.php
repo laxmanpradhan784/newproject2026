@@ -587,3 +587,4 @@
         document.querySelector('.wishlist-count').textContent = wishlistCount;
     }
 </script>
+
