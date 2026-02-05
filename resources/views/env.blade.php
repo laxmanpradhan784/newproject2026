@@ -66,10 +66,7 @@ AWS_USE_PATH_STYLE_ENDPOINT=false
 VITE_APP_NAME="${APP_NAME}"
 
 
-GOOGLE_CLIENT_ID=38312226508-i5er6upc6e9q9lrb5h3ioq577juk47kl.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
+GOOGLE_CLIENT_ID=38312226508-aipv4rjp54m64u0a7if99hni1jimp3rc.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
 GOOGLE_REDIRECT=http://localhost/e-commmerce/public/auth/google/callback
-
-RAZORPAY_KEY=38312226508-i5er6upc6e9q9lrb5h3ioq577juk47kl.apps.googleusercontent.com
-RAZORPAY_SECRET=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
 
