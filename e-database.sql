@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 03, 2026 at 11:39 AM
+-- Generation Time: Feb 05, 2026 at 05:29 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -431,7 +431,7 @@ INSERT INTO `orders` (`id`, `order_number`, `user_id`, `subtotal`, `shipping`, `
 (22, 'ORD-260202-051850-0091495', 9, 648.00, 150.00, 112.68, 888.68, 'shipped', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-02-01 23:48:50', '2026-02-02 01:29:29', NULL, NULL, NULL, NULL, 8, 'fbhfd', 22.00),
 (23, 'ORD-260202-052549-0095799', 9, 598.00, 50.00, 107.64, 755.64, 'delivered', 'cod', NULL, 'pending', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-02-01 23:55:49', '2026-02-02 01:29:23', '2026-02-02 01:29:23', NULL, NULL, NULL, NULL, NULL, 0.00),
 (24, 'ORD-260202-064824-0116334', 11, 3646.00, 150.00, 566.28, 3862.28, 'delivered', 'cod', NULL, 'pending', 'Litu Nayak', 'Litu123@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-02-02 01:18:24', '2026-02-02 01:29:19', '2026-02-02 01:29:19', NULL, NULL, NULL, 2, 'FLAT500', 500.00),
-(25, 'ORD-260203-095013-0095814', 9, 134486.00, 150.00, 24117.48, 158253.48, 'pending', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-02-03 04:20:13', '2026-02-03 04:20:13', NULL, NULL, NULL, NULL, 25, 'QUICK500', 500.00);
+(25, 'ORD-260203-095013-0095814', 9, 134486.00, 150.00, 24117.48, 158253.48, 'delivered', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-02-03 04:20:13', '2026-02-04 01:06:14', '2026-02-04 01:06:14', NULL, NULL, NULL, 25, 'QUICK500', 500.00);
 
 -- --------------------------------------------------------
 
@@ -608,6 +608,505 @@ INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `image`, `descripti
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `product_return_history`
+--
+
+CREATE TABLE `product_return_history` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `month_year` varchar(7) NOT NULL,
+  `total_sold` int(11) DEFAULT 0,
+  `total_returned` int(11) DEFAULT 0,
+  `return_rate` decimal(5,2) DEFAULT 0.00,
+  `common_reasons` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `returns`
+--
+
+CREATE TABLE `returns` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `return_number` varchar(50) NOT NULL,
+  `order_id` bigint(20) UNSIGNED NOT NULL,
+  `order_item_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `return_type` enum('refund','replacement','store_credit') DEFAULT 'refund',
+  `reason` enum('defective','wrong_item','size_issue','not_as_described','damaged','quality_issue','changed_mind','late_delivery','other') NOT NULL,
+  `description` text DEFAULT NULL,
+  `status` enum('pending','approved','rejected','pickup_scheduled','picked_up','processing','refunded','replaced','completed','cancelled') DEFAULT 'pending',
+  `amount` decimal(10,2) NOT NULL,
+  `refund_amount` decimal(10,2) DEFAULT NULL,
+  `refund_method` enum('original','wallet','bank_transfer','credit_card') DEFAULT NULL,
+  `refund_status` enum('pending','processing','completed','failed') DEFAULT NULL,
+  `refunded_at` timestamp NULL DEFAULT NULL,
+  `pickup_address` text DEFAULT NULL,
+  `pickup_scheduled_date` date DEFAULT NULL,
+  `pickup_date` date DEFAULT NULL,
+  `admin_notes` text DEFAULT NULL,
+  `user_notes` text DEFAULT NULL,
+  `image1` varchar(255) DEFAULT NULL,
+  `image2` varchar(255) DEFAULT NULL,
+  `image3` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `returns`
+--
+
+INSERT INTO `returns` (`id`, `return_number`, `order_id`, `order_item_id`, `user_id`, `product_id`, `quantity`, `return_type`, `reason`, `description`, `status`, `amount`, `refund_amount`, `refund_method`, `refund_status`, `refunded_at`, `pickup_address`, `pickup_scheduled_date`, `pickup_date`, `admin_notes`, `user_notes`, `image1`, `image2`, `image3`, `created_at`, `updated_at`) VALUES
+(1, 'RET-20250203-0001', 14, 32, 9, 3, 1, 'refund', 'defective', 'Non-stick coating peeling off after first use', 'approved', 2499.00, 2499.00, 'original', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-03 03:45:00', '2026-02-03 07:31:10'),
+(2, 'RET-20250203-0002', 21, 40, 9, 6, 1, 'refund', 'wrong_item', 'Received blue yoga mat instead of purple as ordered', 'approved', 1499.00, 1499.00, 'original', NULL, NULL, NULL, '2026-02-05', NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-03 05:00:00', '2026-02-03 11:28:02'),
+(3, 'RET-20250202-0001', 20, 39, 9, 6, 1, 'refund', 'damaged', 'Yoga mat arrived with visible scratches and tears', 'pickup_scheduled', 1499.00, 1499.00, 'wallet', NULL, NULL, NULL, '2026-02-04', NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-02 08:50:00', '2026-02-03 11:28:02'),
+(4, 'RET-20250201-0001', 10, 25, 9, 9, 1, 'refund', 'not_as_described', 'Green tea tastes different from previous purchase', 'picked_up', 349.00, 349.00, 'original', NULL, NULL, NULL, '2026-02-03', NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-01 06:15:00', '2026-02-03 11:28:02'),
+(5, 'RET-20250131-0001', 8, 18, 9, 4, 1, 'refund', 'quality_issue', 'Face serum caused skin irritation', 'refunded', 899.00, 899.00, 'wallet', 'completed', NULL, NULL, '2026-01-31', NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-31 11:00:00', '2026-02-03 11:28:02'),
+(6, 'RET-20250130-0001', 7, 17, 9, 8, 1, 'refund', 'changed_mind', 'No longer need the car air purifier', 'rejected', 1999.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-30 07:45:00', '2026-02-03 11:28:02'),
+(7, 'RET-20250129-0001', 6, 15, 9, 7, 1, 'replacement', 'defective', 'Missing pieces in building blocks set', 'completed', 999.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-29 04:30:00', '2026-02-03 11:28:02'),
+(8, 'RET-20250128-0001', 5, 13, 2, 62, 1, 'store_credit', 'size_issue', 'Product size smaller than expected', 'refunded', 15.99, 15.99, 'wallet', 'completed', NULL, NULL, '2026-01-28', NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-28 10:15:00', '2026-02-03 11:28:02'),
+(9, 'RET-20250127-0001', 4, 12, 2, 10, 1, 'refund', 'late_delivery', 'Delivered 5 days after promised date', 'processing', 299.00, 299.00, 'original', 'processing', NULL, NULL, '2026-01-27', NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-27 04:00:00', '2026-02-03 11:28:02'),
+(11, 'RET-20260204-0001', 23, 43, 9, 10, 1, 'refund', 'other', 'vfsedrgvd degvwer eddvgdevg', 'approved', 598.00, 598.00, 'original', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-04 06:11:12', '2026-02-04 06:29:10'),
+(12, 'RET-20260204-0002', 25, 49, 9, 84, 1, 'replacement', 'other', 'ekcfgwkegu egfuikweghu  wefhkwhf', 'pending', 1499.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'returns/6egfLLfJaw5VHOM2oAU9Cl0xsPBnUqt1EyUFP1wI.jpg', 'returns/HnR2xc6fXQ0k0O1y4pTSNBbuZzfznwsujTmPT6yW.jpg', 'returns/hHsuBbJlFtyNbnmJyGavEGrZYI3fhvUT1EA6Ifvt.jpg', '2026-02-04 07:59:06', '2026-02-04 07:59:06');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_analytics`
+--
+
+CREATE TABLE `return_analytics` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `total_returns` int(11) DEFAULT 0,
+  `pending_returns` int(11) DEFAULT 0,
+  `approved_returns` int(11) DEFAULT 0,
+  `rejected_returns` int(11) DEFAULT 0,
+  `completed_returns` int(11) DEFAULT 0,
+  `total_refund_amount` decimal(12,2) DEFAULT 0.00,
+  `avg_processing_days` decimal(5,2) DEFAULT 0.00,
+  `most_common_reason` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_attachments`
+--
+
+CREATE TABLE `return_attachments` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `return_id` bigint(20) UNSIGNED NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `file_type` varchar(100) DEFAULT NULL,
+  `file_size` int(11) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `uploaded_by` int(10) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_audit_logs`
+--
+
+CREATE TABLE `return_audit_logs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `return_id` bigint(20) UNSIGNED NOT NULL,
+  `action` varchar(100) NOT NULL,
+  `old_values` text DEFAULT NULL,
+  `new_values` text DEFAULT NULL,
+  `changed_by` int(10) UNSIGNED DEFAULT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `user_agent` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_categories`
+--
+
+CREATE TABLE `return_categories` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `slug` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
+  `icon` varchar(100) DEFAULT NULL,
+  `color` varchar(20) DEFAULT NULL,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `return_categories`
+--
+
+INSERT INTO `return_categories` (`id`, `name`, `slug`, `description`, `icon`, `color`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Quality Issues', 'quality-issues', 'Returns due to product quality problems', 'fa-star-half-alt', '#FF6B6B', 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(2, 'Wrong Items', 'wrong-items', 'Received incorrect products', 'fa-exchange-alt', '#4ECDC4', 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(3, 'Damaged Goods', 'damaged-goods', 'Products damaged during shipping', 'fa-box-open', '#FFD166', 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(4, 'Size Problems', 'size-problems', 'Clothing or shoes that don\'t fit', 'fa-tshirt', '#06D6A0', 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(5, 'Change of Mind', 'change-of-mind', 'Customer changed their mind', 'fa-heart', '#118AB2', 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(6, 'Late Delivery', 'late-delivery', 'Delivered after promised date', 'fa-clock', '#073B4C', 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_notifications`
+--
+
+CREATE TABLE `return_notifications` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `return_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `type` enum('status_update','refund_processed','pickup_scheduled','admin_message','system') NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `data` text DEFAULT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
+  `read_at` timestamp NULL DEFAULT NULL,
+  `sent_via` enum('email','sms','in_app','all') DEFAULT 'in_app',
+  `sent_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `return_notifications`
+--
+
+INSERT INTO `return_notifications` (`id`, `return_id`, `user_id`, `type`, `title`, `message`, `data`, `is_read`, `read_at`, `sent_via`, `sent_at`, `created_at`) VALUES
+(1, 2, 9, 'status_update', 'Return Approved', 'Your return request #RET-20250203-0002 has been approved. We will schedule pickup soon.', '{\"return_number\":\"RET-20250203-0002\",\"status\":\"approved\"}', 1, NULL, 'in_app', NULL, '2026-02-03 06:15:00'),
+(2, 6, 9, 'status_update', 'Return Rejected', 'Your return request #RET-20250130-0001 has been rejected. Product was used - not eligible for change of mind.', '{\"return_number\":\"RET-20250130-0001\",\"status\":\"rejected\"}', 1, NULL, 'email', NULL, '2026-01-30 09:50:00'),
+(3, 5, 9, 'refund_processed', 'Refund Processed', 'Refund of ₹899.00 has been processed for return #RET-20250131-0001 and added to your wallet.', '{\"return_number\":\"RET-20250131-0001\",\"amount\":899.00,\"method\":\"wallet\"}', 1, NULL, 'in_app', NULL, '2026-02-01 09:00:00'),
+(4, 9, 2, 'status_update', 'Return Processing', 'Your return request #RET-20250127-0001 is being processed. Refund will be initiated soon.', '{\"return_number\":\"RET-20250127-0001\",\"status\":\"processing\"}', 0, NULL, 'in_app', NULL, '2026-01-28 04:30:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_policies`
+--
+
+CREATE TABLE `return_policies` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `return_window_days` int(11) NOT NULL DEFAULT 7,
+  `refund_methods` text DEFAULT NULL,
+  `restocking_fee_percentage` decimal(5,2) DEFAULT 0.00,
+  `return_shipping_paid_by` enum('customer','seller') DEFAULT 'customer',
+  `conditions` text DEFAULT NULL,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_by` int(10) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `return_policies`
+--
+
+INSERT INTO `return_policies` (`id`, `name`, `description`, `return_window_days`, `refund_methods`, `restocking_fee_percentage`, `return_shipping_paid_by`, `conditions`, `status`, `created_by`, `created_at`, `updated_at`) VALUES
+(1, 'Standard Return Policy', 'Our standard return policy for all products', 30, '[\"original\",\"wallet\"]', 0.00, 'seller', '{\"items_must_be_unused\": true, \"original_packaging\": true, \"tags_attached\": true, \"invoice_required\": true}', 'active', NULL, '2026-02-03 11:22:55', '2026-02-03 11:22:55');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_reasons`
+--
+
+CREATE TABLE `return_reasons` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `reason` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `requires_image` tinyint(1) DEFAULT 0,
+  `requires_description` tinyint(1) DEFAULT 1,
+  `refund_type` enum('full','partial','none') DEFAULT 'full',
+  `priority` int(11) DEFAULT 0,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `return_reasons`
+--
+
+INSERT INTO `return_reasons` (`id`, `reason`, `description`, `requires_image`, `requires_description`, `refund_type`, `priority`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Defective Product', 'Product is defective or not working properly', 1, 1, 'full', 1, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(2, 'Wrong Item Received', 'Received wrong item or wrong size/color', 1, 0, 'full', 2, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(3, 'Damaged in Transit', 'Product arrived damaged during shipping', 1, 1, 'full', 3, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(4, 'Not as Described', 'Product does not match the description or images', 1, 1, 'full', 4, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(5, 'Quality Issues', 'Poor quality or manufacturing defects', 1, 1, 'full', 5, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(6, 'Size Issue', 'Does not fit properly (clothing, shoes)', 0, 0, 'full', 6, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(7, 'Changed Mind', 'No longer want or need the product', 0, 0, 'partial', 7, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(8, 'Late Delivery', 'Order delivered after promised delivery date', 0, 0, 'partial', 8, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(9, 'Duplicate Order', 'Accidentally ordered the same item twice', 0, 1, 'full', 9, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(10, 'Other', 'Other reasons not listed above', 1, 1, 'full', 10, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_replacements`
+--
+
+CREATE TABLE `return_replacements` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `return_id` bigint(20) UNSIGNED NOT NULL,
+  `original_product_id` bigint(20) UNSIGNED NOT NULL,
+  `replacement_product_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `quantity` int(11) NOT NULL,
+  `status` enum('pending','processing','shipped','delivered','cancelled') DEFAULT 'pending',
+  `replacement_order_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_rules`
+--
+
+CREATE TABLE `return_rules` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `condition_type` enum('product','category','price','customer','days_since_purchase') NOT NULL,
+  `condition_value` text NOT NULL,
+  `action_type` enum('auto_approve','auto_reject','require_approval','require_images','partial_refund') NOT NULL,
+  `action_value` text DEFAULT NULL,
+  `priority` int(11) DEFAULT 0,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `return_rules`
+--
+
+INSERT INTO `return_rules` (`id`, `name`, `condition_type`, `condition_value`, `action_type`, `action_value`, `priority`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'High Value Auto Approval', 'price', '{\"operator\": \"<\", \"value\": 1000}', 'auto_approve', '{\"refund_percentage\": 100}', 1, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(2, 'Electronics Require Images', 'category', '{\"category_id\": 1}', 'require_images', '{\"min_images\": 2}', 2, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(3, 'Late Returns Partial Refund', 'days_since_purchase', '{\"operator\": \">\", \"value\": 15}', 'partial_refund', '{\"refund_percentage\": 50}', 3, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_shipping_methods`
+--
+
+CREATE TABLE `return_shipping_methods` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `carrier` varchar(100) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `cost` decimal(10,2) DEFAULT 0.00,
+  `estimated_days` varchar(50) DEFAULT NULL,
+  `tracking_url_template` varchar(255) DEFAULT NULL,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `return_shipping_methods`
+--
+
+INSERT INTO `return_shipping_methods` (`id`, `name`, `carrier`, `description`, `cost`, `estimated_days`, `tracking_url_template`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Pickup by Courier', 'Local Courier', 'We will arrange pickup from your address', 0.00, '1-2 days', NULL, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(2, 'Self Ship', 'Any Carrier', 'Ship the item yourself and provide tracking', 0.00, '2-5 days', NULL, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55'),
+(3, 'Drop at Store', 'In-Store', 'Drop off at our nearest store', 0.00, 'Same day', NULL, 'active', '2026-02-03 11:22:55', '2026-02-03 11:22:55');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_slas`
+--
+
+CREATE TABLE `return_slas` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `priority_level` enum('low','medium','high','urgent') NOT NULL,
+  `resolution_days` int(11) NOT NULL,
+  `auto_approve_hours` int(11) DEFAULT NULL,
+  `conditions` text DEFAULT NULL,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `return_slas`
+--
+
+INSERT INTO `return_slas` (`id`, `name`, `priority_level`, `resolution_days`, `auto_approve_hours`, `conditions`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Standard Return', 'medium', 7, 48, '{\"max_amount\": 5000}', 'active', '2026-02-03 11:22:56', '2026-02-03 11:22:56'),
+(2, 'Express Return', 'high', 3, 24, '{\"vip_customer\": true}', 'active', '2026-02-03 11:22:56', '2026-02-03 11:22:56'),
+(3, 'Premium Return', 'urgent', 1, 12, '{\"amount_greater_than\": 10000}', 'active', '2026-02-03 11:22:56', '2026-02-03 11:22:56');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_status_logs`
+--
+
+CREATE TABLE `return_status_logs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `return_id` bigint(20) UNSIGNED NOT NULL,
+  `from_status` varchar(50) DEFAULT NULL,
+  `to_status` varchar(50) NOT NULL,
+  `notes` text DEFAULT NULL,
+  `created_by` int(10) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `return_status_logs`
+--
+
+INSERT INTO `return_status_logs` (`id`, `return_id`, `from_status`, `to_status`, `notes`, `created_by`, `created_at`, `updated_at`) VALUES
+(1, 2, NULL, 'pending', 'Return request created by customer', 9, '2026-02-03 05:00:00', NULL),
+(2, 2, 'pending', 'approved', 'Approved by admin - wrong item confirmed', 1, '2026-02-03 06:15:00', NULL),
+(3, 3, NULL, 'pending', 'Return request submitted', 9, '2026-02-02 08:50:00', NULL),
+(4, 3, 'pending', 'approved', 'Damage confirmed from images', 1, '2026-02-02 10:00:00', NULL),
+(5, 3, 'approved', 'pickup_scheduled', 'Pickup scheduled for tomorrow', 1, '2026-02-02 10:30:00', NULL),
+(6, 4, NULL, 'pending', 'Return initiated', 9, '2026-02-01 06:15:00', NULL),
+(7, 4, 'pending', 'approved', 'Product mismatch verified', 1, '2026-02-01 08:50:00', NULL),
+(8, 4, 'approved', 'pickup_scheduled', 'Pickup scheduled', 1, '2026-02-01 09:00:00', NULL),
+(9, 4, 'pickup_scheduled', 'picked_up', 'Package picked up by courier', 1, '2026-02-03 04:45:00', NULL),
+(10, 5, NULL, 'pending', 'Quality complaint filed', 9, '2026-01-31 11:00:00', NULL),
+(11, 5, 'pending', 'approved', 'Medical complaint verified', 1, '2026-01-31 12:15:00', NULL),
+(12, 5, 'approved', 'picked_up', 'Product collected', 1, '2026-02-01 05:30:00', NULL),
+(13, 5, 'picked_up', 'refunded', 'Refund processed to wallet', 1, '2026-02-01 09:00:00', NULL),
+(14, 6, NULL, 'pending', 'Change of mind return', 9, '2026-01-30 07:45:00', NULL),
+(15, 6, 'pending', 'rejected', 'Product was used - not eligible for change of mind', 1, '2026-01-30 09:50:00', NULL),
+(16, 9, NULL, 'pending', 'Late delivery complaint', 2, '2026-01-27 04:00:00', NULL),
+(17, 9, 'pending', 'approved', 'Delivery delay confirmed', 1, '2026-01-27 06:15:00', NULL),
+(18, 9, 'approved', 'processing', 'Refund processing initiated', 1, '2026-01-28 04:30:00', NULL),
+(19, 2, 'approved', 'approved', NULL, 1, '2026-02-03 07:20:17', '2026-02-03 07:20:17'),
+(20, 2, 'approved', 'approved', NULL, 1, '2026-02-03 07:20:19', '2026-02-03 07:20:19'),
+(21, 2, 'approved', 'approved', NULL, 1, '2026-02-03 07:20:20', '2026-02-03 07:20:20'),
+(22, 1, 'pending', 'approved', NULL, 1, '2026-02-03 07:31:10', '2026-02-03 07:31:10'),
+(23, 11, NULL, 'pending', 'Return request submitted by customer', 9, '2026-02-04 06:11:12', '2026-02-04 06:11:12'),
+(24, 11, 'pending', 'approved', NULL, 1, '2026-02-04 06:29:10', '2026-02-04 06:29:10'),
+(25, 12, NULL, 'pending', 'Return request submitted by customer', 9, '2026-02-04 07:59:06', '2026-02-04 07:59:06');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_tags`
+--
+
+CREATE TABLE `return_tags` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `slug` varchar(50) NOT NULL,
+  `color` varchar(20) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_tag_assignments`
+--
+
+CREATE TABLE `return_tag_assignments` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `return_id` bigint(20) UNSIGNED NOT NULL,
+  `tag_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_templates`
+--
+
+CREATE TABLE `return_templates` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `type` enum('email','sms','notification') NOT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `content` text NOT NULL,
+  `variables` text DEFAULT NULL,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `return_templates`
+--
+
+INSERT INTO `return_templates` (`id`, `name`, `type`, `subject`, `content`, `variables`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Return Request Received', 'email', 'Your Return Request #{{return_number}} Has Been Received', '<p>Dear {{customer_name}},</p><p>We have received your return request for order #{{order_number}}. Our team will review it and get back to you within 24-48 hours.</p><p><strong>Return Details:</strong></p><ul><li>Return Number: {{return_number}}</li><li>Product: {{product_name}}</li><li>Reason: {{reason}}</li><li>Requested Amount: {{amount}}</li></ul><p>Thank you for your patience.</p>', '[\"return_number\",\"order_number\",\"customer_name\",\"product_name\",\"reason\",\"amount\"]', 'active', '2026-02-03 11:22:56', '2026-02-03 11:22:56'),
+(2, 'Return Status Update', 'notification', 'Return Status Updated', 'Your return request #{{return_number}} status has been updated to {{status}}.', '[\"return_number\",\"status\"]', 'active', '2026-02-03 11:22:56', '2026-02-03 11:22:56');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_tracking`
+--
+
+CREATE TABLE `return_tracking` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `return_id` bigint(20) UNSIGNED NOT NULL,
+  `tracking_number` varchar(100) NOT NULL,
+  `carrier` varchar(100) DEFAULT NULL,
+  `shipping_method` varchar(100) DEFAULT NULL,
+  `status` enum('label_created','picked_up','in_transit','out_for_delivery','delivered','exception','lost') DEFAULT 'label_created',
+  `estimated_delivery` date DEFAULT NULL,
+  `actual_delivery` date DEFAULT NULL,
+  `tracking_url` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `return_tracking`
+--
+
+INSERT INTO `return_tracking` (`id`, `return_id`, `tracking_number`, `carrier`, `shipping_method`, `status`, `estimated_delivery`, `actual_delivery`, `tracking_url`, `created_at`, `updated_at`) VALUES
+(1, 3, 'TRK789012345', 'Blue Dart', 'Pickup by Courier', 'in_transit', '2026-02-05', NULL, 'https://www.bluedart.com/tracking?tracking=TRK789012345', '2026-02-02 10:30:00', '2026-02-03 11:28:57'),
+(2, 4, 'TRK123456789', 'Delhivery', 'Pickup by Courier', 'delivered', '2026-02-03', NULL, 'https://www.delhivery.com/track/TRK123456789', '2026-02-01 09:00:00', '2026-02-03 11:28:57');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `return_workflows`
+--
+
+CREATE TABLE `return_workflows` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `steps` text NOT NULL,
+  `conditions` text DEFAULT NULL,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `reviews`
 --
 
@@ -658,7 +1157,9 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('wIgX23llIt2eLTJgnaPGdZA3tV1GVXtK43az74Da', 9, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoidGRQSWIyQkM2N0sxa0ZRR0ZoVmI2VlVRYVNlYVA1T0t4TjVWMms5ciI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6ImE1aWh5bkNLVUcwd1dEbHhIV2dFOEpQajhYOFFyS2J6IjtzOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo1MDoiaHR0cDovL2xvY2FsaG9zdC9lLWNvbW1tZXJjZS9wdWJsaWMvd2lzaGxpc3QvY291bnQiO3M6NToicm91dGUiO3M6MTQ6Indpc2hsaXN0LmNvdW50Ijt9czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo1MDoiaHR0cDovL2xvY2FsaG9zdC9lLWNvbW1tZXJjZS9wdWJsaWMvd2lzaGxpc3QvY291bnQiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo5O30=', 1770115105);
+('6v7rTeM9hNv1GWZVXqcEiBQ4065dpCTJ6LbQ9rkR', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiSUxtNGptZVVNUmdrWmdMWjFxUkJWUmRvdWQyd2I2VWxQSXluWTdtYyI7czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6IkxJNVVVNVlpUVlBb3VNNXFKRlFUMWRkNWVoWjVXeTdPIjtzOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo0MToiaHR0cDovL2xvY2FsaG9zdC9lLWNvbW1tZXJjZS9wdWJsaWMvbG9naW4iO3M6NToicm91dGUiO3M6NToibG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1770265783),
+('DEJY411wvxEpYtydQ2JkaIsyMRcwK9HlvQzChAmB', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiR2hVVVZhSXphV2ZtSnBybU5BUXpDVjF5aFdnanRSMWw0dTZVakxyTSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6Ino0SEl0WXpHRkUyZEoxeTRTa3o2WmNDbjVKRnFSVUttIjtzOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo0MToiaHR0cDovL2xvY2FsaG9zdC9lLWNvbW1tZXJjZS9wdWJsaWMvbG9naW4iO3M6NToicm91dGUiO3M6NToibG9naW4iO319', 1770211886),
+('in1aeWVxp66Mefjxtd5ZwBiuY2Tzq9MGo4HQ9Hmg', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZ2o1QlVuN3lOWmFZRm8xOXV1Z082QTNmbW0yYkdGcXlWRDhlS3RFVyI7czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6IjRLVjZHQXFjRElibnZCeE1pWnpSSU9IamprcFdtaFYyIjtzOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo0MToiaHR0cDovL2xvY2FsaG9zdC9lLWNvbW1tZXJjZS9wdWJsaWMvbG9naW4iO3M6NToicm91dGUiO3M6NToibG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1770265781);
 
 -- --------------------------------------------------------
 
@@ -751,6 +1252,58 @@ INSERT INTO `users` (`id`, `name`, `email`, `phone`, `email_verified_at`, `passw
 (2, 'Regular Users', 'user@example.com', '0987654321', NULL, '$2y$12$r4EOdHojsEaSS4y6EYqtBu3QYRk2BBoV6S0i.rGriYNxJx8kYQqQW', 'user', NULL, '2026-01-22 10:56:12', '2026-01-23 03:51:41', NULL),
 (9, 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', NULL, '$2y$12$Of5BvP9xEQFq9tNMNwwjjems1ya9WK7Z6Ec8R4uPmR98exIq6UULa', 'user', NULL, '2026-01-26 06:34:07', '2026-01-26 06:34:07', NULL),
 (11, 'Litu Nayak', 'Litu123@gmail.com', '09978767202', NULL, '$2y$12$SBgByioIYBFlrZqV9zeWWu3foMXksu1TrYz1wZ6Gek9Y81Y2e1Sda', 'user', NULL, '2026-02-02 00:02:09', '2026-02-02 00:02:09', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_wallets`
+--
+
+CREATE TABLE `user_wallets` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `balance` decimal(10,2) DEFAULT 0.00,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `user_wallets`
+--
+
+INSERT INTO `user_wallets` (`id`, `user_id`, `balance`, `created_at`, `updated_at`) VALUES
+(1, 9, 914.99, '2026-02-01 09:00:00', '2026-02-01 09:00:00'),
+(2, 2, 15.99, '2026-01-28 10:30:00', '2026-01-28 10:30:00'),
+(3, 11, 0.00, '2026-02-01 18:32:09', '2026-02-01 18:32:09');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wallet_transactions`
+--
+
+CREATE TABLE `wallet_transactions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `type` enum('credit','debit') NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `balance_before` decimal(10,2) NOT NULL,
+  `balance_after` decimal(10,2) NOT NULL,
+  `reference_type` enum('order_refund','cashback','manual_adjustment','referral_bonus','order_payment','return_refund') NOT NULL,
+  `reference_id` varchar(100) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `status` enum('pending','completed','failed','cancelled') DEFAULT 'completed',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `wallet_transactions`
+--
+
+INSERT INTO `wallet_transactions` (`id`, `user_id`, `type`, `amount`, `balance_before`, `balance_after`, `reference_type`, `reference_id`, `description`, `status`, `created_at`) VALUES
+(1, 9, 'credit', 899.00, 0.00, 899.00, 'return_refund', 'RET-20250131-0001', 'Refund for return #RET-20250131-0001', 'completed', '2026-02-01 09:00:00'),
+(2, 2, 'credit', 15.99, 0.00, 15.99, 'return_refund', 'RET-20250128-0001', 'Refund for return #RET-20250128-0001', 'completed', '2026-01-28 10:30:00'),
+(3, 9, 'credit', 15.99, 899.00, 914.99, 'cashback', 'ORDER-456', 'Cashback on order #ORDER-456', 'completed', '2026-02-02 04:30:00');
 
 -- --------------------------------------------------------
 
@@ -955,6 +1508,171 @@ ALTER TABLE `products`
   ADD KEY `products_category_fk` (`category_id`);
 
 --
+-- Indexes for table `product_return_history`
+--
+ALTER TABLE `product_return_history`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `product_month_unique` (`product_id`,`month_year`),
+  ADD KEY `history_product_index` (`product_id`),
+  ADD KEY `history_month_index` (`month_year`);
+
+--
+-- Indexes for table `returns`
+--
+ALTER TABLE `returns`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `return_number` (`return_number`),
+  ADD KEY `order_item_id` (`order_item_id`),
+  ADD KEY `product_id` (`product_id`),
+  ADD KEY `return_user_index` (`user_id`),
+  ADD KEY `return_status_index` (`status`),
+  ADD KEY `return_order_index` (`order_id`),
+  ADD KEY `return_number_index` (`return_number`);
+
+--
+-- Indexes for table `return_analytics`
+--
+ALTER TABLE `return_analytics`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `analytics_date_unique` (`date`),
+  ADD KEY `analytics_date_index` (`date`);
+
+--
+-- Indexes for table `return_attachments`
+--
+ALTER TABLE `return_attachments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `uploaded_by` (`uploaded_by`),
+  ADD KEY `attachment_return_index` (`return_id`);
+
+--
+-- Indexes for table `return_audit_logs`
+--
+ALTER TABLE `return_audit_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `changed_by` (`changed_by`),
+  ADD KEY `audit_return_index` (`return_id`),
+  ADD KEY `audit_action_index` (`action`),
+  ADD KEY `audit_created_at_index` (`created_at`);
+
+--
+-- Indexes for table `return_categories`
+--
+ALTER TABLE `return_categories`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `category_status_index` (`status`);
+
+--
+-- Indexes for table `return_notifications`
+--
+ALTER TABLE `return_notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `notification_user_index` (`user_id`,`is_read`),
+  ADD KEY `notification_return_index` (`return_id`),
+  ADD KEY `notification_type_index` (`type`);
+
+--
+-- Indexes for table `return_policies`
+--
+ALTER TABLE `return_policies`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `policy_status_index` (`status`);
+
+--
+-- Indexes for table `return_reasons`
+--
+ALTER TABLE `return_reasons`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `reason` (`reason`),
+  ADD KEY `reason_status_index` (`status`),
+  ADD KEY `reason_priority_index` (`priority`);
+
+--
+-- Indexes for table `return_replacements`
+--
+ALTER TABLE `return_replacements`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `return_replacement_unique` (`return_id`),
+  ADD KEY `original_product_id` (`original_product_id`),
+  ADD KEY `replacement_product_id` (`replacement_product_id`),
+  ADD KEY `replacement_order_id` (`replacement_order_id`),
+  ADD KEY `replacement_status_index` (`status`);
+
+--
+-- Indexes for table `return_rules`
+--
+ALTER TABLE `return_rules`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `rule_status_index` (`status`),
+  ADD KEY `rule_priority_index` (`priority`);
+
+--
+-- Indexes for table `return_shipping_methods`
+--
+ALTER TABLE `return_shipping_methods`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `shipping_status_index` (`status`);
+
+--
+-- Indexes for table `return_slas`
+--
+ALTER TABLE `return_slas`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sla_priority_index` (`priority_level`),
+  ADD KEY `sla_status_index` (`status`);
+
+--
+-- Indexes for table `return_status_logs`
+--
+ALTER TABLE `return_status_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `log_return_index` (`return_id`),
+  ADD KEY `log_created_at_index` (`created_at`);
+
+--
+-- Indexes for table `return_tags`
+--
+ALTER TABLE `return_tags`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `tag_slug_index` (`slug`);
+
+--
+-- Indexes for table `return_tag_assignments`
+--
+ALTER TABLE `return_tag_assignments`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `return_tag_unique` (`return_id`,`tag_id`),
+  ADD KEY `tag_id` (`tag_id`),
+  ADD KEY `assignment_return_index` (`return_id`);
+
+--
+-- Indexes for table `return_templates`
+--
+ALTER TABLE `return_templates`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `template_type_index` (`type`,`status`);
+
+--
+-- Indexes for table `return_tracking`
+--
+ALTER TABLE `return_tracking`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `tracking_number_unique` (`tracking_number`),
+  ADD KEY `tracking_return_index` (`return_id`),
+  ADD KEY `tracking_status_index` (`status`);
+
+--
+-- Indexes for table `return_workflows`
+--
+ALTER TABLE `return_workflows`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `workflow_status_index` (`status`);
+
+--
 -- Indexes for table `reviews`
 --
 ALTER TABLE `reviews`
@@ -993,6 +1711,23 @@ ALTER TABLE `sliders`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `user_wallets`
+--
+ALTER TABLE `user_wallets`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id` (`user_id`),
+  ADD KEY `wallet_user_index` (`user_id`);
+
+--
+-- Indexes for table `wallet_transactions`
+--
+ALTER TABLE `wallet_transactions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `transaction_user_index` (`user_id`),
+  ADD KEY `transaction_reference_index` (`reference_type`,`reference_id`),
+  ADD KEY `transaction_created_at_index` (`created_at`);
 
 --
 -- Indexes for table `wishlists`
@@ -1098,6 +1833,120 @@ ALTER TABLE `products`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
 
 --
+-- AUTO_INCREMENT for table `product_return_history`
+--
+ALTER TABLE `product_return_history`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `returns`
+--
+ALTER TABLE `returns`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `return_analytics`
+--
+ALTER TABLE `return_analytics`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `return_attachments`
+--
+ALTER TABLE `return_attachments`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `return_audit_logs`
+--
+ALTER TABLE `return_audit_logs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `return_categories`
+--
+ALTER TABLE `return_categories`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `return_notifications`
+--
+ALTER TABLE `return_notifications`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `return_policies`
+--
+ALTER TABLE `return_policies`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `return_reasons`
+--
+ALTER TABLE `return_reasons`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `return_replacements`
+--
+ALTER TABLE `return_replacements`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `return_rules`
+--
+ALTER TABLE `return_rules`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `return_shipping_methods`
+--
+ALTER TABLE `return_shipping_methods`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `return_slas`
+--
+ALTER TABLE `return_slas`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `return_status_logs`
+--
+ALTER TABLE `return_status_logs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- AUTO_INCREMENT for table `return_tags`
+--
+ALTER TABLE `return_tags`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `return_tag_assignments`
+--
+ALTER TABLE `return_tag_assignments`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `return_templates`
+--
+ALTER TABLE `return_templates`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `return_tracking`
+--
+ALTER TABLE `return_tracking`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `return_workflows`
+--
+ALTER TABLE `return_workflows`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
@@ -1120,6 +1969,18 @@ ALTER TABLE `sliders`
 --
 ALTER TABLE `users`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `user_wallets`
+--
+ALTER TABLE `user_wallets`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `wallet_transactions`
+--
+ALTER TABLE `wallet_transactions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `wishlists`
@@ -1195,12 +2056,95 @@ ALTER TABLE `products`
   ADD CONSTRAINT `products_category_fk` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `product_return_history`
+--
+ALTER TABLE `product_return_history`
+  ADD CONSTRAINT `product_return_history_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `returns`
+--
+ALTER TABLE `returns`
+  ADD CONSTRAINT `returns_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
+  ADD CONSTRAINT `returns_ibfk_2` FOREIGN KEY (`order_item_id`) REFERENCES `order_items` (`id`),
+  ADD CONSTRAINT `returns_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `returns_ibfk_4` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
+
+--
+-- Constraints for table `return_attachments`
+--
+ALTER TABLE `return_attachments`
+  ADD CONSTRAINT `return_attachments_ibfk_1` FOREIGN KEY (`return_id`) REFERENCES `returns` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `return_attachments_ibfk_2` FOREIGN KEY (`uploaded_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `return_audit_logs`
+--
+ALTER TABLE `return_audit_logs`
+  ADD CONSTRAINT `return_audit_logs_ibfk_1` FOREIGN KEY (`return_id`) REFERENCES `returns` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `return_audit_logs_ibfk_2` FOREIGN KEY (`changed_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `return_notifications`
+--
+ALTER TABLE `return_notifications`
+  ADD CONSTRAINT `return_notifications_ibfk_1` FOREIGN KEY (`return_id`) REFERENCES `returns` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `return_notifications_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `return_policies`
+--
+ALTER TABLE `return_policies`
+  ADD CONSTRAINT `return_policies_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `return_replacements`
+--
+ALTER TABLE `return_replacements`
+  ADD CONSTRAINT `return_replacements_ibfk_1` FOREIGN KEY (`return_id`) REFERENCES `returns` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `return_replacements_ibfk_2` FOREIGN KEY (`original_product_id`) REFERENCES `products` (`id`),
+  ADD CONSTRAINT `return_replacements_ibfk_3` FOREIGN KEY (`replacement_product_id`) REFERENCES `products` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `return_replacements_ibfk_4` FOREIGN KEY (`replacement_order_id`) REFERENCES `orders` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `return_status_logs`
+--
+ALTER TABLE `return_status_logs`
+  ADD CONSTRAINT `return_status_logs_ibfk_1` FOREIGN KEY (`return_id`) REFERENCES `returns` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `return_status_logs_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `return_tag_assignments`
+--
+ALTER TABLE `return_tag_assignments`
+  ADD CONSTRAINT `return_tag_assignments_ibfk_1` FOREIGN KEY (`return_id`) REFERENCES `returns` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `return_tag_assignments_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `return_tags` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `return_tracking`
+--
+ALTER TABLE `return_tracking`
+  ADD CONSTRAINT `return_tracking_ibfk_1` FOREIGN KEY (`return_id`) REFERENCES `returns` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `reviews`
 --
 ALTER TABLE `reviews`
   ADD CONSTRAINT `reviews_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `reviews_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `reviews_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `user_wallets`
+--
+ALTER TABLE `user_wallets`
+  ADD CONSTRAINT `user_wallets_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `wallet_transactions`
+--
+ALTER TABLE `wallet_transactions`
+  ADD CONSTRAINT `wallet_transactions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `wishlists`
