@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 06, 2026 at 11:41 AM
+-- Generation Time: Feb 06, 2026 at 02:33 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -64,16 +64,6 @@ CREATE TABLE `carts` (
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `carts`
---
-
-INSERT INTO `carts` (`id`, `user_id`, `session_id`, `guest_token`, `is_guest`, `product_id`, `quantity`, `price`, `created_at`, `updated_at`) VALUES
-(141, NULL, 'IzILGB0hZDdNeocj2l52dtKpPYTLgnkrLZRmbx0x', 'ngj0Kiym8WJMruGpxUdec0zu8p6GkonQ', 1, 62, 1, 10.00, '2026-01-31 02:01:11', '2026-01-31 02:01:11'),
-(163, 11, NULL, NULL, 0, 9, 1, 349.00, '2026-02-02 01:18:47', '2026-02-02 01:18:47'),
-(166, 11, NULL, NULL, 0, 65, 1, 7999.00, '2026-02-02 04:00:36', '2026-02-02 04:00:44'),
-(197, 1, NULL, NULL, 0, 84, 2, 1499.00, '2026-02-05 23:11:15', '2026-02-05 23:27:04');
-
 -- --------------------------------------------------------
 
 --
@@ -104,7 +94,7 @@ INSERT INTO `categories` (`id`, `name`, `slug`, `image`, `status`, `created_at`,
 (7, 'Toys & Games', 'toys-games', 'category_1769231503_iVP18Yzu9B.jpg', 'active', '2024-01-21 10:00:00', '2026-01-28 04:19:51'),
 (8, 'Automotive', 'automotive', 'category_1769231503_iVP18Yzu9B.jpg', 'active', '2024-01-22 04:30:00', '2026-01-31 02:02:11'),
 (9, 'Groceries', 'groceries', 'category_1769231503_iVP18Yzu9B.jpg', 'active', '2024-01-23 07:55:00', '2026-01-30 06:07:03'),
-(10, 'Healthcare', 'healthcare', 'category_1769231503_iVP18Yzu9B.jpg', 'active', '2024-01-24 12:30:00', '2026-01-28 04:19:49');
+(10, 'Healthcare', 'healthcare', 'category_1769231503_iVP18Yzu9B.jpg', 'active', '2024-01-24 12:30:00', '2026-02-06 07:26:22');
 
 -- --------------------------------------------------------
 
@@ -443,7 +433,10 @@ INSERT INTO `orders` (`id`, `order_number`, `razorpay_order_id`, `razorpay_payme
 (25, 'ORD-260203-095013-0095814', NULL, NULL, NULL, 9, 134486.00, 150.00, 24117.48, 158253.48, 'delivered', 'card', NULL, 'paid', 'laxman pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-02-03 04:20:13', '2026-02-04 01:06:14', '2026-02-04 01:06:14', NULL, NULL, NULL, 25, 'QUICK500', 500.00),
 (26, 'ORD-260206-094842-0093048', NULL, NULL, NULL, 9, 5797.00, 0.00, 782.60, 5130.35, 'pending', 'cod', NULL, 'pending', 'Laxman Pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-02-06 04:18:42', '2026-02-06 04:18:42', NULL, NULL, NULL, NULL, 24, 'HOLIDAY25', 1449.25),
 (27, 'ORD-260206-103521-0091546', NULL, NULL, NULL, 9, 2499.00, 0.00, 449.82, 2948.82, 'pending', 'cod', NULL, 'pending', 'Laxman Pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-02-06 05:05:21', '2026-02-06 05:05:21', NULL, NULL, NULL, NULL, NULL, NULL, 0.00),
-(28, 'ORD-260206-103729-0096877', NULL, NULL, NULL, 9, 7999.00, 0.00, 1439.82, 9438.82, 'processing', 'razorpay', NULL, 'paid', 'Laxman Pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-02-06 05:07:29', '2026-02-06 05:09:16', NULL, NULL, NULL, NULL, NULL, NULL, 0.00);
+(28, 'ORD-260206-103729-0096877', NULL, NULL, NULL, 9, 7999.00, 0.00, 1439.82, 9438.82, 'processing', 'razorpay', NULL, 'paid', 'Laxman Pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-02-06 05:07:29', '2026-02-06 05:09:16', NULL, NULL, NULL, NULL, NULL, NULL, 0.00),
+(29, 'ORD-260206-104427-0093350', NULL, NULL, NULL, 9, 1499.00, 0.00, 269.82, 1768.82, 'processing', 'razorpay', NULL, 'paid', 'Laxman Pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-02-06 05:14:27', '2026-02-06 05:16:14', NULL, NULL, NULL, NULL, NULL, NULL, 0.00),
+(30, 'ORD-260206-105208-0096688', NULL, NULL, NULL, 9, 2499.00, 0.00, 449.82, 2948.82, 'cancelled', 'razorpay', NULL, 'failed', 'Laxman Pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-02-06 05:22:08', '2026-02-06 05:22:56', NULL, NULL, NULL, NULL, NULL, NULL, 0.00),
+(31, 'ORD-260206-105604-0097806', NULL, NULL, NULL, 9, 2499.00, 0.00, 449.82, 2948.82, 'delivered', 'razorpay', NULL, 'paid', 'Laxman Pradhan', 'laxmanpradhan784@gmail.com', '09978767202', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-02-06 05:26:04', '2026-02-06 05:38:12', '2026-02-06 05:38:12', NULL, NULL, NULL, NULL, NULL, 0.00);
 
 -- --------------------------------------------------------
 
@@ -510,7 +503,9 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `product_name`, `quan
 (52, 26, 69, 'Queen Size Bed Sheet Set', 1, 1299.00, 1299.00, 3, 'Home & Kitchen', '2026-02-06 04:18:42', '2026-02-06 04:18:42'),
 (53, 26, 86, 'Electric Kettle 1.5L', 1, 999.00, 999.00, 3, 'Home & Kitchen', '2026-02-06 04:18:42', '2026-02-06 04:18:42'),
 (54, 27, 64, 'Wireless Bluetooth Earbuds Pro', 1, 2499.00, 2499.00, 1, 'Electronics', '2026-02-06 05:05:21', '2026-02-06 05:05:21'),
-(55, 28, 65, 'Smart Watch Series 5', 1, 7999.00, 7999.00, 1, 'Electronics', '2026-02-06 05:09:17', '2026-02-06 05:09:17');
+(55, 28, 65, 'Smart Watch Series 5', 1, 7999.00, 7999.00, 1, 'Electronics', '2026-02-06 05:09:17', '2026-02-06 05:09:17'),
+(56, 29, 84, 'Portable Power Bank 20000mAh', 1, 1499.00, 1499.00, 1, 'Electronics', '2026-02-06 05:16:14', '2026-02-06 05:16:14'),
+(57, 31, 64, 'Wireless Bluetooth Earbuds Pro', 1, 2499.00, 2499.00, 1, 'Electronics', '2026-02-06 05:26:24', '2026-02-06 05:26:24');
 
 -- --------------------------------------------------------
 
@@ -575,11 +570,11 @@ INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `image`, `descripti
 (6, 6, 'Yoga Mat Premium', 'yoga-mat-premium', 'product_1769234603_Nb4pjAqd9m.jpg', '6mm thick non-slip yoga mat with carrying strap. Eco-friendly TPE material in multiple colors.', 1499.00, 44, 0.00, 0, 'active', '2024-01-20 11:00:00', '2026-02-02 01:18:24'),
 (7, 7, 'Educational Building Blocks', 'educational-building-blocks', 'product_1769234603_Nb4pjAqd9m.jpg', '500-piece building blocks set for kids ages 5+. Promotes creativity and motor skills development.', 999.00, 68, 0.00, 0, 'active', '2024-01-21 12:15:00', '2026-02-02 23:52:39'),
 (8, 8, 'Car Air Purifier', 'car-air-purifier', 'product_1769234603_Nb4pjAqd9m.jpg', 'Compact HEPA filter car air purifier with ionizer. USB powered with adjustable fan speed.', 1999.00, 15, 0.00, 0, 'active', '2024-01-22 03:45:00', '2026-02-02 00:01:31'),
-(9, 9, 'Organic Green Tea', 'organic-green-tea', 'product_1769234603_Nb4pjAqd9m.jpg', '100% organic green tea leaves packed in airtight container. 250g pack with antioxidant benefits.', 349.00, 130, 0.00, 0, 'active', '2024-01-23 07:55:00', '2026-02-02 01:18:47'),
+(9, 9, 'Organic Green Tea', 'organic-green-tea', 'product_1769234603_Nb4pjAqd9m.jpg', '100% organic green tea leaves packed in airtight container. 250g pack with antioxidant benefits.', 349.00, 131, 0.00, 0, 'active', '2024-01-23 07:55:00', '2026-02-06 07:20:17'),
 (10, 10, 'Digital Thermometer', 'digital-thermometer', 'product_1769234603_Nb4pjAqd9m.jpg', 'Fast and accurate digital thermometer with beep alert and fever indicator. Battery included.', 299.00, 275, 0.00, 0, 'active', '2024-01-24 12:30:00', '2026-02-02 01:18:24'),
 (62, 1, 'Operations', 'operations', 'product_1769258578_rWP0gdhIvh.jpg', 'testing', 10.00, 67, 0.00, 0, 'active', '2026-01-24 07:12:58', '2026-02-01 23:57:49'),
-(64, 1, 'Wireless Bluetooth Earbuds Pro', 'wireless-bluetooth-earbuds-pro', 'product_1769234603_Nb4pjAqd9m.jpg', 'Premium wireless earbuds with noise cancellation, 30hr battery life, IPX7 waterproof rating.', 2499.00, 79, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-06 05:05:21'),
-(65, 1, 'Smart Watch Series 5', 'smart-watch-series-5', 'product_1769234603_Nb4pjAqd9m.jpg', 'Advanced smartwatch with heart rate monitor, GPS, sleep tracking and 7-day battery life.', 7999.00, 34, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-06 05:09:17'),
+(64, 1, 'Wireless Bluetooth Earbuds Pro', 'wireless-bluetooth-earbuds-pro', 'product_1769234603_Nb4pjAqd9m.jpg', 'Premium wireless earbuds with noise cancellation, 30hr battery life, IPX7 waterproof rating.', 2499.00, 78, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-06 07:22:40'),
+(65, 1, 'Smart Watch Series 5', 'smart-watch-series-5', 'product_1769234603_Nb4pjAqd9m.jpg', 'Advanced smartwatch with heart rate monitor, GPS, sleep tracking and 7-day battery life.', 7999.00, 35, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-06 07:20:20'),
 (66, 2, 'Women\'s Summer Dress', 'womens-summer-dress', 'product_1769234603_Nb4pjAqd9m.jpg', 'Cotton summer dress with floral print, available in multiple sizes and colors.', 1499.00, 60, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-06 04:11:13'),
 (67, 2, 'Leather Formal Shoes', 'leather-formal-shoes', 'product_1769234603_Nb4pjAqd9m.jpg', 'Premium leather formal shoes for men with cushioned insoles and durable sole.', 2899.00, 35, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-05 06:19:59'),
 (68, 3, 'Air Fryer 5.5L', 'air-fryer-5-5l', 'product_1769234603_Nb4pjAqd9m.jpg', 'Digital air fryer with 5.5L capacity, 8 preset cooking modes, and touch control.', 3499.00, 23, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-06 04:18:42'),
@@ -598,7 +593,7 @@ INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `image`, `descripti
 (81, 9, 'Organic Honey 500g', 'organic-honey-500g', 'product_1769234603_Nb4pjAqd9m.jpg', 'Pure organic honey, raw and unprocessed, 500g glass jar.', 449.00, 130, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-02 02:19:00'),
 (82, 10, 'Blood Pressure Monitor', 'blood-pressure-monitor', 'product_1769234603_Nb4pjAqd9m.jpg', 'Digital automatic blood pressure monitor with large display and memory function.', 1299.00, 50, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-02 02:19:00'),
 (83, 10, 'First Aid Kit', 'first-aid-kit', 'product_1769234603_Nb4pjAqd9m.jpg', 'Comprehensive first aid kit with 100+ medical supplies for home and travel.', 699.00, 75, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-02 02:19:00'),
-(84, 1, 'Portable Power Bank 20000mAh', 'portable-power-bank-20000mah', 'product_1769234603_Nb4pjAqd9m.jpg', 'High capacity power bank with 20,000mAh, dual USB ports, fast charging.', 1499.00, 56, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-05 23:12:42'),
+(84, 1, 'Portable Power Bank 20000mAh', 'portable-power-bank-20000mah', 'product_1769234603_Nb4pjAqd9m.jpg', 'High capacity power bank with 20,000mAh, dual USB ports, fast charging.', 1499.00, 54, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-06 05:16:14'),
 (85, 2, 'Men\'s Winter Jacket', 'mens-winter-jacket', 'product_1769234603_Nb4pjAqd9m.jpg', 'Waterproof winter jacket with hood, insulated lining, multiple pockets.', 3299.00, 30, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-02 02:19:00'),
 (86, 3, 'Electric Kettle 1.5L', 'electric-kettle-1-5l', 'product_1769234603_Nb4pjAqd9m.jpg', 'Stainless steel electric kettle with auto shut-off and boil-dry protection.', 999.00, 83, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-06 04:18:42'),
 (87, 4, 'Sunscreen Lotion SPF 50', 'sunscreen-lotion-spf-50', 'product_1769234603_Nb4pjAqd9m.jpg', 'Broad spectrum sunscreen lotion SPF 50, water resistant, 100ml tube.', 499.00, 140, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-02 02:19:00'),
@@ -608,13 +603,13 @@ INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `image`, `descripti
 (91, 8, 'Car Seat Covers Set', 'car-seat-covers-set', 'product_1769234603_Nb4pjAqd9m.jpg', 'Universal car seat covers set for front seats, premium fabric material.', 1599.00, 45, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-02 02:19:00'),
 (92, 9, 'Dry Fruits Mix 500g', 'dry-fruits-mix-500g', 'product_1769234603_Nb4pjAqd9m.jpg', 'Premium mix of almonds, walnuts, cashews, and raisins, 500g pack.', 649.00, 110, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-02 02:19:00'),
 (93, 10, 'Hand Sanitizer 500ml', 'hand-sanitizer-500ml', 'product_1769234603_Nb4pjAqd9m.jpg', 'Alcohol-based hand sanitizer with aloe vera, 500ml pump bottle.', 199.00, 300, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-02 02:19:00'),
-(94, 1, 'Tablet 10-inch', 'tablet-10-inch', 'product_1769234603_Nb4pjAqd9m.jpg', '10-inch Android tablet with 128GB storage, 8MP camera, and long battery.', 12999.00, 9, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-05 23:41:33'),
+(94, 1, 'Tablet 10-inch', 'tablet-10-inch', 'product_1769234603_Nb4pjAqd9m.jpg', '10-inch Android tablet with 128GB storage, 8MP camera, and long battery.', 12999.00, 100, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-06 07:25:08'),
 (95, 2, 'Women\'s Handbag', 'womens-handbag', 'product_1769234603_Nb4pjAqd9m.jpg', 'Leather women\'s handbag with multiple compartments and adjustable strap.', 2299.00, 50, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-05 06:20:02'),
 (96, 3, 'Food Processor', 'food-processor', 'product_1769234603_Nb4pjAqd9m.jpg', 'Multifunction food processor with 3 jars, 500W motor, various attachments.', 2999.00, 40, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-02 02:19:00'),
 (97, 4, 'Perfume Eau de Toilette', 'perfume-eau-de-toilette', 'product_1769234603_Nb4pjAqd9m.jpg', '100ml eau de toilette with long-lasting fragrance, elegant packaging.', 1299.00, 90, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-02 02:19:00'),
 (98, 5, 'Desk Organizer Set', 'desk-organizer-set', 'product_1769234603_Nb4pjAqd9m.jpg', 'Wooden desk organizer with pen holder, file tray, and memo pad stand.', 899.00, 65, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-02 02:19:00'),
 (99, 6, 'Resistance Bands Set', 'resistance-bands-set', 'product_1769234603_Nb4pjAqd9m.jpg', 'Set of 5 resistance bands with different tension levels and accessories.', 799.00, 85, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-02 02:19:00'),
-(100, 7, 'Chess Board Set', 'chess-board-set', 'product_1769234603_Nb4pjAqd9m.jpg', 'Wooden chess board with carved pieces, storage box included.', 899.00, 55, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-02 02:19:00');
+(100, 7, 'Chess Board Set', 'chess-board-set', 'product_1769234603_Nb4pjAqd9m.jpg', 'Wooden chess board with carved pieces, storage box included.', 899.00, 10, 0.00, 0, 'active', '2026-02-02 02:19:00', '2026-02-06 07:26:12');
 
 -- --------------------------------------------------------
 
@@ -1171,7 +1166,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('68frjVohiSEWsa7X8aLrMThmDfV2SSikwFrktC3q', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiRnVCMkVWNlAzN09henRhbkxsZVdxcjJwSDZLSmFWeExsR0hHa1dvbSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6IjhNV1ZRWGlaeUZmTEVaWkRaZHVGSEwzOTMyUXlqbWZ3IjtzOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo1MToiaHR0cDovL2xvY2FsaG9zdC9lLWNvbW1tZXJjZS9wdWJsaWMvYWRtaW4vb3JkZXJzLzI4IjtzOjU6InJvdXRlIjtzOjE5OiJhZG1pbi5vcmRlci5kZXRhaWxzIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1770374426);
+('6pGU1A66QkZPd8O0SwXJfome6Y8Dao12UIeIMUeD', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoicFZxWFVJcGFKWUk3UW5jRk9vRzNLc1VST3QwaUk4d2JZSWtNQ05xVSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6IndKcGZzUG9ZNmw2NWh2NEZvM2s3UVVVNElKQWVucE5SIjtzOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czozNToiaHR0cDovL2xvY2FsaG9zdC9lLWNvbW1tZXJjZS9wdWJsaWMiO3M6NToicm91dGUiO3M6NDoiaG9tZSI7fX0=', 1770383148);
 
 -- --------------------------------------------------------
 
@@ -1331,36 +1326,6 @@ CREATE TABLE `wishlists` (
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `wishlists`
---
-
-INSERT INTO `wishlists` (`id`, `user_id`, `product_id`, `created_at`, `updated_at`) VALUES
-(9, 11, 4, '2026-02-02 04:15:30', '2026-02-02 04:15:30'),
-(10, 11, 7, '2026-02-02 05:00:15', '2026-02-02 05:00:15'),
-(11, 11, 9, '2026-02-02 05:45:28', '2026-02-02 05:45:28'),
-(12, 11, 66, '2026-02-02 07:10:33', '2026-02-02 07:10:33'),
-(13, 11, 70, '2026-02-02 07:55:19', '2026-02-02 07:55:19'),
-(14, 11, 76, '2026-02-02 08:40:47', '2026-02-02 08:40:47'),
-(15, 11, 85, '2026-02-02 10:25:22', '2026-02-02 10:25:22'),
-(16, 2, 3, '2026-02-01 06:45:30', '2026-02-01 06:45:30'),
-(17, 2, 5, '2026-02-01 08:10:25', '2026-02-01 08:10:25'),
-(18, 2, 10, '2026-02-01 09:25:10', '2026-02-01 09:25:10'),
-(19, 2, 64, '2026-02-02 02:50:15', '2026-02-02 02:50:15'),
-(20, 2, 72, '2026-02-02 04:15:33', '2026-02-02 04:15:33'),
-(21, 2, 78, '2026-02-02 05:00:28', '2026-02-02 05:00:28'),
-(22, 2, 81, '2026-02-02 05:45:42', '2026-02-02 05:45:42'),
-(23, 2, 89, '2026-02-02 06:55:19', '2026-02-02 06:55:19'),
-(24, 2, 94, '2026-02-02 08:10:55', '2026-02-02 08:10:55'),
-(25, 2, 96, '2026-02-02 08:50:30', '2026-02-02 08:50:30'),
-(31, 11, 62, '2026-02-02 04:15:30', '2026-02-02 04:15:30'),
-(32, 11, 75, '2026-02-02 05:25:18', '2026-02-02 05:25:18'),
-(33, 11, 83, '2026-02-02 06:40:42', '2026-02-02 06:40:42'),
-(34, 2, 8, '2026-02-02 09:40:25', '2026-02-02 09:40:25'),
-(35, 2, 67, '2026-02-02 10:55:40', '2026-02-02 10:55:40'),
-(36, 2, 73, '2026-02-02 11:45:55', '2026-02-02 11:45:55'),
-(37, 2, 80, '2026-02-02 13:00:10', '2026-02-02 13:00:10');
 
 --
 -- Indexes for dumped tables
@@ -1757,7 +1722,7 @@ ALTER TABLE `wishlists`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=209;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=216;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -1823,13 +1788,13 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT for table `payment_logs`
