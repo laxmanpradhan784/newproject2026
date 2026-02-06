@@ -192,6 +192,38 @@
                                             </a>
                                         </h5>
 
+                                        <!-- Rating & Reviews -->
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="rating-display">
+                                                <div class="stars d-inline-block">
+                                                    @php
+                                                        $avgRating =
+                                                            $product
+                                                                ->reviews()
+                                                                ->where('status', 'approved')
+                                                                ->avg('rating') ?? 0;
+                                                        $totalReviews = $product
+                                                            ->reviews()
+                                                            ->where('status', 'approved')
+                                                            ->count();
+                                                    @endphp
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= floor($avgRating))
+                                                            <i class="fas fa-star text-warning"></i>
+                                                        @elseif($i - 0.5 <= $avgRating)
+                                                            <i class="fas fa-star-half-alt text-warning"></i>
+                                                        @else
+                                                            <i class="far fa-star text-warning"></i>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+                                                <span class="ms-2">
+                                                    <strong class="fs-5">{{ number_format($avgRating, 1) }}</strong>
+                                                    <span class="text-muted">({{ $totalReviews }} reviews)</span>
+                                                </span>
+                                            </div>
+                                        </div>
+
                                         <!-- Short Description -->
                                         <p class="card-text text-muted small mb-3 product-description">
                                             {{ Str::limit($product->short_description ?? $product->description, 80, '...') }}
@@ -415,7 +447,7 @@
 <style>
     /* Inline styles only - no external CSS */
     .products-page {
-        background: #f5f7fa;
+        background: linear-gradient(135deg, #d5d8df 0%, #1e293b 100%);
     }
 
     /* Page Header */
@@ -721,9 +753,8 @@
         });
     });
 
-    // Wishlist Toggle Function
+    // Wishlist toggle function
     function toggleWishlist(button, productId) {
-        // Check if user is logged in
         @if (auth()->check())
             fetch('{{ route('wishlist.toggle') }}', {
                     method: 'POST',
@@ -742,20 +773,21 @@
                         // Update button icon
                         const icon = button.querySelector('i');
                         if (data.action === 'added') {
-                            icon.className = 'fas fa-heart text-danger';
+                            icon.className = 'fas fa-heart text-danger fs-5';
+                            button.title = 'Remove from Wishlist';
                             button.classList.add('active');
+                            showToast('Added to wishlist!', 'success');
                         } else {
-                            icon.className = 'far fa-heart';
+                            icon.className = 'far fa-heart fs-5';
+                            button.title = 'Add to Wishlist';
                             button.classList.remove('active');
+                            showToast('Removed from wishlist', 'info');
                         }
 
                         // Update wishlist count in navbar if function exists
                         if (typeof updateWishlistCount === 'function') {
                             updateWishlistCount();
                         }
-
-                        // Show toast notification
-                        showToast(data.message, data.action === 'added' ? 'success' : 'info');
                     }
                 })
                 .catch(error => {

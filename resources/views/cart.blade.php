@@ -5,8 +5,8 @@
 
 @section('content')
     <!-- Flipkart Style Cart Page -->
-    <section class="cart-page py-4">
-        <div class="container pt-5">
+    <section class="cart-page">
+        <div class="container">
             <!-- Breadcrumb -->
             <div class="row mb-4">
                 <div class="col-12">

@@ -169,7 +169,6 @@
                                     @endif
                                 </div>
 
-
                                 <!-- Quick Actions -->
                                 <div class="product-actions position-absolute top-0 end-0 p-3 d-flex flex-column gap-2">
                                     <!-- Wishlist Button -->
@@ -206,21 +205,35 @@
                                     </a>
                                 </h5>
 
-                                {{-- <!-- Rating -->
-                                <div class="product-rating mb-2">
-                                    <div class="star-rating">
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            @if ($i <= ($product->average_rating ?? 0))
-                                                <i class="fas fa-star text-warning"></i>
-                                            @elseif($i <= ($product->average_rating ?? 0) + 0.5)
-                                                <i class="fas fa-star-half-alt text-warning"></i>
-                                            @else
-                                                <i class="far fa-star text-warning"></i>
-                                            @endif
-                                        @endfor
-                                        <span class="text-muted small ms-1">({{ $product->reviews_count ?? 0 }})</span>
+                                <!-- Rating & Reviews -->
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="rating-display">
+                                        <div class="stars d-inline-block">
+                                            @php
+                                                $avgRating =
+                                                    $product->reviews()->where('status', 'approved')->avg('rating') ??
+                                                    0;
+                                                $totalReviews = $product
+                                                    ->reviews()
+                                                    ->where('status', 'approved')
+                                                    ->count();
+                                            @endphp
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= floor($avgRating))
+                                                    <i class="fas fa-star text-warning"></i>
+                                                @elseif($i - 0.5 <= $avgRating)
+                                                    <i class="fas fa-star-half-alt text-warning"></i>
+                                                @else
+                                                    <i class="far fa-star text-warning"></i>
+                                                @endif
+                                            @endfor
+                                        </div>
+                                        <span class="ms-2">
+                                            <strong class="fs-5">{{ number_format($avgRating, 1) }}</strong>
+                                            <span class="text-muted">({{ $totalReviews }} reviews)</span>
+                                        </span>
                                     </div>
-                                </div> --}}
+                                </div>
 
                                 <!-- Short Description -->
                                 <p class="card-text text-muted small mb-3 product-description">
@@ -267,32 +280,41 @@
                                     </div>
                                 @endif
 
-
                                 <!-- In Cart Controls (if item already in cart) -->
                                 @if ($product->stock > 0 && $product->inCart())
                                     <div class="cart-controls mt-3">
                                         <div class="d-flex align-items-center justify-content-between">
-                                            <div class="btn-group shadow-sm">
+                                            <div class="btn-group shadow-sm rounded-3 overflow-hidden">
                                                 <form action="{{ route('cart.decrease', $product->id) }}" method="POST">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-outline-secondary px-3 py-2">
+                                                    <button type="submit"
+                                                        class="btn btn-outline-secondary px-3 py-2 border-0">
                                                         <i class="fas fa-minus"></i>
                                                     </button>
                                                 </form>
 
+                                                <!-- Hidden input for cart quantity -->
+                                                <input type="number" class="d-none"
+                                                    value="{{ $product->cartQuantity() }}">
+
+                                                <!-- Visible display -->
                                                 <span
-                                                    class="px-3 py-2 bg-light fw-bold min-w-40">{{ $product->cartQuantity() }}</span>
+                                                    class="px-3 py-2 bg-light fw-bold d-flex align-items-center justify-content-center"
+                                                    style="min-width: 40px; background: #f8f9fa;">
+                                                    {{ $product->cartQuantity() }}
+                                                </span>
 
                                                 <form action="{{ route('cart.increase', $product->id) }}" method="POST">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-outline-secondary px-3 py-2"
+                                                    <button type="submit"
+                                                        class="btn btn-outline-secondary px-3 py-2 border-0"
                                                         {{ $product->cartQuantity() >= $product->stock ? 'disabled' : '' }}>
                                                         <i class="fas fa-plus"></i>
                                                     </button>
                                                 </form>
                                             </div>
 
-                                            <a href="{{ route('cart') }}" class="btn btn-success px-4 py-2">
+                                            <a href="{{ route('cart') }}" class="btn btn-success px-4 py-2 rounded-3">
                                                 <i class="fas fa-check me-1"></i> In Cart
                                             </a>
                                         </div>
@@ -300,35 +322,49 @@
                                 @elseif ($product->stock > 0)
                                     <!-- Quantity Selector -->
                                     <div class="mt-3">
-                                        <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                                        <form action="{{ route('cart.add', $product->id) }}" method="POST"
+                                            class="add-to-cart-form" data-product-id="{{ $product->id }}">
                                             @csrf
-                                            <div class="input-group shadow-sm">
-                                                <button type="button"
-                                                    class="btn btn-outline-secondary quantity-minus px-3"
-                                                    data-id="{{ $product->id }}">
-                                                    <i class="fas fa-minus"></i>
+
+                                            <!-- Hidden input for form submission -->
+                                            <input type="number" name="quantity" class="quantity-input d-none"
+                                                value="1" min="1" max="{{ $product->stock }}"
+                                                id="quantity-{{ $product->id }}" data-product-id="{{ $product->id }}">
+
+                                            <div class="d-flex align-items-stretch gap-2">
+                                                <!-- Quantity Controls -->
+                                                <div
+                                                    class="d-flex align-items-center bg-light rounded-3 overflow-hidden shadow-sm">
+                                                    <button type="button"
+                                                        class="btn btn-white quantity-minus px-1 py-2 border-0"
+                                                        data-product-id="{{ $product->id }}">
+                                                        <i class="fas fa-minus text-dark"></i>
+                                                    </button>
+
+                                                    <!-- Visible quantity display -->
+                                                    <div class="quantity-display px-3 py-2 fw-bold text-center bg-white"
+                                                        data-product-id="{{ $product->id }}" style="min-width: 50px;">
+                                                        1
+                                                    </div>
+
+                                                    <button type="button"
+                                                        class="btn btn-white quantity-plus px-3 py-2 border-0"
+                                                        data-product-id="{{ $product->id }}">
+                                                        <i class="fas fa-plus text-dark"></i>
+                                                    </button>
+                                                </div>
+
+                                                <!-- Add to Cart Button -->
+                                                <button type="submit"
+                                                    class="btn btn-primary flex-grow-1 add-to-cart-btn py-2 px-3">
+                                                    <i class="fas fa-cart-plus me-2"></i> Add to Cart
                                                 </button>
-
-                                                <input type="number" name="quantity"
-                                                    class="form-control text-center quantity-input border-0 bg-light"
-                                                    value="1" min="1" max="{{ $product->stock }}"
-                                                    data-id="{{ $product->id }}">
-
-                                                <button type="button"
-                                                    class="btn btn-outline-secondary quantity-plus px-3"
-                                                    data-id="{{ $product->id }}">
-                                                    <i class="fas fa-plus"></i>
-                                                </button>
-
-                                                <button class="btn btn-primary flex-grow-1 add-to-cart-btn">
-                                                    <i class="fas fa-cart-plus me-1"></i> Add to Cart
-                                            </button>
                                             </div>
                                         </form>
                                     </div>
                                 @else
                                     <!-- Out of Stock -->
-                                    <button class="btn btn-outline-secondary w-100 mt-3 py-3" disabled>
+                                    <button class="btn btn-outline-secondary w-100 mt-3 py-3 rounded-3" disabled>
                                         <i class="fas fa-times-circle me-2"></i>Notify When Available
                                     </button>
                                 @endif
@@ -361,9 +397,6 @@
             @endif
         </div>
     </section>
-
-
-
 
     <!-- Banner Section -->
     <section class="banner-section py-5">
@@ -874,7 +907,7 @@
         }
 
         .category-icon {
-            width: 80px;
+            width: 90px;
             height: 80px;
             display: flex;
             align-items: center;
@@ -1166,46 +1199,69 @@
             setInterval(updateCountdown, 1000);
         }
 
-        function initProductInteractions() {
-            // Quantity controls
-            document.querySelectorAll('.quantity-increase').forEach(button => {
+        // Product Quantity Controls
+        function initProductQuantityControls() {
+            // Plus button
+            document.querySelectorAll('.quantity-plus').forEach(button => {
                 button.addEventListener('click', function() {
                     const productId = this.getAttribute('data-product-id');
-                    const input = document.querySelector(`.quantity-input[data-product-id="${productId}"]`);
+                    const input = document.getElementById(`quantity-${productId}`);
+                    const display = document.querySelector(
+                        `.quantity-display[data-product-id="${productId}"]`);
                     const max = parseInt(input.getAttribute('max'));
-                    let value = parseInt(input.value) || 1;
+                    let currentValue = parseInt(input.value) || 1;
 
-                    if (value < max) {
-                        input.value = value + 1;
+                    if (currentValue < max) {
+                        input.value = currentValue + 1;
+                        if (display) display.textContent = input.value;
                     }
                 });
             });
 
-            document.querySelectorAll('.quantity-decrease').forEach(button => {
+            // Minus button
+            document.querySelectorAll('.quantity-minus').forEach(button => {
                 button.addEventListener('click', function() {
                     const productId = this.getAttribute('data-product-id');
-                    const input = document.querySelector(`.quantity-input[data-product-id="${productId}"]`);
+                    const input = document.getElementById(`quantity-${productId}`);
+                    const display = document.querySelector(
+                        `.quantity-display[data-product-id="${productId}"]`);
                     const min = parseInt(input.getAttribute('min'));
-                    let value = parseInt(input.value) || 1;
+                    let currentValue = parseInt(input.value) || 1;
 
-                    if (value > min) {
-                        input.value = value - 1;
+                    if (currentValue > min) {
+                        input.value = currentValue - 1;
+                        if (display) display.textContent = input.value;
                     }
                 });
             });
 
-            // Quantity input validation
-            document.querySelectorAll('.quantity-input').forEach(input => {
-                input.addEventListener('change', function() {
-                    const min = parseInt(this.getAttribute('min'));
-                    const max = parseInt(this.getAttribute('max'));
-                    let value = parseInt(this.value) || min;
+            // Add to cart form submission
+            document.querySelectorAll('.add-to-cart-form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const productId = this.getAttribute('data-product-id');
+                    const button = this.querySelector('.add-to-cart-btn');
+                    const originalText = button.innerHTML;
 
-                    if (value < min) this.value = min;
-                    if (value > max) this.value = max;
+                    // Show loading state
+                    button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Adding...';
+                    button.disabled = true;
+
+                    // You can optionally add AJAX submission here
+                    // For now, let the form submit normally
+
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                    }, 2000);
                 });
             });
         }
+
+        // Call this function on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initProductQuantityControls();
+            // ... rest of your existing code ...
+        });
 
         function initNewsletter() {
             const form = document.querySelector('.newsletter-form');
@@ -1264,6 +1320,7 @@
         function toggleWishlist(button, productId) {
             @if (auth()->check())
                 const originalHTML = button.innerHTML;
+                const originalTitle = button.title;
                 button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
                 button.disabled = true;
 
@@ -1286,33 +1343,54 @@
                                 button.innerHTML = '<i class="fas fa-heart text-danger"></i>';
                                 button.title = 'Remove from Wishlist';
                                 button.classList.add('active');
+
+                                // Show success message
+                                showToast('Added to wishlist!', 'success');
+
+                                // Optional: Add animation
+                                button.classList.add('animate__animated', 'animate__heartBeat');
+                                setTimeout(() => {
+                                    button.classList.remove('animate__animated', 'animate__heartBeat');
+                                }, 1000);
                             } else {
                                 button.innerHTML = '<i class="far fa-heart"></i>';
                                 button.title = 'Add to Wishlist';
                                 button.classList.remove('active');
+
+                                // Show info message
+                                showToast('Removed from wishlist', 'info');
                             }
 
-                            // Update wishlist count in navbar
+                            // Update wishlist count in navbar if function exists
+                            if (typeof updateWishlistCount === 'function') {
+                                updateWishlistCount();
+                            }
+
+                            // Alternative: Check if navbar has update function
                             if (window.Navbar && window.Navbar.updateWishlistCount) {
                                 window.Navbar.updateWishlistCount();
                             }
-
-                            showToast(data.message, data.action === 'added' ? 'success' : 'info');
+                        } else {
+                            // If API returns error
+                            button.innerHTML = originalHTML;
+                            button.title = originalTitle;
+                            showToast(data.message || 'Something went wrong', 'error');
                         }
                     })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        button.innerHTML = originalHTML;
-                        button.disabled = false;
-                        showToast('Something went wrong', 'error');
-                    })
+                    // .catch(error => {
+                    //     console.error('Error:', error);
+                    //     button.innerHTML = originalHTML;
+                    //     button.title = originalTitle;
+                    //     showToast('Failed to update wishlist', 'error');
+                    // })
                     .finally(() => {
                         button.disabled = false;
                     });
             @else
                 showToast('Please login to add items to wishlist', 'warning');
                 setTimeout(() => {
-                    window.location.href = '{{ route('login') }}';
+                    window.location.href = '{{ route('login') }}?redirect=' + encodeURIComponent(window.location
+                        .href);
                 }, 1500);
             @endif
         }

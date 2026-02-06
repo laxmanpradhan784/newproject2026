@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="about-hero position-relative overflow-hidden py-5 py-lg-6 style="background: #f5f7fa;">
+<section class="about-hero position-relative overflow-hidden py-5 py-lg-6">
     <div class="container pt-5 pt-lg-6">
         <div class="row align-items-center">
             <div class="col-lg-6 mb-5 mb-lg-0 animate-fade-in">
@@ -914,7 +914,7 @@
     /* Dark Mode Support */
     @media (prefers-color-scheme: dark) {
         .about-hero {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: linear-gradient(135deg, #f4f5f7 0%, #1e293b 100%);
         }
         
         .hero-title {
@@ -927,9 +927,9 @@
         .value-card,
         .timeline-card,
         .team-card {
-            background: #1e293b;
-            border-color: #334155;
-            color: #e2e8f0;
+            background: #e8e9eb;
+            border-color: #dee3e9;
+            color: #3c7fd6;
         }
         
         .text-muted {

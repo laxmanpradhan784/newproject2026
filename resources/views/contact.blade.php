@@ -1113,16 +1113,16 @@
         /* Dark Mode Support */
         @media (prefers-color-scheme: dark) {
             .contact-hero {
-                background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+                background: linear-gradient(135deg, #f4f5f7 0%, #1e293b 100%);
             }
 
             .contact-card,
             .quick-stats .stat-item,
             .accordion-item,
             .accordion-button {
-                background: #1e293b;
-                border-color: #334155;
-                color: #e2e8f0;
+                background: #d4d7db;
+                border-color: #d2d7dd;
+                color: #5889c9;
             }
 
             .text-muted {
