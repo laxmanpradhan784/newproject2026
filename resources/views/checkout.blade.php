@@ -307,6 +307,19 @@
                                                 </label>
                                             </div>
                                         </div>
+                                        <!-- Razorpay Payment Option -->
+                                        <div class="col-md-4">
+                                            <div class="payment-option text-center">
+                                                <input type="radio" name="payment_method" id="razorpay"
+                                                    value="razorpay" class="d-none">
+                                                <label for="razorpay"
+                                                    class="payment-label border rounded p-3 d-block h-100">
+                                                    <i class="fas fa-credit-card fa-2x text-warning mb-2"></i>
+                                                    <div class="fw-medium">Card/UPI (Razorpay)</div>
+                                                    <small class="text-muted">Secure online payment</small>
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -321,10 +334,18 @@
                                 </div>
 
                                 <!-- Submit Button -->
-                                <button type="submit" class="btn btn-primary btn-lg w-100 py-3 fw-bold">
+                                <button type="submit" class="btn btn-primary btn-lg w-100 py-3 fw-bold" id="placeOrderBtn">
                                     <i class="fas fa-lock me-2"></i> Place Order & Pay ₹<span
                                         id="finalTotal">{{ number_format($total, 2) }}</span>
                                 </button>
+
+                                <!-- Loading Spinner (Hidden by default) -->
+                                <div class="text-center mt-3" id="loadingSpinner" style="display: none;">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-2 text-muted">Processing payment...</p>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -464,6 +485,7 @@
         .payment-label {
             cursor: pointer;
             transition: all 0.3s ease;
+            border: 2px solid #dee2e6;
         }
 
         .payment-label:hover {
@@ -490,6 +512,15 @@
             box-shadow: none;
         }
 
+        #loadingSpinner {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         @media (max-width: 768px) {
             .checkout-steps {
                 font-size: 0.8rem;
@@ -509,6 +540,9 @@
 @endpush
 
 @push('scripts')
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Apply coupon in checkout
@@ -582,17 +616,150 @@
                 });
             });
 
-            // Form validation
+            // Form validation and Razorpay handling
             const checkoutForm = document.getElementById('checkoutForm');
             const agreeTerms = document.getElementById('agreeTerms');
+            const placeOrderBtn = document.getElementById('placeOrderBtn');
+            const loadingSpinner = document.getElementById('loadingSpinner');
 
-            checkoutForm.addEventListener('submit', function(e) {
+            checkoutForm.addEventListener('submit', async function(e) {
+                // Check if terms are agreed
                 if (!agreeTerms.checked) {
                     e.preventDefault();
                     alert('Please agree to the Terms & Conditions');
                     agreeTerms.focus();
+                    return;
                 }
+
+                // Check if payment method is Razorpay
+                const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+                if (paymentMethod && paymentMethod.value === 'razorpay') {
+                    e.preventDefault();
+                    
+                    // Show loading spinner
+                    placeOrderBtn.style.display = 'none';
+                    loadingSpinner.style.display = 'block';
+
+                    try {
+                        // Get form data
+                        const formData = new FormData(checkoutForm);
+                        
+                        // Submit form via AJAX to get Razorpay order
+                        const response = await fetch('{{ route("checkout.store") }}', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            }
+                        });
+
+                        const data = await response.json();
+
+                        if (!data.success) {
+                            throw new Error(data.message || 'Failed to initialize payment');
+                        }
+
+                        // Initialize Razorpay
+                        const options = {
+                            key: data.key,
+                            amount: data.amount,
+                            currency: data.currency,
+                            name: data.name,
+                            description: data.description,
+                            order_id: data.razorpay_order_id,
+                            handler: function(razorpayResponse) {
+                                handleRazorpaySuccess(razorpayResponse, data.order_id);
+                            },
+                            prefill: data.prefill,
+                            theme: {
+                                color: '#3B82F6'
+                            },
+                            modal: {
+                                ondismiss: function() {
+                                    // User closed the modal - redirect to failed page
+                                    window.location.href = '{{ route("razorpay.failed") }}';
+                                }
+                            }
+                        };
+
+                        const rzp = new Razorpay(options);
+                        rzp.open();
+
+                    } catch (error) {
+                        console.error('Payment initialization error:', error);
+                        alert('Error: ' + error.message);
+                    } finally {
+                        // Hide loading spinner
+                        placeOrderBtn.style.display = 'block';
+                        loadingSpinner.style.display = 'none';
+                    }
+                }
+                // For other payment methods (COD, card, upi), let the form submit normally
             });
+
+            // Handle Razorpay success
+            function handleRazorpaySuccess(razorpayResponse, orderId) {
+                // Create a form to submit payment details
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route("razorpay.callback") }}';
+                form.style.display = 'none';
+
+                // Add CSRF token
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+                form.appendChild(csrfToken);
+
+                // Add Razorpay response data
+                const orderIdInput = document.createElement('input');
+                orderIdInput.type = 'hidden';
+                orderIdInput.name = 'razorpay_order_id';
+                orderIdInput.value = razorpayResponse.razorpay_order_id;
+                form.appendChild(orderIdInput);
+
+                const paymentIdInput = document.createElement('input');
+                paymentIdInput.type = 'hidden';
+                paymentIdInput.name = 'razorpay_payment_id';
+                paymentIdInput.value = razorpayResponse.razorpay_payment_id;
+                form.appendChild(paymentIdInput);
+
+                const signatureInput = document.createElement('input');
+                signatureInput.type = 'hidden';
+                signatureInput.name = 'razorpay_signature';
+                signatureInput.value = razorpayResponse.razorpay_signature;
+                form.appendChild(signatureInput);
+
+                // Show loading
+                placeOrderBtn.style.display = 'none';
+                loadingSpinner.style.display = 'block';
+                loadingSpinner.innerHTML = `
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Verifying payment...</p>
+                `;
+
+                // Submit the form
+                document.body.appendChild(form);
+                form.submit();
+            }
+
+            // Allow Enter key in coupon input to apply coupon
+            const couponInput = document.getElementById('checkoutCouponInput');
+            if (couponInput) {
+                couponInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        document.getElementById('applyCouponBtn').click();
+                    }
+                });
+            }
+
+            // Initialize totals on page load
+            updateTotals();
         });
     </script>
 @endpush

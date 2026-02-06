@@ -45,6 +45,14 @@ Route::middleware(['auth'])->prefix('wishlist')->name('wishlist.')->group(functi
     Route::delete('/{id}', [WishlistController::class, 'destroy'])->name('destroy');
 });
 
+
+
+// Razorpay Routes
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::post('/razorpay/callback', [CheckoutController::class, 'razorpayCallback'])->name('razorpay.callback');
+Route::get('/razorpay/failed', [CheckoutController::class, 'razorpayFailed'])->name('razorpay.failed');
+
+
 /*
 |--------------------------------------------------------------------------
 | Return Request Routes (User Side)
@@ -54,15 +62,15 @@ Route::prefix('returns')->name('returns.')->group(function () {
     // Main return routes
     Route::get('/', [AReturnController::class, 'index'])->name('index');
     Route::get('/policy', [AReturnController::class, 'policy'])->name('policy');
-    
+
     // Create return request
     Route::get('/create/{order}', [AReturnController::class, 'create'])->name('create');
     Route::post('/store/{order}', [AReturnController::class, 'store'])->name('store');
-    
+
     // View and manage return
     Route::get('/{id}', [AReturnController::class, 'show'])->where('id', '[0-9]+')->name('show');
     Route::post('/{id}/cancel', [AReturnController::class, 'cancel'])->where('id', '[0-9]+')->name('cancel');
-    
+
     // Check eligibility
     Route::get('/check-eligibility/{order}', [AReturnController::class, 'checkEligibility'])->name('check-eligibility');
 });

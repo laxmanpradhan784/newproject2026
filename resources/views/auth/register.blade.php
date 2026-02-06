@@ -84,7 +84,7 @@
         .form-header {
             text-align: center;
             margin-bottom: 32px;
-            padding-top: 40px;
+            /* padding-top: 40px; */
         }
 
         .form-title {

@@ -70,3 +70,5 @@ GOOGLE_CLIENT_ID=38312226508-aipv4rjp54m64u0a7if99hni1jimp3rc.apps.googleusercon
 GOOGLE_CLIENT_SECRET=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
 GOOGLE_REDIRECT=http://localhost/e-commmerce/public/auth/google/callback
 
+RAZORPAY_KEY=rzp_test_SCpG38hqbSsbZK
+RAZORPAY_SECRET=CRTEXFZrfHzIo1QxEep6f7Ee

@@ -91,12 +91,11 @@ class Order extends Model
             if (!in_array($this->status, ['delivered', 'completed'])) {
                 return false;
             }
-            
+
             // Check if within return window (30 days from creation)
             $returnDeadline = $this->created_at->addDays(30);
-            
+
             return now()->lte($returnDeadline);
-            
         } catch (\Exception $e) {
             // Log error for debugging
             \Log::error('Error in canBeReturned for order ' . $this->id . ': ' . $e->getMessage());
@@ -127,11 +126,11 @@ class Order extends Model
     {
         $deadline = $this->return_deadline;
         $now = now();
-        
+
         if ($now->gt($deadline)) {
             return 0;
         }
-        
+
         return $now->diffInDays($deadline);
     }
 
@@ -240,16 +239,4 @@ class Order extends Model
         return $this->total + $this->discount_amount;
     }
 
-    /**
-     * REMOVED: getOrderItemsAttribute() method
-     * This method was causing the error. Laravel automatically handles
-     * the $order->order_items property through the order_items() relationship.
-     * 
-     * REMOVE THIS METHOD OR COMMENT IT OUT:
-     * 
-     * public function getOrderItemsAttribute()
-     * {
-     *     return $this->order_items; // Alias for compatibility
-     * }
-     */
 }
