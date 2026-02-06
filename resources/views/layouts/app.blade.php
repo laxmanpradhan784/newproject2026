@@ -28,7 +28,7 @@
 
     <style>
         body {
-            background-color: #f5f7fa;
+            background: linear-gradient(135deg, #d5d8df 0%, #1e293b 100%);
             background-image: linear-gradient(135deg, #f5f7fa 0%, #ced3da 100%);
             min-height: 100vh;
             display: flex;

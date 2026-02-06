@@ -3,7 +3,7 @@
 @section('title', 'Checkout')
 
 @section('content')
-    <section class="checkout-page mt-5 pt-5 bg-light">
+    <section class="checkout-page">
         <div class="container">
             <!-- Breadcrumb -->
             <div class="row mb-4">
@@ -271,52 +271,117 @@
                                 <div class="mb-4">
                                     <h6 class="fw-medium mb-3">Payment Method</h6>
                                     <div class="row g-3">
-                                        <div class="col-md-4">
+                                        <!-- Cash on Delivery - Enhanced -->
+                                        <div class="col-md-6">
                                             <div class="payment-option text-center">
                                                 <input type="radio" name="payment_method" id="cod"
                                                     value="cod" class="d-none" checked>
                                                 <label for="cod"
-                                                    class="payment-label border rounded p-3 d-block h-100">
-                                                    <i class="fas fa-money-bill-wave fa-2x text-success mb-2"></i>
-                                                    <div class="fw-medium">Cash on Delivery</div>
-                                                    <small class="text-muted">Pay when you receive</small>
+                                                    class="payment-label border rounded-3 p-4 d-block h-100 position-relative overflow-hidden">
+                                                    <!-- Animated background effect -->
+                                                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-success bg-opacity-5"
+                                                        style="transform: translateY(100%); transition: transform 0.3s ease;">
+                                                    </div>
+
+                                                    <!-- Icon with badge -->
+                                                    <div class="position-relative z-2">
+                                                        <div class="icon-wrapper mb-3">
+                                                            <div
+                                                                class="rounded-circle bg-success bg-opacity-10 p-3 d-inline-block">
+                                                                <i class="fas fa-money-bill-wave fa-2x text-success"></i>
+                                                            </div>
+                                                            <span
+                                                                class="badge bg-success position-absolute top-0 end-0 translate-middle">
+                                                                <i class="fas fa-check"></i>
+                                                            </span>
+                                                        </div>
+
+                                                        <div class="fw-bold mb-1">Cash on Delivery</div>
+                                                        <small class="text-muted d-block mb-2">Pay when you receive</small>
+
+                                                        <!-- Features -->
+                                                        <div class="features mt-3">
+                                                            <div
+                                                                class="d-flex align-items-center justify-content-center gap-1 small text-muted">
+                                                                <i class="fas fa-shield-alt fa-xs text-success"></i>
+                                                                <span>Zero online payment risk</span>
+                                                            </div>
+                                                            <div
+                                                                class="d-flex align-items-center justify-content-center gap-1 small text-muted mt-1">
+                                                                <i class="fas fa-clock fa-xs text-success"></i>
+                                                                <span>Easy & convenient</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="payment-option text-center">
-                                                <input type="radio" name="payment_method" id="card"
-                                                    value="card" class="d-none">
-                                                <label for="card"
-                                                    class="payment-label border rounded p-3 d-block h-100">
-                                                    <i class="fab fa-cc-visa fa-2x text-primary mb-2"></i>
-                                                    <div class="fw-medium">Credit/Debit Card</div>
-                                                    <small class="text-muted">Secure payment</small>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="payment-option text-center">
-                                                <input type="radio" name="payment_method" id="upi"
-                                                    value="upi" class="d-none">
-                                                <label for="upi"
-                                                    class="payment-label border rounded p-3 d-block h-100">
-                                                    <i class="fas fa-mobile-alt fa-2x text-info mb-2"></i>
-                                                    <div class="fw-medium">UPI Payment</div>
-                                                    <small class="text-muted">Google Pay, PhonePe, etc.</small>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <!-- Razorpay Payment Option -->
-                                        <div class="col-md-4">
+
+                                        <!-- Razorpay Payment Option - Enhanced -->
+                                        <div class="col-md-6">
                                             <div class="payment-option text-center">
                                                 <input type="radio" name="payment_method" id="razorpay"
                                                     value="razorpay" class="d-none">
                                                 <label for="razorpay"
-                                                    class="payment-label border rounded p-3 d-block h-100">
-                                                    <i class="fas fa-credit-card fa-2x text-warning mb-2"></i>
-                                                    <div class="fw-medium">Card/UPI (Razorpay)</div>
-                                                    <small class="text-muted">Secure online payment</small>
+                                                    class="payment-label border rounded-3 p-4 d-block h-100 position-relative overflow-hidden">
+                                                    <!-- Animated background effect -->
+                                                    <div class="position-absolute top-0 start-0 w-100 h-100 bg-warning bg-opacity-5"
+                                                        style="transform: translateY(100%); transition: transform 0.3s ease;">
+                                                    </div>
+
+                                                    <!-- Razorpay logo badge -->
+                                                    <div class="position-absolute top-0 start-0 m-2">
+                                                        <span class="badge bg-warning text-dark px-2 py-1"
+                                                            style="font-size: 0.7rem;">
+                                                            <i class="fas fa-lock me-1"></i>Secure
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="position-relative z-2">
+                                                        <!-- Icon with gradient -->
+                                                        <div class="icon-wrapper mb-3">
+                                                            <div class="rounded-circle bg-gradient-warning p-3 d-inline-block"
+                                                                style="background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);">
+                                                                <i class="fas fa-credit-card fa-2x text-white"></i>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="fw-bold mb-1">Online Payment</div>
+                                                        <small class="text-muted d-block mb-2">Card / UPI /
+                                                            Netbanking</small>
+
+                                                        <!-- Payment Logos -->
+                                                        <div class="payment-logos mt-3">
+                                                            <div class="d-flex justify-content-center gap-2">
+                                                                <div class="logo-item" data-bs-toggle="tooltip"
+                                                                    title="Visa">
+                                                                    <i class="fab fa-cc-visa fa-lg text-primary"></i>
+                                                                </div>
+                                                                <div class="logo-item" data-bs-toggle="tooltip"
+                                                                    title="Mastercard">
+                                                                    <i class="fab fa-cc-mastercard fa-lg text-danger"></i>
+                                                                </div>
+                                                                <div class="logo-item" data-bs-toggle="tooltip"
+                                                                    title="UPI">
+                                                                    <i class="fas fa-mobile-alt fa-lg text-info"></i>
+                                                                </div>
+                                                                <div class="logo-item" data-bs-toggle="tooltip"
+                                                                    title="Razorpay">
+                                                                    <span
+                                                                        style="color: #0C4EB2; font-weight: 700; font-size: 0.9rem;">Razorpay</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Security Badge -->
+                                                        <div class="security-badge mt-3">
+                                                            <div
+                                                                class="d-flex align-items-center justify-content-center gap-1 small text-success">
+                                                                <i class="fas fa-shield-alt"></i>
+                                                                <span>SSL Secured</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </label>
                                             </div>
                                         </div>
@@ -334,7 +399,8 @@
                                 </div>
 
                                 <!-- Submit Button -->
-                                <button type="submit" class="btn btn-primary btn-lg w-100 py-3 fw-bold" id="placeOrderBtn">
+                                <button type="submit" class="btn btn-primary btn-lg w-100 py-3 fw-bold"
+                                    id="placeOrderBtn">
                                     <i class="fas fa-lock me-2"></i> Place Order & Pay ₹<span
                                         id="finalTotal">{{ number_format($total, 2) }}</span>
                                 </button>
@@ -517,8 +583,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         @media (max-width: 768px) {
@@ -542,7 +613,7 @@
 @push('scripts')
     <!-- Razorpay Checkout Script -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Apply coupon in checkout
@@ -635,7 +706,7 @@
                 const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
                 if (paymentMethod && paymentMethod.value === 'razorpay') {
                     e.preventDefault();
-                    
+
                     // Show loading spinner
                     placeOrderBtn.style.display = 'none';
                     loadingSpinner.style.display = 'block';
@@ -643,9 +714,9 @@
                     try {
                         // Get form data
                         const formData = new FormData(checkoutForm);
-                        
+
                         // Submit form via AJAX to get Razorpay order
-                        const response = await fetch('{{ route("checkout.store") }}', {
+                        const response = await fetch('{{ route('checkout.store') }}', {
                             method: 'POST',
                             body: formData,
                             headers: {
@@ -678,7 +749,7 @@
                             modal: {
                                 ondismiss: function() {
                                     // User closed the modal - redirect to failed page
-                                    window.location.href = '{{ route("razorpay.failed") }}';
+                                    window.location.href = '{{ route('razorpay.failed') }}';
                                 }
                             }
                         };
@@ -703,7 +774,7 @@
                 // Create a form to submit payment details
                 const form = document.createElement('form');
                 form.method = 'POST';
-                form.action = '{{ route("razorpay.callback") }}';
+                form.action = '{{ route('razorpay.callback') }}';
                 form.style.display = 'none';
 
                 // Add CSRF token

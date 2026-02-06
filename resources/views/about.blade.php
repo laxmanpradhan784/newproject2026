@@ -285,7 +285,7 @@
 </section>
 
 <!-- Timeline -->
-<section class="timeline py-5 py-lg-6 bg-light">
+<section class="timeline py-5 py-lg-6">
     <div class="container">
         <div class="section-header text-center mb-5">
             <h2 class="display-4 fw-bold mb-3">Our Journey</h2>
@@ -544,7 +544,7 @@
 
     /* Hero Section */
     .about-hero {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        background:#f5f7fa00;
         position: relative;
         overflow: hidden;
     }

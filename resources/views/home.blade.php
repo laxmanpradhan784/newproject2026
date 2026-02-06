@@ -82,7 +82,7 @@
     </section>
 
     <!-- Features Section -->
-    <section class="features-section py-5 bg-light">
+    <section class="features-section py-5">
         <div class="container">
             <div class="row g-4">
                 <div class="col-md-3 col-sm-6">
@@ -357,7 +357,7 @@
                                                 <!-- Add to Cart Button -->
                                                 <button type="submit"
                                                     class="btn btn-primary flex-grow-1 add-to-cart-btn py-2 px-3">
-                                                    <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                                                    <i class="fas fa-cart-plus me-2"></i> Add
                                                 </button>
                                             </div>
                                         </form>
@@ -458,7 +458,7 @@
     </section>
 
     <!-- Popular Categories -->
-    <section class="categories py-5 bg-light">
+    <section class="categories py-5">
         <div class="container">
             <div class="section-header text-center mb-5">
                 <h2 class="display-5 fw-bold mb-3">Shop by Category</h2>
@@ -482,7 +482,7 @@
                                 class="category-card text-center border-0 shadow-sm rounded-3 p-4 h-100 position-relative overflow-hidden">
                                 <!-- Category Icon -->
                                 <div class="category-icon-wrapper mb-4">
-                                    <div class="category-icon mx-auto">
+                                    <div class="category-icon mx-auto"  style="width: 80px">
                                         @php
                                             $icon = match (strtolower($category->name)) {
                                                 'electronics', 'electronic' => 'tv',
@@ -1067,7 +1067,7 @@
             }
 
             .add-to-cart-btn {
-                width: 100%;
+                width: 50%;
             }
         }
 

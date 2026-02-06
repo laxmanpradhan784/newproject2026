@@ -3,7 +3,7 @@
 @section('title', isset($category) ? $category->name : 'Products')
 
 @section('content')
-    <section class="products-page" style="background: #f5f7fa;">
+    <section class="products-page">
         <div class="container pt-4">
             <!-- Page Header -->
             <div class="page-header mb-5">
@@ -193,7 +193,7 @@
                                         </h5>
 
                                         <!-- Rating & Reviews -->
-                                        <div class="d-flex align-items-center mb-3">
+                                        {{-- <div class="d-flex align-items-center mb-3">
                                             <div class="rating-display">
                                                 <div class="stars d-inline-block">
                                                     @php
@@ -222,12 +222,12 @@
                                                     <span class="text-muted">({{ $totalReviews }} reviews)</span>
                                                 </span>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                         <!-- Short Description -->
-                                        <p class="card-text text-muted small mb-3 product-description">
+                                        {{-- <p class="card-text text-muted small mb-3 product-description">
                                             {{ Str::limit($product->short_description ?? $product->description, 80, '...') }}
-                                        </p>
+                                        </p> --}}
 
                                         <!-- Price -->
                                         <div class="product-price d-flex align-items-center justify-content-between mb-3">
@@ -322,7 +322,7 @@
                                                         <!-- Add to Cart Button -->
                                                         <button type="submit" class="btn btn-primary"
                                                             style="flex: 1; padding: 8px 16px; border-radius: 8px; transition: all 0.3s ease;">
-                                                            <i class="fas fa-cart-plus me-1"></i> Add to Cart
+                                                            <i class="fas fa-cart-plus me-1"></i> Add
                                                         </button>
                                                     </div>
                                                 </form>
@@ -419,35 +419,13 @@
                 </div>
             </div>
         </div>
-
-        <!-- Mobile Filter Offcanvas -->
-        <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="filterOffcanvas"
-            aria-labelledby="filterOffcanvasLabel">
-            <div class="offcanvas-header border-bottom">
-                <h5 class="offcanvas-title fw-bold" id="filterOffcanvasLabel">
-                    <i class="fas fa-filter me-2 text-primary"></i> Filters
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <!-- Mobile filter content goes here -->
-                <div class="mobile-filters-content">
-                    <!-- Same filter content as desktop sidebar -->
-                </div>
-            </div>
-            <div class="offcanvas-footer border-top p-3">
-                <button class="btn btn-primary w-100" data-bs-dismiss="offcanvas">
-                    <i class="fas fa-check me-1"></i> Apply Filters
-                </button>
-            </div>
-        </div>
     </section>
 @endsection
 
 <style>
     /* Inline styles only - no external CSS */
     .products-page {
-        background: linear-gradient(135deg, #d5d8df 0%, #1e293b 100%);
+        background: #f5f7fa00;
     }
 
     /* Page Header */

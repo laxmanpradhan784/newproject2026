@@ -250,7 +250,7 @@
     </section>
 
     <!-- Contact Form -->
-    <section id="contactForm" class="contact-form py-5 py-lg-6 bg-light">
+    <section id="contactForm" class="contact-form py-5 py-lg-6">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-10 col-xl-8">
