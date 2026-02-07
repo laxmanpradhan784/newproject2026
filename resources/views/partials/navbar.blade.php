@@ -205,6 +205,11 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a class="dropdown-item dropdown-hover" href="{{ route('payments.index') }}">
+                                        <i class="fas fa-shopping-bag me-2"></i> Payment History
+                                    </a>
+                                </li>
+                                <li>
                                     <a class="dropdown-item dropdown-hover" href="{{ route('returns.index') }}">
                                         <i class="fas fa-exchange-alt me-2"></i> My Returns
                                     </a>

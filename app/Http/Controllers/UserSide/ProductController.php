@@ -19,7 +19,7 @@ class ProductController extends Controller
                 $query->where('status', 'active'); // category must be active
             })
             ->orderBy('created_at', 'desc')
-            ->paginate(12);
+            ->paginate(9);
 
         return view('products', compact('products'));
     }
@@ -49,11 +49,22 @@ class ProductController extends Controller
     // Show single product detail
     public function show($id)
     {
-        $product = Product::with('category')->findOrFail($id);
+        $product = Product::with(['category', 'images', 'reviews' => function ($query) {
+            $query->where('status', 'approved');
+        }, 'reviews.user'])
+            ->withCount(['reviews' => function ($query) {
+                $query->where('status', 'approved');
+            }])
+            ->findOrFail($id);
+
         $category = $product->category;
 
+        // Calculate average rating
+        $avgRating = $product->reviews->avg('rating') ?? 0;
+        $totalReviews = $product->reviews->count();
+
         // Get related products (same category, excluding current product)
-        $relatedProducts = Product::with('category')
+        $relatedProducts = Product::with(['category', 'images'])
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('status', 'active')
@@ -61,7 +72,22 @@ class ProductController extends Controller
             ->limit(4)
             ->get();
 
-        return view('product_detail', compact('product', 'category', 'relatedProducts'));
+        // Check if user has already reviewed this product
+        $existingReview = null;
+        if (auth()->check()) {
+            $existingReview = \App\Models\Review::where('product_id', $id)
+                ->where('user_id', auth()->id())
+                ->first();
+        }
+
+        return view('product_detail', compact(
+            'product',
+            'category',
+            'relatedProducts',
+            'avgRating',
+            'totalReviews',
+            'existingReview'
+        ));
     }
 
     // Show products by category with pagination

@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Coupon;
+use App\Models\Payment;
 use App\Models\CouponUsage;
 use Illuminate\Http\Request;
 use App\Mail\OrderPlacedAdminMail;
@@ -67,18 +68,18 @@ class CheckoutController extends Controller
         // Get applied coupon from session
         $appliedCoupon = session('applied_coupon');
         $discountAmount = session('cart_discount', 0);
-        
+
         // Apply discount if coupon is valid
         $discountedSubtotal = $subtotal;
         if ($appliedCoupon && $discountAmount > 0) {
             // Re-validate coupon before checkout
             $cartController = new CartController();
             $validation = $cartController->validateCoupon(
-                $appliedCoupon['code'], 
-                $user->id, 
+                $appliedCoupon['code'],
+                $user->id,
                 $subtotal
             );
-            
+
             if (!$validation['valid']) {
                 // Remove invalid coupon
                 session()->forget(['applied_coupon', 'applied_coupon_code', 'cart_discount']);
@@ -100,13 +101,13 @@ class CheckoutController extends Controller
         $availableCoupons = $cartController->getAvailableCoupons();
 
         return view('checkout', compact(
-            'user', 
-            'cartItems', 
-            'subtotal', 
-            'discountedSubtotal', 
+            'user',
+            'cartItems',
+            'subtotal',
+            'discountedSubtotal',
             'discountAmount',
-            'shipping', 
-            'tax', 
+            'shipping',
+            'tax',
             'total',
             'availableCoupons'
         ));
@@ -153,7 +154,7 @@ class CheckoutController extends Controller
         $discountAmount = session('cart_discount', 0);
         $couponCode = session('applied_coupon_code');
         $couponId = session('applied_coupon.id') ?? null;
-        
+
         // Apply discount
         $discountedSubtotal = $subtotal;
         if ($appliedCoupon && $discountAmount > 0) {
@@ -201,7 +202,7 @@ class CheckoutController extends Controller
         try {
             // Create order record in database with pending status
             $orderNumber = Order::generateUniqueOrderNumber($user->id);
-            
+
             $orderData = [
                 'order_number' => $orderNumber,
                 'user_id' => $user->id,
@@ -270,7 +271,6 @@ class CheckoutController extends Controller
                 'order_id' => $order->id,
                 'callback_url' => route('razorpay.callback'),
             ]);
-
         } catch (\Exception $e) {
             \Log::error('Razorpay order creation failed: ' . $e->getMessage());
             return response()->json([
@@ -362,7 +362,6 @@ class CheckoutController extends Controller
 
             return redirect()->route('order.confirmation', $order->order_number)
                 ->with('success', 'Order placed successfully!');
-
         } catch (\Exception $e) {
             \Log::error('Order creation failed: ' . $e->getMessage());
             return redirect()->back()
@@ -398,10 +397,20 @@ class CheckoutController extends Controller
                     'status' => 'cancelled',
                     'cancelled_at' => now(),
                 ]);
-                
+
+                // Save failed payment record
+                $this->savePaymentRecord($order, [
+                    'razorpay_payment_id' => $paymentId,
+                    'status' => 'failed',
+                    'error_description' => 'Payment signature verification failed'
+                ]);
+
                 session()->forget('pending_razorpay_order');
                 return redirect()->route('checkout')->with('error', 'Payment verification failed!');
             }
+
+            // Get payment details from Razorpay
+            $razorpayPayment = $this->razorpayService->getPaymentDetails($paymentId);
 
             // Update order with payment details
             $order->update([
@@ -410,6 +419,20 @@ class CheckoutController extends Controller
                 'payment_status' => 'paid',
                 'status' => 'processing',
                 'transaction_id' => $paymentId,
+            ]);
+
+            // SAVE PAYMENT TO PAYMENTS TABLE
+            $this->savePaymentRecord($order, [
+                'razorpay_payment_id' => $paymentId,
+                'razorpay_order_id' => $orderId,
+                'razorpay_signature' => $signature,
+                'status' => 'captured',
+                'payment_method' => $razorpayPayment->method ?? null,
+                'bank' => $razorpayPayment->bank ?? null,
+                'card_type' => $razorpayPayment->card_type ?? null,
+                'wallet' => $razorpayPayment->wallet ?? null,
+                'vpa' => $razorpayPayment->vpa ?? null,
+                'gateway_response' => json_encode($razorpayPayment),
             ]);
 
             // Get user and cart items
@@ -470,7 +493,6 @@ class CheckoutController extends Controller
 
             return redirect()->route('order.confirmation', $order->order_number)
                 ->with('success', 'Payment successful! Order placed successfully.');
-
         } catch (\Exception $e) {
             \Log::error('Razorpay callback error: ' . $e->getMessage());
             return redirect()->route('checkout')->with('error', 'Payment processing failed. Please try again.');
@@ -483,7 +505,7 @@ class CheckoutController extends Controller
     public function razorpayFailed()
     {
         $orderId = session('pending_razorpay_order');
-        
+
         if ($orderId) {
             $order = Order::find($orderId);
             if ($order) {
@@ -491,6 +513,12 @@ class CheckoutController extends Controller
                     'payment_status' => 'failed',
                     'status' => 'cancelled',
                     'cancelled_at' => now(),
+                ]);
+
+                // Save failed payment record
+                $this->savePaymentRecord($order, [
+                    'status' => 'failed',
+                    'error_description' => 'Payment cancelled by user'
                 ]);
             }
             session()->forget('pending_razorpay_order');
@@ -551,5 +579,37 @@ class CheckoutController extends Controller
             ->firstOrFail();
 
         return view('order-details', compact('order'));
+    }
+
+    /**
+     * Save Payment Record to Payments Table
+     */
+    private function savePaymentRecord($order, $paymentData)
+    {
+        try {
+            Payment::create([
+                'order_id' => $order->id,
+                'user_id' => $order->user_id,
+                'razorpay_order_id' => $paymentData['razorpay_order_id'] ?? $order->razorpay_order_id,
+                'razorpay_payment_id' => $paymentData['razorpay_payment_id'] ?? null,
+                'razorpay_signature' => $paymentData['razorpay_signature'] ?? null,
+                'amount' => $order->total,
+                'currency' => 'INR',
+                'payment_method' => $paymentData['payment_method'] ?? null,
+                'payment_gateway' => 'razorpay',
+                'bank' => $paymentData['bank'] ?? null,
+                'card_type' => $paymentData['card_type'] ?? null,
+                'wallet' => $paymentData['wallet'] ?? null,
+                'vpa' => $paymentData['vpa'] ?? null,
+                'status' => $paymentData['status'] ?? 'created',
+                'gateway_response' => $paymentData['gateway_response'] ?? null,
+                'error_code' => $paymentData['error_code'] ?? null,
+                'error_description' => $paymentData['error_description'] ?? null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to save payment record: ' . $e->getMessage());
+        }
     }
 }

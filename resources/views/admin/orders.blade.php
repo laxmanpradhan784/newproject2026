@@ -452,19 +452,6 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- Pagination -->
-            {{-- @if ($orders->hasPages())
-                <div class="d-flex justify-content-between align-items-center mt-4">
-                    <div class="text-muted small">
-                        Showing {{ $orders->firstItem() }} to {{ $orders->lastItem() }} of {{ $orders->total() }}
-                        orders
-                    </div>
-                    <nav>
-                        {{ $orders->links() }}
-                    </nav>
-                </div>
-            @endif --}}
         </div>
     </div>
     </div>

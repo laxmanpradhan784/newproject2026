@@ -142,15 +142,18 @@
                             <!-- Product Image with Badges -->
                             <div class="product-img-wrapper position-relative">
                                 <a href="{{ route('product.show', $product->id) }}" class="d-block img-link">
-                                    <div class="product-image position-relative">
+                                    <div class="product-image position-relative"
+                                        style="height: 220px; background: #f8fafc;">
                                         @if ($product->image)
                                             <img src="{{ asset('uploads/products/' . $product->image) }}"
-                                                class="img-fluid w-100 h-auto product-img" alt="{{ $product->name }}"
-                                                loading="lazy">
+                                                class="img-fluid w-100 h-auto product-img"
+                                                style="object-fit: contain; height: 100%; width: 100%;"
+                                                alt="{{ $product->name }}" loading="lazy">
                                         @else
                                             <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop"
-                                                class="img-fluid w-100 h-auto product-img" alt="{{ $product->name }}"
-                                                loading="lazy">
+                                                class="img-fluid w-100 h-auto product-img"
+                                                style="object-fit: contain; height: 100%; width: 100%;"
+                                                alt="{{ $product->name }}" loading="lazy">
                                         @endif
                                     </div>
                                 </a>
@@ -206,7 +209,7 @@
                                 </h5>
 
                                 <!-- Rating & Reviews -->
-                                <div class="d-flex align-items-center mb-3">
+                                {{-- <div class="d-flex align-items-center mb-3">
                                     <div class="rating-display">
                                         <div class="stars d-inline-block">
                                             @php
@@ -233,12 +236,12 @@
                                             <span class="text-muted">({{ $totalReviews }} reviews)</span>
                                         </span>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <!-- Short Description -->
-                                <p class="card-text text-muted small mb-3 product-description">
+                                {{-- <p class="card-text text-muted small mb-3 product-description">
                                     {{ Str::limit($product->short_description ?? $product->description, 80, '...') }}
-                                </p>
+                                </p> --}}
 
                                 <!-- Price -->
                                 <div class="product-price d-flex align-items-center justify-content-between mb-3">
@@ -470,7 +473,7 @@
                     $categories = \App\Models\Category::where('status', 'active')
                         ->withCount('products')
                         ->orderByDesc('products_count')
-                        ->take(8)
+                        ->take(4)
                         ->get();
                 @endphp
 
@@ -482,7 +485,7 @@
                                 class="category-card text-center border-0 shadow-sm rounded-3 p-4 h-100 position-relative overflow-hidden">
                                 <!-- Category Icon -->
                                 <div class="category-icon-wrapper mb-4">
-                                    <div class="category-icon mx-auto"  style="width: 80px">
+                                    <div class="category-icon mx-auto" style="width: 80px">
                                         @php
                                             $icon = match (strtolower($category->name)) {
                                                 'electronics', 'electronic' => 'tv',

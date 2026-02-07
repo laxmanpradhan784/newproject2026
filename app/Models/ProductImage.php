@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class ProductImage extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'product_id',
+        'image'
+        // Remove 'order' from here since your table doesn't have it
+    ];
+
+    /**
+     * Get the product that owns the image.
+     */
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    /**
+     * Get the image URL.
+     */
+    public function getImageUrlAttribute()
+    {
+        return asset('uploads/product-images/' . $this->image);
+    }
+}

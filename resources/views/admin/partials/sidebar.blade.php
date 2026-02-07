@@ -161,8 +161,6 @@
                 </a>
             </li>
 
-
-
             <!-- Products -->
             <li class="nav-item mb-2">
                 <a href="{{ route('admin.products') }}"
@@ -173,6 +171,27 @@
                     <div class="nav-text">PRODUCTS</div>
                     <div class="ms-auto">
                         <span class="badge police-badge-count"></span>
+                    </div>
+                </a>
+            </li>
+
+            <!-- Product Images with Badge -->
+            <li class="nav-item mb-2">
+                <a href="{{ route('admin.product.image.manager') }}"
+                    class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3 
+                    {{ request()->routeIs('admin.product.image.*') ? 'active' : '' }}">
+
+                    <div class="nav-icon me-3">
+                        <i class="fas fa-images"></i>
+                    </div>
+
+                    <div class="nav-text">PRODUCT IMAGES</div>
+
+                    <div class="ms-auto">
+                        <span class="badge police-badge-alert bg-info">
+                            {{-- Products having less than 5 images (need upload attention) --}}
+                            {{ \App\Models\Product::whereHas('images', function ($q) {}, '<', 5)->count() }}
+                        </span>
                     </div>
                 </a>
             </li>
@@ -228,6 +247,31 @@
                         <span class="badge police-badge-alert bg-danger">
                             {{ \App\Models\Order::where('status', 'pending')->where('created_at', '>=', now()->subDay())->count() }}
                         </span>
+                    </div>
+                </a>
+            </li>
+
+            <li class="nav-item mb-2">
+                <a href="{{ route('admin.payments.index') }}"
+                    class="nav-link police-nav-link d-flex align-items-center px-3 py-2 rounded-3 {{ request()->is('admin/payments*') ? 'active' : '' }}">
+                    <div class="nav-icon me-3">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="nav-text">PAYMENTS</div>
+                    <div class="ms-auto">
+                        @php
+                            use App\Models\Payment;
+                            // Count failed payments
+                            $failedPaymentsCount = Payment::where('status', 'failed')->count();
+                            // Count pending payments (if you have a pending status)
+                            $pendingPaymentsCount = Payment::where('status', 'created')->count();
+                            $totalAlertCount = $failedPaymentsCount + $pendingPaymentsCount;
+                        @endphp
+                        @if ($totalAlertCount > 0)
+                            <span class="badge police-badge-alert bg-danger">
+                                {{ $totalAlertCount }}
+                            </span>
+                        @endif
                     </div>
                 </a>
             </li>
@@ -291,7 +335,7 @@
     </div>
 
     <!-- Emergency Logout -->
-    <div class="emergency-section p-3">
+    {{-- <div class="emergency-section p-3">
         <form id="admin-emergency-logout-form" action="{{ route('logout') }}" method="POST">
             @csrf
             <button type="submit" class="btn btn-emergency w-100 d-flex align-items-center justify-content-center">
@@ -299,7 +343,7 @@
                 <span>EMERGENCY LOGOUT</span>
             </button>
         </form>
-    </div>
+    </div> --}}
 
 </aside>
 

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Razorpay\Api\Api;
 use App\Models\Order;
+use App\Models\Payment;
 
 class RazorpayService
 {
@@ -85,6 +86,19 @@ class RazorpayService
         } catch (\Exception $e) {
             \Log::error('Refund failed: ' . $e->getMessage());
             throw new \Exception('Refund failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Get Payment Details from Razorpay
+     */
+    public function getPaymentDetails($paymentId)
+    {
+        try {
+            return $this->api->payment->fetch($paymentId);
+        } catch (\Exception $e) {
+            Log::error('Failed to fetch payment details: ' . $e->getMessage());
+            return null;
         }
     }
 }

@@ -37,6 +37,7 @@
                         <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i> Order Summary</h5>
                     </div>
                     <div class="card-body">
+                        <!-- Order Info -->
                         <div class="row mb-3">
                             <div class="col-6">
                                 <p class="mb-1 text-muted small">Order Number</p>
@@ -48,51 +49,199 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <p class="mb-1 text-muted small">Payment Method</p>
-                                <span class="badge bg-info text-capitalize">{{ $order->payment_method }}</span>
-                            </div>
-                            <div class="col-6">
-                                <p class="mb-1 text-muted small">Payment Status</p>
-                                <span
-                                    class="badge bg-{{ $order->payment_status == 'paid' ? 'success' : 'warning' }} text-capitalize">
-                                    {{ $order->payment_status }}
-                                </span>
+                        <!-- Payment Information -->
+                        <div class="mb-3">
+                            <p class="mb-1 text-muted small">Payment Information</p>
+                            <div class="border rounded p-3 bg-light">
+                                <!-- Payment Method & Status -->
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <span class="badge bg-info text-capitalize">{{ $order->payment_method }}</span>
+                                        @if ($order->payment_method == 'razorpay')
+                                            <span class="badge bg-primary ms-1">Online</span>
+                                        @endif
+                                    </div>
+                                    <span
+                                        class="badge bg-{{ $order->payment_status == 'paid' ? 'success' : ($order->payment_status == 'refunded' ? 'warning' : 'danger') }} text-capitalize">
+                                        {{ $order->payment_status }}
+                                    </span>
+                                </div>
+
+                                <!-- Transaction ID -->
+                                @if ($order->razorpay_payment_id)
+                                    <div class="mb-2">
+                                        <p class="mb-1 text-muted small">Transaction ID</p>
+                                        <div class="d-flex align-items-center">
+                                            <code class="bg-white p-1 rounded small flex-grow-1 text-truncate"
+                                                title="{{ $order->razorpay_payment_id }}">
+                                                {{ substr($order->razorpay_payment_id, 0, 20) }}...
+                                            </code>
+                                            <button class="btn btn-sm btn-outline-secondary ms-2"
+                                                onclick="copyToClipboard('{{ $order->razorpay_payment_id }}')"
+                                                title="Copy to clipboard">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <!-- Razorpay Order ID -->
+                                @if ($order->razorpay_order_id)
+                                    <div class="mb-2">
+                                        <p class="mb-1 text-muted small">Razorpay Order ID</p>
+                                        <code class="bg-white p-1 rounded d-block small text-truncate"
+                                            title="{{ $order->razorpay_order_id }}">
+                                            {{ substr($order->razorpay_order_id, 0, 20) }}...
+                                        </code>
+                                    </div>
+                                @endif
+
+                                <!-- Payment Captured Time -->
+                                @if ($order->payment_captured_at)
+                                    <div>
+                                        <p class="mb-1 text-muted small">Paid On</p>
+                                        <p class="mb-0 small">{{ $order->payment_captured_at->format('d M Y, h:i A') }}</p>
+                                    </div>
+                                @endif
+
+                                <!-- View Payment Link -->
+                                @if ($order->razorpay_payment_id)
+                                    <div class="mt-3">
+                                        <a href="{{ route('admin.payments.index') }}?search={{ $order->razorpay_payment_id }}"
+                                            class="btn btn-sm btn-outline-primary w-100">
+                                            <i class="fas fa-search-dollar me-1"></i> View Payment Details
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
+                        <!-- Shipping Information -->
                         <div class="row mb-3">
                             <div class="col-12">
                                 <p class="mb-1 text-muted small">Shipping Method</p>
-                                <p class="fw-bold text-capitalize">{{ $order->shipping_method }} Delivery</p>
+                                <div class="d-flex align-items-center">
+                                    <span class="fw-bold text-capitalize">{{ $order->shipping_method }} Delivery</span>
+                                    @if ($order->shipping_method == 'express')
+                                        <span class="badge bg-warning ms-2">Fast</span>
+                                    @endif
+                                </div>
+                                @if ($order->delivered_at)
+                                    <small class="text-success">
+                                        <i class="fas fa-check-circle"></i> Delivered on
+                                        {{ $order->delivered_at->format('d M Y') }}
+                                    </small>
+                                @endif
                             </div>
                         </div>
 
                         <hr>
 
+                        <!-- Price Summary -->
                         <div class="price-summary">
+                            <!-- Subtotal -->
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Subtotal</span>
                                 <span>₹{{ number_format($order->subtotal, 2) }}</span>
                             </div>
+
+                            <!-- Discount (if any) -->
+                            @if ($order->discount_amount > 0)
+                                <div class="d-flex justify-content-between mb-2 text-success">
+                                    <span>Discount
+                                        @if ($order->coupon_code)
+                                            <span class="badge bg-success ms-1">{{ $order->coupon_code }}</span>
+                                        @endif
+                                    </span>
+                                    <span>-₹{{ number_format($order->discount_amount, 2) }}</span>
+                                </div>
+                            @endif
+
+                            <!-- Shipping -->
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Shipping</span>
                                 <span>₹{{ number_format($order->shipping, 2) }}</span>
                             </div>
+
+                            <!-- Tax -->
                             <div class="d-flex justify-content-between mb-2">
-                                <span>Tax</span>
+                                <span>Tax (18%)</span>
                                 <span>₹{{ number_format($order->tax, 2) }}</span>
                             </div>
+
                             <hr>
+
+                            <!-- Total -->
                             <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">Total</h5>
+                                <h5 class="mb-0">Total Amount</h5>
                                 <h4 class="mb-0 text-primary">₹{{ number_format($order->total, 2) }}</h4>
+                            </div>
+
+                            <!-- Payment Status Note -->
+                            @if ($order->payment_status != 'paid')
+                                <div class="mt-2">
+                                    <small class="text-{{ $order->payment_status == 'pending' ? 'warning' : 'danger' }}">
+                                        <i class="fas fa-exclamation-circle me-1"></i>
+                                        Payment is {{ $order->payment_status }}
+                                    </small>
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="mt-4">
+                            <div class="btn-group w-100" role="group">
+                                @if ($order->payment_status == 'paid' && $order->payment_method == 'razorpay')
+                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                        data-bs-target="#refundModal">
+                                        <i class="fas fa-undo me-1"></i> Refund
+                                    </button>
+                                @endif
+
+                                <a href="{{ route('admin.order.invoice', $order->id) }}"
+                                    class="btn btn-sm btn-outline-secondary" target="_blank">
+                                    <i class="fas fa-file-invoice me-1"></i> Invoice
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- JavaScript for Copy Function -->
+            @push('scripts')
+                <script>
+                    function copyToClipboard(text) {
+                        navigator.clipboard.writeText(text).then(() => {
+                            // Show success toast
+                            const toast = document.createElement('div');
+                            toast.className = 'position-fixed bottom-0 end-0 p-3';
+                            toast.style.zIndex = '9999';
+                            toast.innerHTML = `
+            <div id="copyToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-check-circle me-2"></i> Copied to clipboard!
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        `;
+                            document.body.appendChild(toast);
+
+                            // Show toast
+                            const bsToast = new bootstrap.Toast(document.getElementById('copyToast'));
+                            bsToast.show();
+
+                            // Remove after 3 seconds
+                            setTimeout(() => toast.remove(), 3000);
+                        }).catch(err => {
+                            console.error('Copy failed:', err);
+                            alert('Failed to copy. Please copy manually.');
+                        });
+                    }
+                </script>
+            @endpush
 
             <!-- Customer Information -->
             <div class="col-lg-4 mb-4">
@@ -514,38 +663,6 @@
                                 </table>
                             </div>
                         </div>
-
-                        <!-- Summary Card -->
-                        {{-- <div class="card border-0 shadow-sm bg-light mt-4">
-                            <div class="card-body p-3">
-                                <div class="row align-items-center">
-                                    <div class="col-md-6">
-                                        <div class="d-flex align-items-center">
-                                            <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3">
-                                                <i class="bi bi-box-seam text-primary fs-4"></i>
-                                            </div>
-                                            <div>
-                                                <h6 class="mb-0 text-muted">Total Items</h6>
-                                                <p class="fw-bold text-dark mb-0 fs-4">{{ $order->items->count() }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 text-end">
-                                        <div class="d-flex align-items-center justify-content-end">
-                                            <div class="me-3 text-end">
-                                                <h6 class="mb-1 text-muted">Grand Total</h6>
-                                                <p class="fw-bold text-success mb-0 fs-3">
-                                                    ₹{{ number_format($order->items->sum('total'), 2) }}
-                                                </p>
-                                            </div>
-                                            <div class="bg-success bg-opacity-10 p-3 rounded-3">
-                                                <i class="bi bi-currency-rupee text-success fs-3"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
                     </div>
 
                     <!-- Modal Footer -->

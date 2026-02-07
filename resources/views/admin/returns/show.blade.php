@@ -381,39 +381,343 @@
                         </form>
 
                         <!-- Refund Form (show only for approved/picked up returns) -->
+                        <!-- Refund Form (show only for approved/picked up returns) -->
                         @if (in_array($return->status, ['approved', 'picked_up']) && $return->return_type == 'refund')
                             <hr>
-                            <form action="{{ route('admin.returns.process-refund', $return->id) }}" method="POST">
-                                @csrf
-                                <h5>Process Refund</h5>
-                                <div class="form-group">
-                                    <label for="refund_amount">Refund Amount</label>
-                                    <input type="number" name="refund_amount" id="refund_amount" class="form-control"
-                                        step="0.01" min="0" max="{{ $return->amount }}"
-                                        value="{{ $return->amount }}" required>
+
+                            <!-- Payment Information from Original Order -->
+                            @if ($return->order && $return->order->payment_method)
+                                <div class="card border-info mb-3">
+                                    <div class="card-header bg-info bg-opacity-10 border-info">
+                                        <h6 class="mb-0"><i class="fas fa-credit-card me-2"></i>Original Payment
+                                            Information</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p class="mb-1 text-muted small">Payment Method</p>
+                                                <span
+                                                    class="badge bg-info">{{ strtoupper($return->order->payment_method) }}</span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p class="mb-1 text-muted small">Payment Status</p>
+                                                <span
+                                                    class="badge bg-{{ $return->order->payment_status == 'paid' ? 'success' : 'warning' }}">
+                                                    {{ ucfirst($return->order->payment_status) }}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Show Razorpay Transaction ID if exists -->
+                                        @if ($return->order->razorpay_payment_id)
+                                            <div class="mt-2">
+                                                <p class="mb-1 text-muted small">Razorpay Transaction ID</p>
+                                                <div class="d-flex align-items-center">
+                                                    <code class="bg-light p-2 rounded small flex-grow-1 text-truncate"
+                                                        title="{{ $return->order->razorpay_payment_id }}">
+                                                        {{ substr($return->order->razorpay_payment_id, 0, 25) }}...
+                                                    </code>
+                                                    <button class="btn btn-sm btn-outline-secondary ms-2"
+                                                        onclick="copyToClipboard('{{ $return->order->razorpay_payment_id }}')"
+                                                        title="Copy to clipboard">
+                                                        <i class="fas fa-copy"></i>
+                                                    </button>
+                                                    <a href="https://dashboard.razorpay.com/app/payments/{{ $return->order->razorpay_payment_id }}"
+                                                        target="_blank" class="btn btn-sm btn-outline-primary ms-2"
+                                                        title="View on Razorpay">
+                                                        <i class="fas fa-external-link-alt"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        <!-- Show original transaction ID -->
+                                        @if ($return->order->transaction_id && !$return->order->razorpay_payment_id)
+                                            <div class="mt-2">
+                                                <p class="mb-1 text-muted small">Transaction ID</p>
+                                                <code
+                                                    class="bg-light p-2 rounded d-block small">{{ $return->order->transaction_id }}</code>
+                                            </div>
+                                        @endif
+
+                                        @if ($return->order->payment_captured_at)
+                                            <div class="mt-2">
+                                                <p class="mb-1 text-muted small">Payment Date</p>
+                                                <p class="mb-0">
+                                                    {{ $return->order->payment_captured_at->format('d M Y, h:i A') }}</p>
+                                            </div>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="refund_method">Refund Method</label>
+                            @endif
+
+                            <!-- Refund Form -->
+                            <form action="{{ route('admin.returns.process-refund', $return->id) }}" method="POST"
+                                id="refundForm">
+                                @csrf
+                                <h5><i class="fas fa-undo me-2"></i>Process Refund</h5>
+
+                                <div class="form-group mb-3">
+                                    <label for="refund_amount" class="form-label">Refund Amount</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">₹</span>
+                                        <input type="number" name="refund_amount" id="refund_amount"
+                                            class="form-control" step="0.01" min="0"
+                                            max="{{ $return->amount }}" value="{{ $return->amount }}" required>
+                                        <span class="input-group-text">
+                                            <small class="text-muted">Max:
+                                                ₹{{ number_format($return->amount, 2) }}</small>
+                                        </span>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        Original order amount: ₹{{ number_format($return->order->total ?? 0, 2) }}
+                                    </small>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="refund_method" class="form-label">Refund Method</label>
                                     <select name="refund_method" id="refund_method" class="form-control" required>
-                                        <option value="original">Original Payment Method</option>
-                                        <option value="wallet">Store Credit/Wallet</option>
-                                        <option value="bank_transfer">Bank Transfer</option>
-                                        <option value="credit_card">Credit Card Refund</option>
+                                        @if ($return->order && $return->order->payment_method == 'razorpay')
+                                            <option value="original">Refund to Original Payment Method (Razorpay)</option>
+                                            <option value="wallet">Store Credit/Wallet</option>
+                                            <option value="bank_transfer">Bank Transfer</option>
+                                        @elseif($return->order && $return->order->payment_method == 'cod')
+                                            <option value="bank_transfer">Bank Transfer</option>
+                                            <option value="wallet">Store Credit/Wallet</option>
+                                        @else
+                                            <option value="original">Original Payment Method</option>
+                                            <option value="wallet">Store Credit/Wallet</option>
+                                            <option value="bank_transfer">Bank Transfer</option>
+                                            <option value="credit_card">Credit Card Refund</option>
+                                        @endif
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="transaction_id">Transaction ID (Optional)</label>
-                                    <input type="text" name="transaction_id" id="transaction_id" class="form-control"
-                                        placeholder="Refund transaction ID">
+
+                                <!-- Dynamic fields based on refund method -->
+                                <div id="refundMethodFields">
+                                    <!-- Fields will be shown based on selected method -->
                                 </div>
-                                <div class="form-group mb-1">
-                                    <label for="refund_notes">Refund Notes</label>
-                                    <textarea name="notes" id="refund_notes" class="form-control" rows="2"
-                                        placeholder="Notes about this refund..."></textarea>
+
+                                <div class="form-group mb-3">
+                                    <label for="transaction_id" class="form-label">Refund Transaction ID</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-receipt"></i></span>
+                                        <input type="text" name="transaction_id" id="transaction_id"
+                                            class="form-control"
+                                            placeholder="Enter refund transaction ID (e.g., REF_123456)">
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        Leave blank to auto-generate. Required for Razorpay refunds.
+                                    </small>
                                 </div>
-                                <button type="submit" class="btn btn-success btn-block">Process Refund</button>
+
+                                <div class="form-group mb-3">
+                                    <label for="refund_notes" class="form-label">Refund Notes</label>
+                                    <textarea name="notes" id="refund_notes" class="form-control" rows="3"
+                                        placeholder="Notes about this refund (reason, customer communication, etc.)"></textarea>
+                                </div>
+
+                                <!-- Refund Summary -->
+                                <div class="card border-secondary mb-3">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Refund Summary</h6>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Original Amount:</span>
+                                            <span>₹{{ number_format($return->amount, 2) }}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Refund Amount:</span>
+                                            <span id="refundSummary"
+                                                class="fw-bold text-success">₹{{ number_format($return->amount, 2) }}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span>Method:</span>
+                                            <span id="methodSummary">Original Payment Method</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-success btn-lg">
+                                        <i class="fas fa-check-circle me-2"></i> Process Refund
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="previewRefund()">
+                                        <i class="fas fa-eye me-2"></i> Preview Refund
+                                    </button>
+                                </div>
                             </form>
                         @endif
+
+                        @push('scripts')
+                            <script>
+                                $(document).ready(function() {
+                                    // Update refund summary
+                                    $('#refund_amount').on('input', function() {
+                                        var amount = $(this).val();
+                                        $('#refundSummary').text('₹' + parseFloat(amount).toFixed(2));
+                                    });
+
+                                    // Update method summary
+                                    $('#refund_method').on('change', function() {
+                                        var method = $(this).find('option:selected').text();
+                                        $('#methodSummary').text(method);
+
+                                        // Show/hide additional fields based on method
+                                        var html = '';
+                                        var selectedMethod = $(this).val();
+
+                                        if (selectedMethod === 'bank_transfer') {
+                                            html = `
+                <div class="form-group mb-3">
+                    <label for="bank_account" class="form-label">Bank Account Details</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" name="bank_name" class="form-control" placeholder="Bank Name">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" name="account_number" class="form-control" placeholder="Account Number">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <input type="text" name="account_holder" class="form-control" placeholder="Account Holder">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" name="ifsc_code" class="form-control" placeholder="IFSC Code">
+                        </div>
+                    </div>
+                </div>
+            `;
+                                        } else if (selectedMethod === 'wallet') {
+                                            html = `
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Refund will be added to customer's wallet. They can use it for future purchases.
+                </div>
+            `;
+                                        }
+
+                                        $('#refundMethodFields').html(html);
+                                    });
+
+                                    // Trigger change on load
+                                    $('#refund_method').trigger('change');
+
+                                    // Form validation
+                                    $('#refundForm').submit(function(e) {
+                                        var refundAmount = parseFloat($('#refund_amount').val());
+                                        var maxAmount = parseFloat($('#refund_amount').attr('max'));
+
+                                        if (refundAmount > maxAmount) {
+                                            e.preventDefault();
+                                            alert('Refund amount cannot exceed ₹' + maxAmount.toFixed(2));
+                                            $('#refund_amount').focus();
+                                            return false;
+                                        }
+
+                                        if (refundAmount <= 0) {
+                                            e.preventDefault();
+                                            alert('Refund amount must be greater than 0');
+                                            $('#refund_amount').focus();
+                                            return false;
+                                        }
+
+                                        // Ask for confirmation
+                                        if (!confirm('Are you sure you want to process this refund?\n\nAmount: ₹' + refundAmount
+                                                .toFixed(2) + '\nMethod: ' + $('#refund_method option:selected').text())) {
+                                            e.preventDefault();
+                                            return false;
+                                        }
+                                    });
+                                });
+
+                                // Copy to clipboard function
+                                function copyToClipboard(text) {
+                                    navigator.clipboard.writeText(text).then(() => {
+                                        const toast = document.createElement('div');
+                                        toast.className = 'position-fixed bottom-0 end-0 p-3';
+                                        toast.style.zIndex = '9999';
+                                        toast.innerHTML = `
+            <div class="toast align-items-center text-white bg-success border-0 show" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-check-circle me-2"></i>Copied to clipboard!
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        `;
+                                        document.body.appendChild(toast);
+
+                                        setTimeout(() => toast.remove(), 3000);
+                                    }).catch(err => {
+                                        console.error('Copy failed:', err);
+                                        alert('Failed to copy to clipboard');
+                                    });
+                                }
+
+                                // Preview refund function
+                                function previewRefund() {
+                                    var amount = $('#refund_amount').val();
+                                    var method = $('#refund_method option:selected').text();
+                                    var notes = $('#refund_notes').val();
+
+                                    var preview = `
+        <div class="modal fade" id="previewModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-info text-white">
+                        <h5 class="modal-title"><i class="fas fa-eye me-2"></i>Refund Preview</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th width="40%">Refund Amount:</th>
+                                    <td class="fw-bold text-success">₹${parseFloat(amount).toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                    <th>Refund Method:</th>
+                                    <td>${method}</td>
+                                </tr>
+                                <tr>
+                                    <th>Original Order:</th>
+                                    <td>${$return->order->order_number ?? 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Customer:</th>
+                                    <td>${$return->user->name ?? 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Original Payment:</th>
+                                    <td>${$return->order->payment_method ? $return->order->payment_method.toUpperCase() : 'N/A'}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        ${notes ? `<div class="alert alert-light mt-3"><strong>Notes:</strong><br>${notes}</div>` : ''}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success" onclick="$('#refundForm').submit()">
+                            <i class="fas fa-check-circle me-2"></i> Confirm & Process
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+                                    // Remove existing modal if any
+                                    $('#previewModal').remove();
+
+                                    // Add and show new modal
+                                    $('body').append(preview);
+                                    var previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+                                    previewModal.show();
+                                }
+                            </script>
+                        @endpush
 
                         <!-- Delete Button -->
                         <hr>

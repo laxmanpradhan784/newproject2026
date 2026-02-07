@@ -165,4 +165,21 @@ class Product extends Model
             ->where('product_id', $this->id)
             ->exists();
     }
+
+    /**
+     * Get all images for the product
+     */
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
+
+
+    /**
+     * Get the primary image
+     */
+    public function primaryImage()
+    {
+        return $this->hasOne(ProductImage::class)->where('is_primary', 1);
+    }
 }

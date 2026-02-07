@@ -329,10 +329,10 @@
                                             @endif
 
                                             <!-- Stock Information -->
-                                            <small class="text-muted d-block mt-2">
+                                            {{-- <small class="text-muted d-block mt-2">
                                                 <i class="fas fa-box me-1"></i>
                                                 {{ $product->stock }} in stock
-                                            </small>
+                                            </small> --}}
                                         @else
                                             <button class="btn btn-secondary w-100" disabled
                                                 style="padding: 12px; border-radius: 8px;">
