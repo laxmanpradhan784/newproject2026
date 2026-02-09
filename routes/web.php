@@ -311,3 +311,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         [ProductImageController::class, 'destroy']
     )->name('product.images.delete');
 });
+
+
+// In your admin routes
+Route::post('payments/{id}/mark-cod-paid', [APaymentController::class, 'markCODPaid'])
+    ->name('admin.payments.mark-cod-paid');

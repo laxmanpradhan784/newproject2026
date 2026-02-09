@@ -5,7 +5,7 @@
 @section('content')
     <div class="container-fluid px-4">
         <!-- Page Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
             <div>
                 <h1 class="h3 mb-0 text-primary">Order Details</h1>
                 <nav style="--bs-breadcrumb-divider: '›';" aria-label="breadcrumb">
@@ -31,7 +31,7 @@
 
         <div class="row">
             <!-- Order Summary -->
-            <div class="col-lg-4 mb-4">
+            <div class="col-lg-4 mb-2">
                 <div class="card shadow border-0 h-100">
                     <div class="card-header bg-primary text-white py-3">
                         <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i> Order Summary</h5>
@@ -50,7 +50,7 @@
                         </div>
 
                         <!-- Payment Information -->
-                        <div class="mb-3">
+                        <div class="mb-1">
                             <p class="mb-1 text-muted small">Payment Information</p>
                             <div class="border rounded p-3 bg-light">
                                 <!-- Payment Method & Status -->
@@ -59,59 +59,132 @@
                                         <span class="badge bg-info text-capitalize">{{ $order->payment_method }}</span>
                                         @if ($order->payment_method == 'razorpay')
                                             <span class="badge bg-primary ms-1">Online</span>
+                                        @elseif ($order->payment_method == 'cod')
+                                            <span class="badge bg-warning ms-1">Cash on Delivery</span>
                                         @endif
                                     </div>
                                     <span
-                                        class="badge bg-{{ $order->payment_status == 'paid' ? 'success' : ($order->payment_status == 'refunded' ? 'warning' : 'danger') }} text-capitalize">
+                                        class="badge bg-{{ $order->payment_status == 'paid' ? 'success' : ($order->payment_status == 'refunded' ? 'warning' : ($order->payment_status == 'failed' ? 'danger' : 'secondary')) }} text-capitalize">
                                         {{ $order->payment_status }}
                                     </span>
                                 </div>
 
-                                <!-- Transaction ID -->
-                                @if ($order->razorpay_payment_id)
-                                    <div class="mb-2">
-                                        <p class="mb-1 text-muted small">Transaction ID</p>
-                                        <div class="d-flex align-items-center">
-                                            <code class="bg-white p-1 rounded small flex-grow-1 text-truncate"
-                                                title="{{ $order->razorpay_payment_id }}">
-                                                {{ substr($order->razorpay_payment_id, 0, 20) }}...
-                                            </code>
-                                            <button class="btn btn-sm btn-outline-secondary ms-2"
-                                                onclick="copyToClipboard('{{ $order->razorpay_payment_id }}')"
-                                                title="Copy to clipboard">
-                                                <i class="fas fa-copy"></i>
-                                            </button>
+                                <!-- COD Payment Form -->
+                                @if ($order->payment_method == 'cod')
+                                    @if ($order->payment_status == 'pending')
+                                        <div class="mt-3">
+                                            <p class="mb-2 text-muted small">Update COD Status</p>
+                                            <form action="{{ route('admin.payments.mark-cod-paid', $order->id) }}"
+                                                method="POST" class="mb-3">
+                                                @csrf
+                                                <div class="row g-2">
+                                                    <div class="col-8">
+                                                        <select name="payment_status" class="form-select form-select-sm"
+                                                            required>
+                                                            <option value="">Select Status</option>
+                                                            <option value="paid">Mark as Collected</option>
+                                                            <option value="failed">Mark as Failed</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <button type="submit" class="btn btn-sm btn-warning w-100">
+                                                            Update
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
                                         </div>
-                                    </div>
-                                @endif
+                                    @elseif ($order->payment_status == 'paid')
+                                        <div class="mt-3">
+                                            <p class="mb-1 text-muted small">COD Collection Details</p>
+                                            <div class="alert alert-success py-2">
+                                                <i class="fas fa-check-circle me-2"></i>
+                                                <strong>COD Collected</strong>
+                                                @if ($order->payment_captured_at)
+                                                    <div class="small mt-1">
+                                                        Collected on:
+                                                        {{ $order->payment_captured_at->format('d M Y, h:i A') }}
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endif
 
-                                <!-- Razorpay Order ID -->
-                                @if ($order->razorpay_order_id)
-                                    <div class="mb-2">
-                                        <p class="mb-1 text-muted small">Razorpay Order ID</p>
-                                        <code class="bg-white p-1 rounded d-block small text-truncate"
-                                            title="{{ $order->razorpay_order_id }}">
-                                            {{ substr($order->razorpay_order_id, 0, 20) }}...
-                                        </code>
-                                    </div>
-                                @endif
+                                    <!-- COD Refund Option -->
+                                    @if ($order->payment_status == 'paid')
+                                        <div class="mt-3">
+                                            <a href="{{ route('admin.payments.show', $order->id) }}"
+                                                class="btn btn-sm btn-outline-warning w-100">
+                                                <i class="fas fa-undo me-1"></i> Process Refund
+                                            </a>
+                                        </div>
+                                    @endif
+                                @else
+                                    <!-- Online Payment Details -->
+                                    <!-- Transaction ID -->
+                                    @if ($order->razorpay_payment_id)
+                                        <div class="mb-2">
+                                            <p class="mb-1 text-muted small">Transaction ID</p>
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-white p-1 rounded small flex-grow-1 text-truncate"
+                                                    title="{{ $order->razorpay_payment_id }}">
+                                                    {{ substr($order->razorpay_payment_id, 0, 20) }}...
+                                                </div>
+                                                <form action="{{ route('admin.payments.index') }}" method="GET"
+                                                    class="ms-2">
+                                                    <input type="hidden" name="search"
+                                                        value="{{ $order->razorpay_payment_id }}">
+                                                    <button type="submit" class="btn btn-sm btn-outline-secondary"
+                                                        title="Search this payment">
+                                                        <i class="fas fa-search"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endif
 
-                                <!-- Payment Captured Time -->
-                                @if ($order->payment_captured_at)
-                                    <div>
-                                        <p class="mb-1 text-muted small">Paid On</p>
-                                        <p class="mb-0 small">{{ $order->payment_captured_at->format('d M Y, h:i A') }}</p>
-                                    </div>
-                                @endif
+                                    <!-- Razorpay Order ID -->
+                                    @if ($order->razorpay_order_id)
+                                        <div class="mb-2">
+                                            <p class="mb-1 text-muted small">Razorpay Order ID</p>
+                                            <div class="bg-white p-1 rounded small text-truncate"
+                                                title="{{ $order->razorpay_order_id }}">
+                                                {{ substr($order->razorpay_order_id, 0, 20) }}...
+                                            </div>
+                                        </div>
+                                    @endif
 
-                                <!-- View Payment Link -->
-                                @if ($order->razorpay_payment_id)
-                                    <div class="mt-3">
-                                        <a href="{{ route('admin.payments.index') }}?search={{ $order->razorpay_payment_id }}"
-                                            class="btn btn-sm btn-outline-primary w-100">
-                                            <i class="fas fa-search-dollar me-1"></i> View Payment Details
-                                        </a>
-                                    </div>
+                                    <!-- Payment Captured Time -->
+                                    @if ($order->payment_captured_at)
+                                        <div>
+                                            <p class="mb-1 text-muted small">Paid On</p>
+                                            <p class="mb-0 small">{{ $order->payment_captured_at->format('d M Y, h:i A') }}
+                                            </p>
+                                        </div>
+                                    @endif
+
+                                    <!-- View Payment Details Link -->
+                                    @if ($order->razorpay_payment_id)
+                                        <div class="mt-3">
+                                            <form action="{{ route('admin.payments.index') }}" method="GET">
+                                                <input type="hidden" name="search"
+                                                    value="{{ $order->razorpay_payment_id }}">
+                                                <button type="submit" class="btn btn-sm btn-outline-primary w-100">
+                                                    <i class="fas fa-search-dollar me-1"></i> View Payment Details
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @endif
+
+                                    <!-- Online Payment Refund Link -->
+                                    @if ($order->payment_status == 'paid' && $order->payment_method == 'razorpay')
+                                        <div class="mt-3">
+                                            <a href="{{ route('admin.payments.show', $order->id) }}"
+                                                class="btn btn-sm btn-outline-warning w-100">
+                                                <i class="fas fa-undo me-1"></i> Process Refund
+                                            </a>
+                                        </div>
+                                    @endif
                                 @endif
                             </div>
                         </div>
@@ -189,7 +262,7 @@
                         </div>
 
                         <!-- Quick Actions -->
-                        <div class="mt-4">
+                        {{-- <div class="mt-4">
                             <div class="btn-group w-100" role="group">
                                 @if ($order->payment_status == 'paid' && $order->payment_method == 'razorpay')
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
@@ -203,7 +276,7 @@
                                     <i class="fas fa-file-invoice me-1"></i> Invoice
                                 </a>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -253,7 +326,7 @@
                         <div class="customer-info">
                             <div class="d-flex align-items-center mb-3">
                                 @if ($order->user->profile_image)
-                                    <img src="{{ asset('storage/profile-images/' . $order->user->profile_image) }}"
+                                    <img src="{{ asset('uploads/profile-images/' . $order->user->profile_image) }}"
                                         alt="{{ $order->user->name }}" class="rounded-circle me-3"
                                         style="width: 60px; height: 60px; object-fit: cover;">
                                 @else
@@ -289,7 +362,7 @@
                     <div class="card-header bg-warning text-dark py-3">
                         <h5 class="mb-0"><i class="fas fa-cog me-2"></i> Order Actions</h5>
                     </div>
-                    <div class="card-body"> 
+                    <div class="card-body">
                         <!-- Current Status -->
                         <div class="mb-4">
                             <h6 class="fw-bold mb-3">Current Status</h6>

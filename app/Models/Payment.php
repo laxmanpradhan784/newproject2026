@@ -29,7 +29,8 @@ class Payment extends Model
         'refund_amount',
         'refund_id',
         'refund_status',
-        'refunded_at'
+        'refunded_at',
+        'payment_type' // Add this: 'online' or 'offline'
     ];
 
     protected $casts = [
@@ -37,6 +38,17 @@ class Payment extends Model
         'amount' => 'decimal:2',
         'refund_amount' => 'decimal:2',
     ];
+
+    // Add these scopes
+    public function scopeOnline($query)
+    {
+        return $query->where('payment_type', 'online')->orWhereNotNull('razorpay_payment_id');
+    }
+
+    public function scopeOffline($query)
+    {
+        return $query->where('payment_type', 'offline')->orWhere('payment_method', 'cod');
+    }
 
     public function order()
     {

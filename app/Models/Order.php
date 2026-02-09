@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Order extends Model
 {
@@ -32,7 +33,7 @@ class Order extends Model
         'coupon_id',
         'coupon_code',
         'discount_amount',
-        'delivered_at', // Add this if you need return tracking
+        'delivered_at',
     ];
 
     protected $casts = [
@@ -40,10 +41,17 @@ class Order extends Model
         'shipping' => 'decimal:2',
         'tax' => 'decimal:2',
         'total' => 'decimal:2',
-        'delivered_at' => 'datetime', // Add this
+        'delivered_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+
+    // Add this payments relationship
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
 
     // Relationships
     public function user()
@@ -238,5 +246,4 @@ class Order extends Model
     {
         return $this->total + $this->discount_amount;
     }
-
 }

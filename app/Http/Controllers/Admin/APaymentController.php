@@ -22,16 +22,16 @@ class APaymentController extends Controller
         // Apply filters
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('razorpay_payment_id', 'like', "%{$search}%")
-                  ->orWhere('razorpay_order_id', 'like', "%{$search}%")
-                  ->orWhereHas('order', function($q) use ($search) {
-                      $q->where('order_number', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('user', function($q) use ($search) {
-                      $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%");
-                  });
+                    ->orWhere('razorpay_order_id', 'like', "%{$search}%")
+                    ->orWhereHas('order', function ($q) use ($search) {
+                        $q->where('order_number', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('user', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -52,7 +52,7 @@ class APaymentController extends Controller
         }
 
         $payments = $query->orderBy('created_at', 'desc')->paginate(20);
-        
+
         // Get filter options
         $paymentMethods = Payment::distinct()->pluck('payment_method')->filter();
         $statuses = Payment::distinct()->pluck('status')->filter();
@@ -69,7 +69,7 @@ class APaymentController extends Controller
     public function show($id)
     {
         $payment = Payment::with(['order.items.product', 'user'])->findOrFail($id);
-        
+
         return view('admin.payments.show', compact('payment'));
     }
 
@@ -142,9 +142,9 @@ class APaymentController extends Controller
         try {
             // Here you would integrate with Razorpay refund API
             // For now, we'll just update the database
-            
+
             $refundId = 'REF_' . strtoupper(uniqid());
-            
+
             $payment->update([
                 'refund_amount' => ($payment->refund_amount ?? 0) + $request->refund_amount,
                 'refund_id' => $refundId,
@@ -176,7 +176,6 @@ class APaymentController extends Controller
                 ->log('processed_refund');
 
             return back()->with('success', 'Refund processed successfully. Refund ID: ' . $refundId);
-
         } catch (\Exception $e) {
             return back()->with('error', 'Failed to process refund: ' . $e->getMessage());
         }
@@ -188,13 +187,13 @@ class APaymentController extends Controller
     public function export(Request $request)
     {
         $payments = Payment::with(['order', 'user'])
-            ->when($request->filled('date_from'), function($q) use ($request) {
+            ->when($request->filled('date_from'), function ($q) use ($request) {
                 $q->whereDate('created_at', '>=', $request->date_from);
             })
-            ->when($request->filled('date_to'), function($q) use ($request) {
+            ->when($request->filled('date_to'), function ($q) use ($request) {
                 $q->whereDate('created_at', '<=', $request->date_to);
             })
-            ->when($request->filled('status'), function($q) use ($request) {
+            ->when($request->filled('status'), function ($q) use ($request) {
                 $q->where('status', $request->status);
             })
             ->orderBy('created_at', 'desc')
@@ -205,9 +204,9 @@ class APaymentController extends Controller
             'Content-Disposition' => 'attachment; filename="payments_' . date('Y-m-d') . '.csv"',
         ];
 
-        $callback = function() use ($payments) {
+        $callback = function () use ($payments) {
             $file = fopen('php://output', 'w');
-            
+
             // Add CSV headers
             fputcsv($file, [
                 'ID',
@@ -263,10 +262,10 @@ class APaymentController extends Controller
     {
         // Daily payment data for chart (last 30 days)
         $dailyData = Payment::select(
-                DB::raw('DATE(created_at) as date'),
-                DB::raw('COUNT(*) as count'),
-                DB::raw('SUM(amount) as amount')
-            )
+            DB::raw('DATE(created_at) as date'),
+            DB::raw('COUNT(*) as count'),
+            DB::raw('SUM(amount) as amount')
+        )
             ->where('status', 'captured')
             ->whereDate('created_at', '>=', Carbon::now()->subDays(30))
             ->groupBy('date')
@@ -275,10 +274,10 @@ class APaymentController extends Controller
 
         // Payment methods distribution
         $methodDistribution = Payment::select(
-                'payment_method',
-                DB::raw('COUNT(*) as count'),
-                DB::raw('SUM(amount) as amount')
-            )
+            'payment_method',
+            DB::raw('COUNT(*) as count'),
+            DB::raw('SUM(amount) as amount')
+        )
             ->whereNotNull('payment_method')
             ->where('status', 'captured')
             ->groupBy('payment_method')
@@ -293,9 +292,9 @@ class APaymentController extends Controller
         $stats = $this->getPaymentStatistics();
 
         return view('admin.payments.dashboard', compact(
-            'dailyData', 
-            'methodDistribution', 
-            'recentPayments', 
+            'dailyData',
+            'methodDistribution',
+            'recentPayments',
             'stats'
         ));
     }
@@ -341,5 +340,48 @@ class APaymentController extends Controller
         ];
 
         return response()->json($data);
+    }
+
+    public function markCODPaid(Request $request, $id)
+    {
+        $request->validate([
+            'payment_status' => 'required|in:paid,failed'
+        ]);
+
+        $order = Order::findOrFail($id);
+
+        if ($order->payment_method !== 'cod') {
+            return back()->with('error', 'Only COD orders can be marked as collected.');
+        }
+
+        try {
+            // Update order payment status
+            $order->update([
+                'payment_status' => $request->payment_status,
+                'payment_captured_at' => $request->payment_status == 'paid' ? now() : null,
+            ]);
+
+            // Create or update payment record for COD
+            if ($request->payment_status == 'paid') {
+                Payment::updateOrCreate(
+                    ['order_id' => $order->id, 'payment_method' => 'cod'],
+                    [
+                        'user_id' => $order->user_id,
+                        'amount' => $order->total,
+                        'currency' => 'INR',
+                        'payment_method' => 'cod',
+                        'payment_type' => 'offline',
+                        'status' => 'captured',
+                        'created_at' => $order->created_at,
+                    ]
+                );
+            }
+
+            $statusMessage = $request->payment_status == 'paid' ? 'COD payment marked as collected successfully.' : 'COD payment marked as failed.';
+
+            return back()->with('success', $statusMessage);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to update COD status: ' . $e->getMessage());
+        }
     }
 }
