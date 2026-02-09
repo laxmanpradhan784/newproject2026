@@ -113,10 +113,10 @@
 
     <!-- Navigation Links - Police Style -->
     <div class="sidebar-nav p-3">
-        <div class="section-title mb-3">
+        {{-- <div class="section-title mb-3">
             <i class="bi bi-list-task me-2"></i>
             <span class="text-uppercase small fw-bold">NAVIGATION</span>
-        </div>
+        </div> --}}
 
         <ul class="nav flex-column">
             <!-- Dashboard -->
@@ -185,7 +185,7 @@
                         <i class="fas fa-images"></i>
                     </div>
 
-                    <div class="nav-text">PRODUCT IMAGES</div>
+                    <div class="nav-text"> PRO IMAGES</div>
 
                     <div class="ms-auto">
                         <span class="badge police-badge-alert bg-info">

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 07, 2026 at 10:37 AM
+-- Generation Time: Feb 09, 2026 at 08:33 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -63,13 +63,6 @@ CREATE TABLE `carts` (
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `carts`
---
-
-INSERT INTO `carts` (`id`, `user_id`, `session_id`, `guest_token`, `is_guest`, `product_id`, `quantity`, `price`, `created_at`, `updated_at`) VALUES
-(1, 103, NULL, NULL, 0, 1, 3, 29999.00, '2026-02-07 03:28:29', '2026-02-07 03:36:03');
 
 -- --------------------------------------------------------
 
@@ -193,6 +186,13 @@ CREATE TABLE `coupon_usages` (
   `used_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `coupon_usages`
+--
+
+INSERT INTO `coupon_usages` (`id`, `coupon_id`, `user_id`, `order_id`, `discount_amount`, `original_total`, `final_total`, `used_at`) VALUES
+(1, 2, 103, 1, 500.00, 47497.00, 55456.46, '2026-02-09 05:34:15');
+
 -- --------------------------------------------------------
 
 --
@@ -277,7 +277,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (1, '0001_01_01_000000_create_users_table', 1),
 (2, '0001_01_01_000001_create_cache_table', 1),
 (3, '0001_01_01_000002_create_jobs_table', 1),
-(4, '2026_01_27_060556_add_google_id_to_users_table', 2);
+(4, '2026_01_27_060556_add_google_id_to_users_table', 2),
+(5, '2026_02_07_104521_create_product_images_table', 3);
 
 -- --------------------------------------------------------
 
@@ -322,6 +323,13 @@ CREATE TABLE `orders` (
   `payment_captured_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `order_number`, `razorpay_order_id`, `razorpay_payment_id`, `razorpay_signature`, `user_id`, `subtotal`, `shipping`, `tax`, `total`, `status`, `payment_method`, `payment_gateway`, `payment_status`, `shipping_name`, `shipping_email`, `shipping_phone`, `shipping_address`, `shipping_city`, `shipping_state`, `shipping_zip`, `shipping_country`, `shipping_method`, `created_at`, `updated_at`, `delivered_at`, `cancelled_at`, `transaction_id`, `gateway_response`, `coupon_id`, `coupon_code`, `discount_amount`, `payment_captured`, `payment_captured_at`) VALUES
+(1, 'ORD-260209-053329-1035756', NULL, NULL, NULL, 103, 47497.00, 0.00, 8459.46, 55456.46, 'processing', 'razorpay', NULL, 'paid', 'LAXMAN PRADHAN', 'laxmanpradhan784@gmail.com', '9913817411', '531 apexa nagar bamroli road surat', 'surat', 'guurat', '394221', 'India', 'standard', '2026-02-09 00:03:29', '2026-02-09 00:04:15', NULL, NULL, NULL, NULL, 2, 'FLAT500', 500.00, 0, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -341,6 +349,15 @@ CREATE TABLE `order_items` (
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `product_name`, `quantity`, `price`, `total`, `category_id`, `category_name`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'Smartphone X', 1, 29999.00, 29999.00, 1, 'Electronics', '2026-02-09 00:04:15', '2026-02-09 00:04:15'),
+(2, 1, 2, 'Wireless Earbuds Pro', 1, 4499.00, 4499.00, 1, 'Electronics', '2026-02-09 00:04:15', '2026-02-09 00:04:15'),
+(3, 1, 3, 'Smart Watch Series 6', 1, 12999.00, 12999.00, 1, 'Electronics', '2026-02-09 00:04:15', '2026-02-09 00:04:15');
 
 -- --------------------------------------------------------
 
@@ -387,6 +404,13 @@ CREATE TABLE `payments` (
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`id`, `order_id`, `user_id`, `razorpay_order_id`, `razorpay_payment_id`, `razorpay_signature`, `amount`, `currency`, `payment_method`, `payment_gateway`, `bank`, `card_type`, `wallet`, `vpa`, `status`, `gateway_response`, `error_code`, `error_description`, `refund_amount`, `refund_id`, `refund_status`, `refunded_at`, `created_at`, `updated_at`) VALUES
+(2, 1, 103, 'order_SDvurfJhvBwFUF', 'pay_SDvvKkPVeMCfJk', '344ca66e780478b30a2ed3f3701342266a55f9542640d862e96a1738e9f4f364', 55456.46, 'INR', 'card', 'razorpay', NULL, NULL, NULL, NULL, 'captured', '\"{}\"', NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-09 00:04:15', '2026-02-09 00:04:15');
+
 -- --------------------------------------------------------
 
 --
@@ -432,9 +456,9 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `image`, `description`, `price`, `stock`, `rating`, `review_count`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Smartphone X', 'smartphone-x', 'product_1770451330_7ZmQ501nEx.jpg', 'Latest smartphone with 128GB storage, 48MP camera', 29999.00, 47, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-07 09:26:57'),
-(2, 1, 'Wireless Earbuds Pro', 'wireless-earbuds-pro', 'product_1770451279_oItdOJ3KZz.jpg', 'Noise cancelling wireless earbuds with 30hr battery', 4499.00, 100, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-07 02:31:19'),
-(3, 1, 'Smart Watch Series 6', 'smart-watch-series-6', 'product_1770451243_a6imvra10y.jpg', 'Health tracking smartwatch with GPS and heart monitor', 12999.00, 30, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-07 02:30:43'),
+(1, 1, 'Smartphone X', 'smartphone-x', 'product_1770451330_7ZmQ501nEx.jpg', 'Latest smartphone with 128GB storage, 48MP camera', 29999.00, 48, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-09 00:04:15'),
+(2, 1, 'Wireless Earbuds Pro', 'wireless-earbuds-pro', 'product_1770451279_oItdOJ3KZz.jpg', 'Noise cancelling wireless earbuds with 30hr battery', 4499.00, 98, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-09 00:04:15'),
+(3, 1, 'Smart Watch Series 6', 'smart-watch-series-6', 'product_1770451243_a6imvra10y.jpg', 'Health tracking smartwatch with GPS and heart monitor', 12999.00, 28, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-09 00:04:15'),
 (4, 2, 'Men\'s Casual Shirt', 'mens-casual-shirt', 'product_1770451182_01K2R69cqH.jpg', 'Cotton casual shirt for men, available in multiple colors', 1299.00, 80, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-07 02:29:42'),
 (5, 2, 'Women\'s Summer Dress', 'womens-summer-dress', 'product_1770449706_XeHm76elEt.jpg', 'Floral print cotton summer dress, perfect for summer', 2499.00, 60, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-07 02:05:06'),
 (6, 2, 'Leather Formal Shoes', 'leather-formal-shoes', 'product_1770449664_R49W7yWNo5.jpg', 'Premium leather formal shoes for men, comfortable fit', 3899.00, 40, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-07 02:04:24'),
@@ -465,6 +489,56 @@ CREATE TABLE `product_images` (
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product_images`
+--
+
+INSERT INTO `product_images` (`id`, `product_id`, `image`, `thumbnail`, `alt_text`, `is_primary`, `sort_order`, `created_at`, `updated_at`) VALUES
+(1, 1, '1770614015_69896cff41403.png', NULL, 'Smartphone X Front View', 1, 1, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(2, 1, '1770614015_69896cff41403.png', NULL, 'Smartphone X Back View', 0, 2, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(3, 1, '1770614015_69896cff41403.png', NULL, 'Smartphone X Side View', 0, 3, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(4, 2, '1770614015_69896cff41403.png', NULL, 'Earbuds Pro with Case', 1, 1, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(5, 2, '1770614015_69896cff41403.png', NULL, 'Earbuds Pro in Ear', 0, 2, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(6, 2, '1770614015_69896cff41403.png', NULL, 'Earbuds Pro Charging', 0, 3, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(7, 3, '1770614015_69896cff41403.png', NULL, 'Smart Watch Face', 1, 1, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(8, 3, '1770614015_69896cff41403.png', NULL, 'Smart Watch Band', 0, 2, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(9, 3, '1770614015_69896cff41403.png', NULL, 'Smart Watch Display', 0, 3, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(10, 3, '1770614015_69896cff41403.png', NULL, 'Smart Watch Charger', 0, 4, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(11, 3, '1770614015_69896cff41403.png', NULL, 'Smart Watch Box', 0, 5, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(12, 4, '1770614015_69896cff41403.png', NULL, 'Shirt Front View', 1, 1, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(13, 4, '1770614015_69896cff41403.png', NULL, 'Shirt Back View', 0, 2, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(14, 5, '1770614015_69896cff41403.png', NULL, 'Dress Front View', 1, 1, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(15, 6, '1770614015_69896cff41403.png', NULL, 'Shoes Front View', 1, 1, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(16, 6, '1770614015_69896cff41403.png', NULL, 'Shoes Side View', 0, 2, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(17, 6, '1770614015_69896cff41403.png', NULL, 'Shoes Bottom View', 0, 3, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(18, 7, '1770614015_69896cff41403.png', NULL, 'Cookware Set', 1, 1, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(19, 7, '1770614015_69896cff41403.png', NULL, 'Pan Closeup', 0, 2, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(20, 7, '1770614015_69896cff41403.png', NULL, 'Pot Closeup', 0, 3, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(21, 7, '1770614015_69896cff41403.png', NULL, 'Lid Closeup', 0, 4, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(22, 8, '1770614015_69896cff41403.png', NULL, 'Air Fryer Front', 1, 1, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(23, 8, '1770614015_69896cff41403.png', NULL, 'Air Fryer Controls', 0, 2, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(24, 9, '1770614015_69896cff41403.png', NULL, 'Bed Sheet Full Set', 1, 1, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(25, 9, '1770614015_69896cff41403.png', NULL, 'Sheet Pattern Closeup', 0, 2, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(26, 9, '1770614015_69896cff41403.png', NULL, 'Pillow Cover Closeup', 0, 3, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(27, 10, '1770614015_69896cff41403.png', NULL, 'Serum Bottle', 1, 1, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(28, 11, '1770614015_69896cff41403.png', NULL, 'Face Wash Tube', 1, 1, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(29, 11, '1770614015_69896cff41403.png', NULL, 'Face Wash Lather', 0, 2, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(30, 12, '1770614015_69896cff41403.png', NULL, 'Sunscreen Bottle', 1, 1, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(31, 12, '1770614015_69896cff41403.png', NULL, 'Sunscreen Texture', 0, 2, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(32, 12, '1770614015_69896cff41403.png', NULL, 'Sunscreen Application', 0, 3, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(33, 13, '1770614015_69896cff41403.png', NULL, 'Yoga Mat Rolled', 1, 1, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(34, 13, '1770614015_69896cff41403.png', NULL, 'Yoga Mat Unrolled', 0, 2, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(35, 13, '1770614015_69896cff41403.png', NULL, 'Yoga Mat Texture', 0, 3, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(36, 13, '1770614015_69896cff41403.png', NULL, 'Yoga Mat Strap', 0, 4, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(37, 14, '1770614015_69896cff41403.png', NULL, 'Dumbbell Set Full', 1, 1, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(38, 14, '1770614015_69896cff41403.png', NULL, 'Single Dumbbell', 0, 2, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(39, 14, '1770614015_69896cff41403.png', NULL, 'Weight Plates', 0, 3, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(40, 15, '1770614015_69896cff41403.png', NULL, 'Running Shoes Front', 1, 1, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(41, 15, '1770614015_69896cff41403.png', NULL, 'Running Shoes Side', 0, 2, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(42, 15, '1770614015_69896cff41403.png', NULL, 'Running Shoes Back', 0, 3, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(43, 15, '1770614015_69896cff41403.png', NULL, 'Running Shoes Sole', 0, 4, '2026-02-09 05:21:33', '2026-02-09 05:21:33'),
+(44, 15, '1770614015_69896cff41403.png', NULL, 'Running Shoes Box', 0, 5, '2026-02-09 05:21:33', '2026-02-09 05:21:33');
 
 -- --------------------------------------------------------
 
@@ -859,7 +933,7 @@ CREATE TABLE `reviews` (
 --
 
 INSERT INTO `reviews` (`id`, `product_id`, `user_id`, `order_id`, `rating`, `title`, `comment`, `status`, `is_verified_purchase`, `helpful_yes`, `helpful_no`, `report_count`, `admin_response`, `response_date`, `created_at`, `updated_at`) VALUES
-(1, 1, 103, NULL, 5, 'good product', 'this is very  about this products', 'pending', 0, 0, 0, 0, NULL, NULL, '2026-02-07 03:36:51', '2026-02-07 03:36:51');
+(1, 1, 103, NULL, 5, 'good product', 'this is very  about this products', 'approved', 0, 0, 0, 0, NULL, NULL, '2026-02-07 03:36:51', '2026-02-09 00:11:27');
 
 -- --------------------------------------------------------
 
@@ -881,8 +955,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('UTyoqsKVeRjHvh15TJpHZfiNqKEg2ApUdyvneq3b', 103, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiMXVkSmx2M29HaGx3czFzRElLOTFzVHM1SzZBVm5RWm9CS1hGMUdpNyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDU6Imh0dHA6Ly9sb2NhbGhvc3QvZS1jb21tbWVyY2UvcHVibGljL3Byb2R1Y3QvMSI7czo1OiJyb3V0ZSI7czoxMjoicHJvZHVjdC5zaG93Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTAzO3M6MTc6ImNhcnRfbWVyZ2VkX2l0ZW1zIjtpOjM7czoxOToiY2FydF9tZXJnZWRfbWVzc2FnZSI7czo0OToiU3VjY2Vzc2Z1bGx5IG1lcmdlZCAzIGl0ZW1zIGZyb20geW91ciBndWVzdCBjYXJ0ISI7fQ==', 1770456869),
-('XKFUkAxxUlIQJNU3Dxuws9GiSlUNUvkpFDr64C3B', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiZEZTeUpzaTlMbERwRHVhM2dYQTVmZ05iWkNpcWxUTXZEZmdxTUsxQyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6Ik81bzJwNWgxdDRQS1pGQmdteWZpNUxES2dHc1NDSTgyIjtzOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo1MDoiaHR0cDovL2xvY2FsaG9zdC9lLWNvbW1tZXJjZS9wdWJsaWMvYWRtaW4vcHJvZHVjdHMiO3M6NToicm91dGUiO3M6MTQ6ImFkbWluLnByb2R1Y3RzIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1770454571);
+('bTFQEMpKpOuoNkRDJfzLr5IaYWpH0TFDJzYrYFlu', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiOGF5QUZhOE1OMmFWS2h6UnpFRFhTdEhqc2hFaHdTT2xCVnQzS1RydyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NjA6Imh0dHA6Ly9sb2NhbGhvc3QvZS1jb21tbWVyY2UvcHVibGljL2FkbWluL3BheW1lbnRzL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoyNDoiYWRtaW4ucGF5bWVudHMuZGFzaGJvYXJkIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6ImlqRlZaQjkxNVgzYzFvSlVnYTBtNm9pSWhObXNPak9lIjtzOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1770622419),
+('sZk0GXs1f4xp6BuMHg9eakZwsRCHKjbCpMzMvdRb', 103, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiek51dmFqTW5sSW5wNkZNMGFHVTYwOWNoaEZibWJEUzMzTGFPdnJwcyI7czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6Ims5cnh4T092cEVidVRRdjFHQmpHY2hYaUtPNkNWYjZzIjtzOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czozNToiaHR0cDovL2xvY2FsaG9zdC9lLWNvbW1tZXJjZS9wdWJsaWMiO3M6NToicm91dGUiO3M6NDoiaG9tZSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MzoidXJsIjthOjE6e3M6ODoiaW50ZW5kZWQiO3M6NDQ6Imh0dHA6Ly9sb2NhbGhvc3QvZS1jb21tbWVyY2UvcHVibGljL3dpc2hsaXN0Ijt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTAzO30=', 1770622402);
 
 -- --------------------------------------------------------
 
@@ -956,6 +1030,7 @@ CREATE TABLE `users` (
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `phone` varchar(20) DEFAULT NULL,
+  `profile_image` varchar(255) DEFAULT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `role` enum('user','admin') NOT NULL DEFAULT 'user',
@@ -969,12 +1044,12 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `phone`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`, `google_id`) VALUES
-(1, 'Admin User', 'admin@example.com', '1234567890', NULL, '$2y$12$aGSDTCEDK7do1Rk5lxH74uL6B7auOqExL.anLNbXvzxwD8k3jqAC2', 'admin', NULL, '2026-01-22 10:56:12', '2026-01-24 03:31:44', NULL),
-(100, 'John Doe', 'john@example.com', '9876543210', NULL, '$2y$12$hashedpassword', 'user', NULL, '2026-02-07 07:21:47', '2026-02-07 07:21:47', NULL),
-(101, 'Jane Smith', 'jane@example.com', '9876543211', NULL, '$2y$12$hashedpassword', 'user', NULL, '2026-02-07 07:21:47', '2026-02-07 07:21:47', NULL),
-(102, 'Test Customer', 'customer@example.com', '9876543212', NULL, '$2y$12$hashedpassword', 'user', NULL, '2026-02-07 07:21:47', '2026-02-07 07:21:47', NULL),
-(103, 'LAXMAN PRADHAN', 'laxmanpradhan784@gmail.com', '9913817411', NULL, '$2y$12$h48zIlQqzEREuTaoq9avk.bo2XVQjE8KL0DDsYZXLGHwDubyS/rCi', 'user', NULL, '2026-02-07 01:53:46', '2026-02-07 01:54:18', NULL);
+INSERT INTO `users` (`id`, `name`, `email`, `phone`, `profile_image`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`, `google_id`) VALUES
+(1, 'Admin User', 'admin@example.com', '1234567890', NULL, NULL, '$2y$12$aGSDTCEDK7do1Rk5lxH74uL6B7auOqExL.anLNbXvzxwD8k3jqAC2', 'admin', NULL, '2026-01-22 10:56:12', '2026-01-24 03:31:44', NULL),
+(100, 'John Doe', 'john@example.com', '9876543210', NULL, NULL, '$2y$12$hashedpassword', 'user', NULL, '2026-02-07 07:21:47', '2026-02-07 07:21:47', NULL),
+(101, 'Jane Smith', 'jane@example.com', '9876543211', NULL, NULL, '$2y$12$hashedpassword', 'user', NULL, '2026-02-07 07:21:47', '2026-02-07 07:21:47', NULL),
+(102, 'Test Customer', 'customer@example.com', '9876543212', NULL, NULL, '$2y$12$hashedpassword', 'user', NULL, '2026-02-07 07:21:47', '2026-02-07 07:21:47', NULL),
+(103, 'LAXMAN PRADHAN', 'laxmanpradhan784@gmail.com', '9913817411', 'profile_103_1770622226.jpg', NULL, '$2y$12$h48zIlQqzEREuTaoq9avk.bo2XVQjE8KL0DDsYZXLGHwDubyS/rCi', 'user', NULL, '2026-02-07 01:53:46', '2026-02-09 02:00:26', NULL);
 
 -- --------------------------------------------------------
 
@@ -1195,8 +1270,7 @@ ALTER TABLE `products`
 -- Indexes for table `product_images`
 --
 ALTER TABLE `product_images`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `product_images_product_id_foreign` (`product_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `product_return_history`
@@ -1437,7 +1511,7 @@ ALTER TABLE `wishlists`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -1473,7 +1547,7 @@ ALTER TABLE `coupon_products`
 -- AUTO_INCREMENT for table `coupon_usages`
 --
 ALTER TABLE `coupon_usages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `coupon_users`
@@ -1497,25 +1571,25 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `payment_logs`
@@ -1533,7 +1607,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `product_images`
 --
 ALTER TABLE `product_images`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `product_return_history`
@@ -1764,12 +1838,6 @@ ALTER TABLE `payment_logs`
 --
 ALTER TABLE `products`
   ADD CONSTRAINT `products_category_fk` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `product_images`
---
-ALTER TABLE `product_images`
-  ADD CONSTRAINT `product_images_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `product_return_history`

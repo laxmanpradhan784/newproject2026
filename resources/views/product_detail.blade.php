@@ -116,14 +116,14 @@
                                                     @foreach ($allImages as $index => $image)
                                                         <div class="col-3">
                                                             <div class="thumbnail-item border rounded-2 overflow-hidden cursor-pointer p-1 
-                    {{ ($image->is_primary ?? false) || $index === 0 ? 'border-primary border-2' : 'border-light' }}"
+                                                                {{ ($image->is_primary ?? false) || $index === 0 ? 'border-primary border-2' : 'border-light' }}"
                                                                 style="height: 50px; background: #f8f9fa;"
                                                                 onclick="changeMainImage(
-                            '{{ asset('uploads/product-images/' . $image->image) }}', 
-                            '{{ $image->alt_text ?? $product->name }}', 
-                            this, 
-                            {{ $index }}
-                        )">
+                                                                '{{ asset('uploads/product-images/' . $image->image) }}', 
+                                                                '{{ $image->alt_text ?? $product->name }}', 
+                                                                this, 
+                                                                {{ $index }}
+                                                            )">
 
                                                                 <img src="{{ asset('uploads/product-images/' . $image->image) }}"
                                                                     class="w-100 h-100 object-fit-cover rounded-1"
@@ -418,10 +418,10 @@
                                                         <h5 class="fw-bold text-dark">Premium Product</h5>
                                                         <p class="text-muted small">Certified quality product with warranty
                                                         </p>
-                                                        <div class="d-grid">
+                                                        {{-- <div class="d-grid">
                                                             <button class="btn btn-outline-primary">View Warranty
                                                                 Details</button>
-                                                        </div>
+                                                        </div> --}}
                                                     </div>
                                                 </div>
                                             </div>

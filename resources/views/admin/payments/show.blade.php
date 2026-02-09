@@ -23,7 +23,7 @@
                             <table class="table table-bordered">
                                 <tr>
                                     <th width="40%">Payment ID:</th>
-                                    <td>#{{ $payment->id }}</td>
+                                    <td>{{ $payment->id }}</td>
                                 </tr>
                                 <tr>
                                     <th>Order:</th>
@@ -68,13 +68,13 @@
                                     <th width="40%">Status:</th>
                                     <td>
                                         @if($payment->status == 'captured')
-                                            <span class="badge badge-success">Successful</span>
+                                            <span class="badge text-primary badge-success">Successful</span>
                                         @elseif($payment->status == 'failed')
-                                            <span class="badge badge-danger">Failed</span>
+                                            <span class="badge text-primary badge-danger">Failed</span>
                                         @elseif($payment->status == 'refunded')
-                                            <span class="badge badge-warning">Refunded</span>
+                                            <span class="badge text-primary badge-warning">Refunded</span>
                                         @else
-                                            <span class="badge badge-secondary">{{ ucfirst($payment->status) }}</span>
+                                            <span class="badge text-primary badge-secondary">{{ ucfirst($payment->status) }}</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -211,7 +211,7 @@
                 </div>
                 <div class="card-body">
                     <p><strong>Order Status:</strong> 
-                        <span class="badge badge-{{ $payment->order->status == 'delivered' ? 'success' : 'info' }}">
+                        <span class="badge text-primary badge-{{ $payment->order->status == 'delivered' ? 'success' : 'info' }}">
                             {{ ucfirst($payment->order->status) }}
                         </span>
                     </p>

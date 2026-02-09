@@ -33,21 +33,6 @@
             </div>
         </div>
 
-        <!-- Flash Messages -->
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i> {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
         <!-- Main Content - Compact Design -->
         <div class="row">
             <!-- Product Selector -->
@@ -155,7 +140,7 @@
                                     @foreach ($selectedProduct->images as $img)
                                         <div class="col">
                                             <div class="card border-0 shadow-sm h-100">
-                                                <img src="{{ asset('storage/' . $img->image) }}"
+                                                <img src="{{ asset('uploads/product-images/' . $img->image) }}"
                                                     class="card-img-top" style="height: 120px; object-fit: cover;"
                                                     alt="Product Image">
                                                 <div class="card-body p-2 text-center">

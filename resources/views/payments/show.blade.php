@@ -96,13 +96,13 @@
                     </div>
                     @endif
                     
-                    @if($payment->gateway_response)
+                    {{-- @if($payment->gateway_response)
                     <hr>
                     <h5>Gateway Response</h5>
                     <pre class="bg-light p-3" style="max-height: 300px; overflow: auto;">
 {{ json_encode($payment->gateway_response, JSON_PRETTY_PRINT) }}
                     </pre>
-                    @endif
+                    @endif --}}
                 </div>
                 <div class="card-footer">
                     <a href="{{ route('payments.index') }}" class="btn btn-secondary">

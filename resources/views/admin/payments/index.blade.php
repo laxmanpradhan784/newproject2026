@@ -5,9 +5,9 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Payment Management</h1>
         <div>
-            <a href="{{ route('admin.payments.export') }}" class="btn btn-secondary">
+            {{-- <a href="{{ route('admin.payments.export') }}" class="btn btn-secondary">
                 <i class="fas fa-file-export"></i> Export CSV
-            </a>
+            </a> --}}
             <a href="{{ route('admin.payments.dashboard') }}" class="btn btn-info">
                 <i class="fas fa-chart-line"></i> Analytics
             </a>
@@ -100,7 +100,7 @@
                     <input type="text" name="search" class="form-control" placeholder="Search..." 
                            value="{{ request('search') }}">
                 </div>
-                <div class="col-md-2 mb-3">
+                {{-- <div class="col-md-2 mb-3">
                     <select name="status" class="form-control">
                         <option value="">All Status</option>
                         @foreach($statuses as $status)
@@ -109,7 +109,7 @@
                         </option>
                         @endforeach
                     </select>
-                </div>
+                </div> --}}
                 <div class="col-md-2 mb-3">
                     <select name="payment_method" class="form-control">
                         <option value="">All Methods</option>
@@ -120,7 +120,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-2 mb-3">
+                {{-- <div class="col-md-2 mb-3">
                     <input type="date" name="date_from" class="form-control" 
                            value="{{ request('date_from') }}" placeholder="From Date">
                 </div>
@@ -137,7 +137,7 @@
                     <a href="{{ route('admin.payments.index') }}" class="btn btn-secondary btn-block">
                         <i class="fas fa-redo"></i>
                     </a>
-                </div>
+                </div> --}}
             </form>
         </div>
     </div>
@@ -187,7 +187,7 @@
                             <td class="font-weight-bold">₹{{ number_format($payment->amount, 2) }}</td>
                             <td>
                                 @if($payment->payment_method)
-                                    <span class="badge badge-info">{{ ucfirst($payment->payment_method) }}</span>
+                                    <span class="badge badge-info text-primary">{{ ucfirst($payment->payment_method) }}</span>
                                 @endif
                                 @if($payment->bank)
                                     <small class="d-block">{{ $payment->bank }}</small>
@@ -195,13 +195,13 @@
                             </td>
                             <td>
                                 @if($payment->status == 'captured')
-                                    <span class="badge badge-success">Successful</span>
+                                    <span class="badge text-primary badge-success">Successful</span>
                                 @elseif($payment->status == 'failed')
-                                    <span class="badge badge-danger">Failed</span>
+                                    <span class="badge text-primary badge-danger">Failed</span>
                                 @elseif($payment->status == 'refunded')
-                                    <span class="badge badge-warning">Refunded</span>
+                                    <span class="badge text-primary badge-warning">Refunded</span>
                                 @else
-                                    <span class="badge badge-secondary">{{ ucfirst($payment->status) }}</span>
+                                    <span class="badge text-primary badge-secondary">{{ ucfirst($payment->status) }}</span>
                                 @endif
                             </td>
                             <td>{{ $payment->created_at->format('d M Y, h:i A') }}</td>

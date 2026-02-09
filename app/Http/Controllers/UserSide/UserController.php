@@ -84,39 +84,42 @@ class UserController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'avatar' => ['required', 'image', 'mimes:jpg,jpeg,png,gif', 'max:2048'],
+            'avatar' => ['required', 'image', 'mimes:jpg,jpeg,png,gif,webp', 'max:2048'],
         ], [
-            'avatar.max' => 'The avatar image should not exceed 2MB.',
-            'avatar.mimes' => 'Only JPG, PNG, and GIF images are allowed.',
+            'avatar.max' => 'The profile image should not exceed 2MB.',
+            'avatar.mimes' => 'Only JPG, PNG, GIF and WebP images are allowed.',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // Delete old avatar if exists
-        if ($user->avatar) {
-            Storage::delete('public/avatars/' . $user->avatar);
+        // Delete old profile image if exists
+        if ($user->profile_image && file_exists(public_path('uploads/profile-images/' . $user->profile_image))) {
+            unlink(public_path('uploads/profile-images/' . $user->profile_image));
         }
 
-        // Store new avatar
-        $avatar = $request->file('avatar');
-        $avatarName = 'avatar-' . $user->id . '-' . time() . '.' . $avatar->getClientOriginalExtension();
-        $avatar->storeAs('public/avatars', $avatarName);
-        
-        $user->avatar = $avatarName;
+        // Store new profile image in public folder
+        $image = $request->file('avatar');
+        $imageName = 'profile_' . $user->id . '_' . time() . '.' . $image->getClientOriginalExtension();
+
+        // Store in public/uploads/profile-images directory
+        $image->move(public_path('uploads/profile-images'), $imageName);
+
+        // Update user record
+        $user->profile_image = $imageName;
         $user->save();
 
         return response()->json([
             'success' => true,
-            'message' => 'Avatar updated successfully!',
-            'avatar' => asset('storage/avatars/' . $avatarName),
+            'message' => 'Profile image updated successfully!',
+            'profile_image' => asset('uploads/profile-images/' . $imageName),
             'initials' => strtoupper(substr($user->name, 0, 1))
         ]);
     }
 
     /**
-     * Remove user avatar
+     * Remove user profile image
      */
     public function removeAvatar()
     {
@@ -126,15 +129,21 @@ class UserController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        if ($user->avatar) {
-            Storage::delete('public/avatars/' . $user->avatar);
-            $user->avatar = null;
+        if ($user->profile_image) {
+            // Delete from public folder
+            $filePath = public_path('uploads/profile-images/' . $user->profile_image);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+
+            // Update database
+            $user->profile_image = null;
             $user->save();
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Avatar removed successfully!',
+            'message' => 'Profile image removed successfully!',
             'initials' => strtoupper(substr($user->name, 0, 1))
         ]);
     }

@@ -219,14 +219,14 @@
                                         <i class="fas fa-star me-2"></i> My Reviews
                                     </a>
                                 </li>
-                                <li>
+                                {{-- <li>
                                     <a class="dropdown-item dropdown-hover" href="{{ route('wishlist.index') }}">
                                         <i class="fas fa-heart me-2"></i> My Wishlist
                                         @if ($wishlistCount > 0)
                                             <span class="badge bg-danger float-end">{{ $wishlistCount }}</span>
                                         @endif
                                     </a>
-                                </li>
+                                </li> --}}
                                 @if (Auth::user()->is_admin)
                                     <li>
                                         <hr class="dropdown-divider">
