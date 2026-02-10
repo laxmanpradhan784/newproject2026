@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 09, 2026 at 08:33 AM
+-- Generation Time: Feb 10, 2026 at 12:45 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -191,7 +191,9 @@ CREATE TABLE `coupon_usages` (
 --
 
 INSERT INTO `coupon_usages` (`id`, `coupon_id`, `user_id`, `order_id`, `discount_amount`, `original_total`, `final_total`, `used_at`) VALUES
-(1, 2, 103, 1, 500.00, 47497.00, 55456.46, '2026-02-09 05:34:15');
+(1, 2, 103, 1, 500.00, 47497.00, 55456.46, '2026-02-09 05:34:15'),
+(2, 2, 104, 2, 500.00, 47497.00, 55606.46, '2026-02-09 10:03:41'),
+(3, 3, 103, 3, 1000.00, 47497.00, 54866.46, '2026-02-09 12:24:14');
 
 -- --------------------------------------------------------
 
@@ -328,7 +330,18 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `order_number`, `razorpay_order_id`, `razorpay_payment_id`, `razorpay_signature`, `user_id`, `subtotal`, `shipping`, `tax`, `total`, `status`, `payment_method`, `payment_gateway`, `payment_status`, `shipping_name`, `shipping_email`, `shipping_phone`, `shipping_address`, `shipping_city`, `shipping_state`, `shipping_zip`, `shipping_country`, `shipping_method`, `created_at`, `updated_at`, `delivered_at`, `cancelled_at`, `transaction_id`, `gateway_response`, `coupon_id`, `coupon_code`, `discount_amount`, `payment_captured`, `payment_captured_at`) VALUES
-(1, 'ORD-260209-053329-1035756', NULL, NULL, NULL, 103, 47497.00, 0.00, 8459.46, 55456.46, 'processing', 'razorpay', NULL, 'paid', 'LAXMAN PRADHAN', 'laxmanpradhan784@gmail.com', '9913817411', '531 apexa nagar bamroli road surat', 'surat', 'guurat', '394221', 'India', 'standard', '2026-02-09 00:03:29', '2026-02-09 00:04:15', NULL, NULL, NULL, NULL, 2, 'FLAT500', 500.00, 0, NULL);
+(1, 'ORD-260209-053329-1035756', NULL, NULL, NULL, 103, 47497.00, 0.00, 8459.46, 55456.46, 'processing', 'razorpay', NULL, 'paid', 'LAXMAN PRADHAN', 'laxmanpradhan784@gmail.com', '9913817411', '531 apexa nagar bamroli road surat', 'surat', 'guurat', '394221', 'India', 'standard', '2026-02-09 00:03:29', '2026-02-09 00:04:15', NULL, NULL, NULL, NULL, 2, 'FLAT500', 500.00, 0, NULL),
+(2, 'ORD-260209-095939-1042314', NULL, NULL, NULL, 104, 47497.00, 150.00, 8459.46, 55606.46, 'processing', 'razorpay', NULL, 'paid', 'laxmanp primex', 'laxmanp.primex@gmail.com', '9913817411', '531 apexa nagar', 'surat', 'gujurat', '394221', 'India', 'express', '2026-02-09 04:29:39', '2026-02-09 04:33:40', NULL, NULL, NULL, NULL, 2, 'FLAT500', 500.00, 0, NULL),
+(3, 'ORD-260209-122414-1032198', NULL, NULL, NULL, 103, 47497.00, 0.00, 8369.46, 54866.46, 'delivered', 'cod', NULL, 'paid', 'LAXMAN PRADHAN', 'laxmanpradhan784@gmail.com', '9913817411', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-02-09 06:54:14', '2026-02-09 07:27:55', '2026-02-09 07:21:06', NULL, NULL, NULL, 3, 'SUMMER20', 1000.00, 0, NULL),
+(4, 'ORD-260209-125928-1036768', NULL, NULL, NULL, 103, 2499.00, 150.00, 449.82, 3098.82, 'pending', 'cod', NULL, 'paid', 'LAXMAN PRADHAN', 'laxmanpradhan784@gmail.com', '9913817411', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-02-09 07:29:28', '2026-02-09 07:29:48', NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0, NULL),
+(5, 'ORD-260209-130108-1038508', NULL, NULL, NULL, 103, 29999.00, 150.00, 5399.82, 35548.82, 'processing', 'cod', NULL, 'paid', 'LAXMAN PRADHAN', 'laxmanpradhan784@gmail.com', '9913817411', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-02-09 07:31:08', '2026-02-09 07:31:25', NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0, NULL),
+(6, 'ORD-260209-130147-1037259', NULL, NULL, NULL, 103, 17498.00, 150.00, 3149.64, 20797.64, 'delivered', 'cod', NULL, 'paid', 'LAXMAN PRADHAN', 'laxmanpradhan784@gmail.com', '9913817411', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'express', '2026-02-09 07:31:47', '2026-02-09 07:51:44', '2026-02-09 07:51:44', NULL, NULL, NULL, NULL, NULL, 0.00, 0, NULL),
+(7, 'ORD-260209-130210-1039023', NULL, NULL, NULL, 103, 3499.00, 0.00, 629.82, 4128.82, 'processing', 'razorpay', NULL, 'paid', 'LAXMAN PRADHAN', 'laxmanpradhan784@gmail.com', '9913817411', '1st Floor, 451, 9th A Main, 2nd Block, Jayanagar, Bengaluru, Karnataka 560011', 'Bengaluru', 'Karnataka', '560011', 'India', 'standard', '2026-02-09 07:32:10', '2026-02-09 07:32:55', NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0, NULL),
+(8, 'ORD-260210-104403-1045307', NULL, NULL, NULL, 104, 29999.00, 0.00, 5399.82, 35398.82, 'pending', 'cod', NULL, 'pending', 'laxmanp primex', 'laxmanp.primex@gmail.com', '9913817411', '531 apexa nagar', 'surat', 'gujurat', '394221', 'India', 'standard', '2026-02-10 05:14:03', '2026-02-10 05:14:03', NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0, NULL),
+(9, 'ORD-260210-104405-1049300', NULL, NULL, NULL, 104, 29999.00, 0.00, 5399.82, 35398.82, 'pending', 'cod', NULL, 'paid', 'laxmanp primex', 'laxmanp.primex@gmail.com', '9913817411', '531 apexa nagar', 'surat', 'gujurat', '394221', 'India', 'standard', '2026-02-10 05:14:05', '2026-02-10 05:15:13', NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0, NULL),
+(10, 'ORD-260210-143540-1041587', NULL, NULL, NULL, 104, 4499.00, 150.00, 809.82, 5458.82, 'processing', 'razorpay', NULL, 'paid', 'laxmanp primex', 'laxmanp.primex@gmail.com', '9913817411', 'apexa nagar', 'surat', 'gujurat', '394221', 'India', 'express', '2026-02-10 09:05:40', '2026-02-10 09:06:22', NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0, NULL),
+(11, 'ORD-260210-144400-1048489', NULL, NULL, NULL, 104, 12999.00, 0.00, 2339.82, 15338.82, 'pending', 'cod', NULL, 'pending', 'laxmanp primex', 'laxmanp.primex@gmail.com', '9913817411', 'apexa nagar', 'surat', 'gujurat', '394221', 'India', 'standard', '2026-02-10 09:14:00', '2026-02-10 09:14:00', NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0, NULL),
+(12, 'ORD-260210-144458-1042163', NULL, NULL, NULL, 104, 3899.00, 0.00, 701.82, 4600.82, 'pending', 'cod', NULL, 'pending', 'laxmanp primex', 'laxmanp.primex@gmail.com', '9913817411', 'divg wohegivoher', 'surat', 'gujurat', '394221', 'India', 'standard', '2026-02-10 09:14:58', '2026-02-10 09:14:58', NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -357,7 +370,23 @@ CREATE TABLE `order_items` (
 INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `product_name`, `quantity`, `price`, `total`, `category_id`, `category_name`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, 'Smartphone X', 1, 29999.00, 29999.00, 1, 'Electronics', '2026-02-09 00:04:15', '2026-02-09 00:04:15'),
 (2, 1, 2, 'Wireless Earbuds Pro', 1, 4499.00, 4499.00, 1, 'Electronics', '2026-02-09 00:04:15', '2026-02-09 00:04:15'),
-(3, 1, 3, 'Smart Watch Series 6', 1, 12999.00, 12999.00, 1, 'Electronics', '2026-02-09 00:04:15', '2026-02-09 00:04:15');
+(3, 1, 3, 'Smart Watch Series 6', 1, 12999.00, 12999.00, 1, 'Electronics', '2026-02-09 00:04:15', '2026-02-09 00:04:15'),
+(4, 2, 1, 'Smartphone X', 1, 29999.00, 29999.00, 1, 'Electronics', '2026-02-09 04:33:41', '2026-02-09 04:33:41'),
+(5, 2, 2, 'Wireless Earbuds Pro', 1, 4499.00, 4499.00, 1, 'Electronics', '2026-02-09 04:33:41', '2026-02-09 04:33:41'),
+(6, 2, 3, 'Smart Watch Series 6', 1, 12999.00, 12999.00, 1, 'Electronics', '2026-02-09 04:33:41', '2026-02-09 04:33:41'),
+(7, 3, 1, 'Smartphone X', 1, 29999.00, 29999.00, 1, 'Electronics', '2026-02-09 06:54:14', '2026-02-09 06:54:14'),
+(8, 3, 2, 'Wireless Earbuds Pro', 1, 4499.00, 4499.00, 1, 'Electronics', '2026-02-09 06:54:14', '2026-02-09 06:54:14'),
+(9, 3, 3, 'Smart Watch Series 6', 1, 12999.00, 12999.00, 1, 'Electronics', '2026-02-09 06:54:14', '2026-02-09 06:54:14'),
+(10, 4, 5, 'Women\'s Summer Dress', 1, 2499.00, 2499.00, 2, 'Fashion', '2026-02-09 07:29:28', '2026-02-09 07:29:28'),
+(11, 5, 1, 'Smartphone X', 1, 29999.00, 29999.00, 1, 'Electronics', '2026-02-09 07:31:08', '2026-02-09 07:31:08'),
+(12, 6, 3, 'Smart Watch Series 6', 1, 12999.00, 12999.00, 1, 'Electronics', '2026-02-09 07:31:47', '2026-02-09 07:31:47'),
+(13, 6, 2, 'Wireless Earbuds Pro', 1, 4499.00, 4499.00, 1, 'Electronics', '2026-02-09 07:31:47', '2026-02-09 07:31:47'),
+(14, 7, 7, 'Non-Stick Cookware Set', 1, 3499.00, 3499.00, 3, 'Home & Kitchen', '2026-02-09 07:32:55', '2026-02-09 07:32:55'),
+(15, 8, 1, 'Smartphone X', 1, 29999.00, 29999.00, 1, 'Electronics', '2026-02-10 05:14:03', '2026-02-10 05:14:03'),
+(16, 9, 1, 'Smartphone X', 1, 29999.00, 29999.00, 1, 'Electronics', '2026-02-10 05:14:05', '2026-02-10 05:14:05'),
+(17, 10, 2, 'Wireless Earbuds Pro', 1, 4499.00, 4499.00, 1, 'Electronics', '2026-02-10 09:06:22', '2026-02-10 09:06:22'),
+(18, 11, 3, 'Smart Watch Series 6', 1, 12999.00, 12999.00, 1, 'Electronics', '2026-02-10 09:14:00', '2026-02-10 09:14:00'),
+(19, 12, 6, 'Leather Formal Shoes', 1, 3899.00, 3899.00, 2, 'Fashion', '2026-02-10 09:14:58', '2026-02-10 09:14:58');
 
 -- --------------------------------------------------------
 
@@ -387,6 +416,7 @@ CREATE TABLE `payments` (
   `amount` decimal(10,2) NOT NULL,
   `currency` varchar(10) DEFAULT 'INR',
   `payment_method` varchar(50) DEFAULT NULL,
+  `payment_type` enum('online','offline') DEFAULT NULL,
   `payment_gateway` varchar(50) DEFAULT 'razorpay',
   `bank` varchar(100) DEFAULT NULL,
   `card_type` varchar(50) DEFAULT NULL,
@@ -408,8 +438,14 @@ CREATE TABLE `payments` (
 -- Dumping data for table `payments`
 --
 
-INSERT INTO `payments` (`id`, `order_id`, `user_id`, `razorpay_order_id`, `razorpay_payment_id`, `razorpay_signature`, `amount`, `currency`, `payment_method`, `payment_gateway`, `bank`, `card_type`, `wallet`, `vpa`, `status`, `gateway_response`, `error_code`, `error_description`, `refund_amount`, `refund_id`, `refund_status`, `refunded_at`, `created_at`, `updated_at`) VALUES
-(2, 1, 103, 'order_SDvurfJhvBwFUF', 'pay_SDvvKkPVeMCfJk', '344ca66e780478b30a2ed3f3701342266a55f9542640d862e96a1738e9f4f364', 55456.46, 'INR', 'card', 'razorpay', NULL, NULL, NULL, NULL, 'captured', '\"{}\"', NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-09 00:04:15', '2026-02-09 00:04:15');
+INSERT INTO `payments` (`id`, `order_id`, `user_id`, `razorpay_order_id`, `razorpay_payment_id`, `razorpay_signature`, `amount`, `currency`, `payment_method`, `payment_type`, `payment_gateway`, `bank`, `card_type`, `wallet`, `vpa`, `status`, `gateway_response`, `error_code`, `error_description`, `refund_amount`, `refund_id`, `refund_status`, `refunded_at`, `created_at`, `updated_at`) VALUES
+(2, 1, 103, 'order_SDvurfJhvBwFUF', 'pay_SDvvKkPVeMCfJk', '344ca66e780478b30a2ed3f3701342266a55f9542640d862e96a1738e9f4f364', 55456.46, 'INR', 'card', NULL, 'razorpay', NULL, NULL, NULL, NULL, 'captured', '\"{}\"', NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-09 00:04:15', '2026-02-09 00:04:15'),
+(3, 2, 104, 'order_SE0S5Pmqo9Y35P', 'pay_SE0VixAUkPNLX9', '02320c922843003cdbf8740efcbd3f51be2fdee1dfbb0af765916ab8c88963e1', 55606.46, 'INR', 'upi', NULL, 'razorpay', NULL, NULL, NULL, 'success@razorpay', 'captured', '\"{}\"', NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-09 04:33:40', '2026-02-09 04:33:40'),
+(4, 5, 103, NULL, NULL, NULL, 35548.82, 'INR', 'cod', 'offline', 'razorpay', NULL, NULL, NULL, NULL, 'captured', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-09 07:31:25', '2026-02-09 07:31:25'),
+(5, 7, 103, 'order_SE3Yso1xpoxBSz', 'pay_SE3ZL8EoQM24wh', '5af8e6e778424639684ae070eadd3afef5bbf061d8346ace89fdbf535cbbf5a6', 4128.82, 'INR', 'card', NULL, 'razorpay', NULL, NULL, NULL, NULL, 'captured', '\"{}\"', NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-09 07:32:55', '2026-02-09 07:32:55'),
+(6, 6, 103, NULL, NULL, NULL, 20797.64, 'INR', 'cod', 'offline', 'razorpay', NULL, NULL, NULL, NULL, 'captured', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-09 07:51:38', '2026-02-09 07:51:38'),
+(7, 9, 104, NULL, NULL, NULL, 35398.82, 'INR', 'cod', 'offline', 'razorpay', NULL, NULL, NULL, NULL, 'captured', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-10 05:15:13', '2026-02-10 05:15:13'),
+(8, 10, 104, 'order_SEO49tfeXrOU4c', 'pay_SEO4armYiqn1ua', 'bb625e6682ce2a3bbe4d099ecb6f00ebe91e4401cbf0aa241c8dbe8c95575141', 5458.82, 'INR', 'card', NULL, 'razorpay', NULL, NULL, NULL, NULL, 'captured', '\"{}\"', NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-10 09:06:22', '2026-02-10 09:06:22');
 
 -- --------------------------------------------------------
 
@@ -456,13 +492,13 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `image`, `description`, `price`, `stock`, `rating`, `review_count`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Smartphone X', 'smartphone-x', 'product_1770451330_7ZmQ501nEx.jpg', 'Latest smartphone with 128GB storage, 48MP camera', 29999.00, 48, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-09 00:04:15'),
-(2, 1, 'Wireless Earbuds Pro', 'wireless-earbuds-pro', 'product_1770451279_oItdOJ3KZz.jpg', 'Noise cancelling wireless earbuds with 30hr battery', 4499.00, 98, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-09 00:04:15'),
-(3, 1, 'Smart Watch Series 6', 'smart-watch-series-6', 'product_1770451243_a6imvra10y.jpg', 'Health tracking smartwatch with GPS and heart monitor', 12999.00, 28, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-09 00:04:15'),
+(1, 1, 'Smartphone X', 'smartphone-x', 'product_1770451330_7ZmQ501nEx.jpg', 'Latest smartphone with 128GB storage, 48MP camera', 29999.00, 39, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-10 11:30:11'),
+(2, 1, 'Wireless Earbuds Pro', 'wireless-earbuds-pro', 'product_1770451279_oItdOJ3KZz.jpg', 'Noise cancelling wireless earbuds with 30hr battery', 4499.00, 90, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-10 09:06:22'),
+(3, 1, 'Smart Watch Series 6', 'smart-watch-series-6', 'product_1770451243_a6imvra10y.jpg', 'Health tracking smartwatch with GPS and heart monitor', 12999.00, 20, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-10 09:30:49'),
 (4, 2, 'Men\'s Casual Shirt', 'mens-casual-shirt', 'product_1770451182_01K2R69cqH.jpg', 'Cotton casual shirt for men, available in multiple colors', 1299.00, 80, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-07 02:29:42'),
-(5, 2, 'Women\'s Summer Dress', 'womens-summer-dress', 'product_1770449706_XeHm76elEt.jpg', 'Floral print cotton summer dress, perfect for summer', 2499.00, 60, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-07 02:05:06'),
-(6, 2, 'Leather Formal Shoes', 'leather-formal-shoes', 'product_1770449664_R49W7yWNo5.jpg', 'Premium leather formal shoes for men, comfortable fit', 3899.00, 40, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-07 02:04:24'),
-(7, 3, 'Non-Stick Cookware Set', 'non-stick-cookware-set', 'product_1770449632_xaQPZ9iHU3.jpg', '5-piece non-stick cookware set with glass lids', 3499.00, 25, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-07 02:03:52'),
+(5, 2, 'Women\'s Summer Dress', 'womens-summer-dress', 'product_1770449706_XeHm76elEt.jpg', 'Floral print cotton summer dress, perfect for summer', 2499.00, 58, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-09 07:29:28'),
+(6, 2, 'Leather Formal Shoes', 'leather-formal-shoes', 'product_1770449664_R49W7yWNo5.jpg', 'Premium leather formal shoes for men, comfortable fit', 3899.00, 38, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-10 09:14:58'),
+(7, 3, 'Non-Stick Cookware Set', 'non-stick-cookware-set', 'product_1770449632_xaQPZ9iHU3.jpg', '5-piece non-stick cookware set with glass lids', 3499.00, 23, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-09 07:32:55'),
 (8, 3, 'Air Fryer 5.5L', 'air-fryer-55l', 'product_1770449559_kRGSQ1rp0w.jpg', 'Digital air fryer with 8 preset cooking modes', 5999.00, 35, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-07 02:02:39'),
 (9, 3, 'Queen Size Bed Sheet Set', 'queen-size-bed-sheet-set', 'product_1770449523_frKXjzNaMU.jpg', 'Premium cotton bed sheet set with 2 pillow covers', 1999.00, 70, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-07 02:02:03'),
 (10, 4, 'Vitamin C Face Serum', 'vitamin-c-face-serum', 'product_1770449475_4ubDXpvLfK.jpg', 'Anti-aging vitamin C serum with hyaluronic acid, 30ml', 899.00, 120, 0.00, 0, 'active', '2026-02-07 07:20:13', '2026-02-07 02:01:15'),
@@ -933,7 +969,7 @@ CREATE TABLE `reviews` (
 --
 
 INSERT INTO `reviews` (`id`, `product_id`, `user_id`, `order_id`, `rating`, `title`, `comment`, `status`, `is_verified_purchase`, `helpful_yes`, `helpful_no`, `report_count`, `admin_response`, `response_date`, `created_at`, `updated_at`) VALUES
-(1, 1, 103, NULL, 5, 'good product', 'this is very  about this products', 'approved', 0, 0, 0, 0, NULL, NULL, '2026-02-07 03:36:51', '2026-02-09 00:11:27');
+(1, 1, 103, NULL, 5, 'good product', 'this is very  about this products', 'approved', 0, 1, 0, 0, NULL, NULL, '2026-02-07 03:36:51', '2026-02-10 09:04:48');
 
 -- --------------------------------------------------------
 
@@ -955,8 +991,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('bTFQEMpKpOuoNkRDJfzLr5IaYWpH0TFDJzYrYFlu', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiOGF5QUZhOE1OMmFWS2h6UnpFRFhTdEhqc2hFaHdTT2xCVnQzS1RydyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NjA6Imh0dHA6Ly9sb2NhbGhvc3QvZS1jb21tbWVyY2UvcHVibGljL2FkbWluL3BheW1lbnRzL2Rhc2hib2FyZCI7czo1OiJyb3V0ZSI7czoyNDoiYWRtaW4ucGF5bWVudHMuZGFzaGJvYXJkIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6ImlqRlZaQjkxNVgzYzFvSlVnYTBtNm9pSWhObXNPak9lIjtzOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1770622419),
-('sZk0GXs1f4xp6BuMHg9eakZwsRCHKjbCpMzMvdRb', 103, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiek51dmFqTW5sSW5wNkZNMGFHVTYwOWNoaEZibWJEUzMzTGFPdnJwcyI7czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6Ims5cnh4T092cEVidVRRdjFHQmpHY2hYaUtPNkNWYjZzIjtzOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czozNToiaHR0cDovL2xvY2FsaG9zdC9lLWNvbW1tZXJjZS9wdWJsaWMiO3M6NToicm91dGUiO3M6NDoiaG9tZSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MzoidXJsIjthOjE6e3M6ODoiaW50ZW5kZWQiO3M6NDQ6Imh0dHA6Ly9sb2NhbGhvc3QvZS1jb21tbWVyY2UvcHVibGljL3dpc2hsaXN0Ijt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTAzO30=', 1770622402);
+('sPsOtPkLCxTXLI8yiZM4Qa4QwLDdM7jtjO3cGqfe', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiQkUzcFpnZEJ2VE54eXptNEhVMVlDUDFNWlVOTmVKejg4d0tXbnE3WCI7czoxMToiZ3Vlc3RfdG9rZW4iO3M6MzI6ImNwaTI5NzEyWHpySDhMckwyUW56SVBIUTBhSXR4MDM1IjtzOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo1MToiaHR0cDovL2xvY2FsaG9zdC9lLWNvbW1tZXJjZS9wdWJsaWMvYWRtaW4vZGFzaGJvYXJkIjtzOjU6InJvdXRlIjtzOjE1OiJhZG1pbi5kYXNoYm9hcmQiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjIwOiJwcmVfbG9naW5fY2FydF9jb3VudCI7aToxO3M6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1770723911);
 
 -- --------------------------------------------------------
 
@@ -1049,7 +1084,8 @@ INSERT INTO `users` (`id`, `name`, `email`, `phone`, `profile_image`, `email_ver
 (100, 'John Doe', 'john@example.com', '9876543210', NULL, NULL, '$2y$12$hashedpassword', 'user', NULL, '2026-02-07 07:21:47', '2026-02-07 07:21:47', NULL),
 (101, 'Jane Smith', 'jane@example.com', '9876543211', NULL, NULL, '$2y$12$hashedpassword', 'user', NULL, '2026-02-07 07:21:47', '2026-02-07 07:21:47', NULL),
 (102, 'Test Customer', 'customer@example.com', '9876543212', NULL, NULL, '$2y$12$hashedpassword', 'user', NULL, '2026-02-07 07:21:47', '2026-02-07 07:21:47', NULL),
-(103, 'LAXMAN PRADHAN', 'laxmanpradhan784@gmail.com', '9913817411', 'profile_103_1770622226.jpg', NULL, '$2y$12$h48zIlQqzEREuTaoq9avk.bo2XVQjE8KL0DDsYZXLGHwDubyS/rCi', 'user', NULL, '2026-02-07 01:53:46', '2026-02-09 02:00:26', NULL);
+(103, 'LAXMAN PRADHAN', 'laxmanpradhan784@gmail.com', '9913817411', 'profile_103_1770622226.jpg', NULL, '$2y$12$h48zIlQqzEREuTaoq9avk.bo2XVQjE8KL0DDsYZXLGHwDubyS/rCi', 'user', NULL, '2026-02-07 01:53:46', '2026-02-09 02:00:26', NULL),
+(104, 'laxmanp primex', 'laxmanp.primex@gmail.com', '9913817411', 'profile_104_1770631122.jpg', NULL, '$2y$12$zFwyD28t3MEMfviM5kw6e.9BurkRtcnYzMaSOFXA5bdpEHT2nwKti', 'user', NULL, '2026-02-09 04:28:13', '2026-02-09 04:28:52', NULL);
 
 -- --------------------------------------------------------
 
@@ -1511,7 +1547,7 @@ ALTER TABLE `wishlists`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -1547,7 +1583,7 @@ ALTER TABLE `coupon_products`
 -- AUTO_INCREMENT for table `coupon_usages`
 --
 ALTER TABLE `coupon_usages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `coupon_users`
@@ -1577,19 +1613,19 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `payment_logs`
@@ -1745,7 +1781,7 @@ ALTER TABLE `sliders`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
 
 --
 -- AUTO_INCREMENT for table `user_wallets`
