@@ -551,12 +551,35 @@ class CheckoutController extends Controller
         );
     }
 
+    /**
+     * Show order confirmation page (one-time view with auto-redirect)
+     */
     public function confirmation($orderNumber)
     {
+        // Check if user is logged in
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Please login to view order confirmation.');
+        }
+
+        // Find the order
         $order = Order::where('order_number', $orderNumber)
             ->where('user_id', Auth::id())
             ->with('items')
             ->firstOrFail();
+
+        // Check if user has already viewed this confirmation
+        $viewedKey = 'viewed_order_' . $orderNumber;
+
+        if (session()->has($viewedKey)) {
+            // Already viewed, redirect immediately to orders page
+            return redirect()->route('orders')->with('info', 'You can view your order details in your orders page.');
+        }
+
+        // Mark this confirmation as viewed (store in session)
+        session([$viewedKey => true]);
+
+        // Also store the timestamp for reference
+        session(['order_confirmation_time_' . $orderNumber => now()]);
 
         return view('order-confirmation', compact('order'));
     }
@@ -611,5 +634,22 @@ class CheckoutController extends Controller
         } catch (\Exception $e) {
             \Log::error('Failed to save payment record: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Clear order confirmation session (optional)
+     */
+    public function clearConfirmationSession(Request $request)
+    {
+        // Clear all order confirmation sessions
+        $sessionKeys = array_keys(session()->all());
+
+        foreach ($sessionKeys as $key) {
+            if (str_starts_with($key, 'viewed_order_') || str_starts_with($key, 'order_confirmation_time_')) {
+                session()->forget($key);
+            }
+        }
+
+        return response()->json(['success' => true]);
     }
 }

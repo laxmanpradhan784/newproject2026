@@ -3,7 +3,6 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\CartSessionMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,12 +13,18 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Create admin middleware group
         $middleware->group('admin', [
-            \App\Http\Middleware\AdminMiddleware::class, // Create this if doesn't exist
+            \App\Http\Middleware\AdminMiddleware::class,
         ]);
         
-        // Cart middleware for regular users only
+        // Register middleware aliases
+        $middleware->alias([
+            'auth.redirect' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+            'cart.session' => \App\Http\Middleware\CartSessionMiddleware::class,
+        ]);
+        
+        // Cart middleware for regular users only (apply to web routes)
         $middleware->web(append: [
-            CartSessionMiddleware::class,
+            \App\Http\Middleware\CartSessionMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

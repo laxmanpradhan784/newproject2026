@@ -246,4 +246,23 @@ class Order extends Model
     {
         return $this->total + $this->discount_amount;
     }
+
+    // In Order.php model
+    public function markConfirmationViewed()
+    {
+        $this->update(['confirmation_viewed' => true]);
+    }
+
+    public function canViewConfirmation()
+    {
+        // Allow viewing if not viewed yet OR viewed less than 10 seconds ago
+        if (!$this->confirmation_viewed) {
+            $this->markConfirmationViewed();
+            return true;
+        }
+
+        // If already viewed, check when it was updated
+        $updatedAt = $this->updated_at ?: $this->created_at;
+        return now()->diffInSeconds($updatedAt) < 10;
+    }
 }

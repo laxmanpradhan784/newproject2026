@@ -9,6 +9,10 @@ use App\Http\Controllers\UserSide\UserController;
 use App\Http\Controllers\UserSide\UserReviewController;
 use App\Http\Controllers\UserSide\CheckoutController;
 use App\Http\Controllers\UserSide\CartController;
+use App\Http\Controllers\UserSide\WishlistController;
+use App\Http\Controllers\UserSide\AReturnController;
+use App\Http\Controllers\UserSide\PaymentController;
+
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\SiteController;
@@ -19,60 +23,20 @@ use App\Http\Controllers\Admin\AContactController;
 use App\Http\Controllers\Admin\AUserController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ReviewController;
-use App\Http\Controllers\Admin\ImageController;
-use App\Http\Controllers\UserSide\WishlistController;
-use App\Http\Controllers\UserSide\AReturnController;
-use App\Http\Controllers\UserSide\PaymentController;
+use App\Http\Controllers\Admin\CouponController;
+use App\Http\Controllers\Admin\ReturnController;
+use App\Http\Controllers\Admin\APaymentController;
+use App\Http\Controllers\Admin\ProductImageController;
 
 /*
 |--------------------------------------------------------------------------
 | User Side Routes
 |--------------------------------------------------------------------------
 */
-// Wishlist Routes
-Route::middleware(['auth'])->prefix('wishlist')->name('wishlist.')->group(function () {
-    Route::get('/', [WishlistController::class, 'index'])->name('index');
-    Route::get('/count', [WishlistController::class, 'count'])->name('count');
-    Route::get('/summary', [WishlistController::class, 'summary'])->name('summary');
-    Route::post('/store', [WishlistController::class, 'store'])->name('store');
-    Route::post('/toggle', [WishlistController::class, 'toggle'])->name('toggle');
-    Route::post('/clear', [WishlistController::class, 'clear'])->name('clear');
-    Route::post('/move-all-to-cart', [WishlistController::class, 'moveAllToCart'])->name('move-all-to-cart');
-    Route::post('/move-to-cart/{id}', [WishlistController::class, 'moveToCart'])->name('move-to-cart');
-    Route::delete('/{id}', [WishlistController::class, 'destroy'])->name('destroy');
-});
-
-// Payment Routes
-Route::middleware(['auth'])->prefix('payments')->name('payments.')->group(function () {
-    Route::get('/', [PaymentController::class, 'index'])->name('index');
-    Route::get('/{payment}', [PaymentController::class, 'show'])->name('show');
-});
-
-// Razorpay Routes
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-Route::post('/razorpay/callback', [CheckoutController::class, 'razorpayCallback'])->name('razorpay.callback');
-Route::get('/razorpay/failed', [CheckoutController::class, 'razorpayFailed'])->name('razorpay.failed');
-
-// Return Request Routes
-Route::prefix('returns')->name('returns.')->group(function () {
-    Route::get('/', [AReturnController::class, 'index'])->name('index');
-    Route::get('/policy', [AReturnController::class, 'policy'])->name('policy');
-    Route::get('/create/{order}', [AReturnController::class, 'create'])->name('create');
-    Route::post('/store/{order}', [AReturnController::class, 'store'])->name('store');
-    Route::get('/{id}', [AReturnController::class, 'show'])->where('id', '[0-9]+')->name('show');
-    Route::post('/{id}/cancel', [AReturnController::class, 'cancel'])->where('id', '[0-9]+')->name('cancel');
-    Route::get('/check-eligibility/{order}', [AReturnController::class, 'checkEligibility'])->name('check-eligibility');
-});
-
-// Coupon Routes
-Route::middleware(['web'])->group(function () {
-    Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon'])->name('coupon.apply');
-    Route::get('/cart/remove-coupon', [CartController::class, 'removeCoupon'])->name('coupon.remove');
-    Route::get('/coupons/available', [CartController::class, 'getAvailableCoupons'])->name('coupons.available');
-});
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
 Route::get('/about', function () {
     return view('about');
 })->name('about');
@@ -97,14 +61,30 @@ Route::post('/cart/increase/{product}', [CartController::class, 'increase'])->na
 Route::post('/cart/decrease/{product}', [CartController::class, 'decrease'])->name('cart.decrease');
 Route::post('/product/quick-add/{id}', [ProductController::class, 'quickAdd'])->name('product.quick-add');
 
+// Coupon Routes
+Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon'])->name('coupon.apply');
+Route::get('/cart/remove-coupon', [CartController::class, 'removeCoupon'])->name('coupon.remove');
+Route::get('/coupons/available', [CartController::class, 'getAvailableCoupons'])->name('coupons.available');
+
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/auth/google', [AuthController::class, 'googleRedirect']);
+Route::get('/auth/google', [AuthController::class, 'googleRedirect'])->name('google.login');
 Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
+
+// Return Request Routes
+Route::prefix('returns')->name('returns.')->group(function () {
+    Route::get('/', [AReturnController::class, 'index'])->name('index');
+    Route::get('/policy', [AReturnController::class, 'policy'])->name('policy');
+    Route::get('/create/{order}', [AReturnController::class, 'create'])->name('create');
+    Route::post('/store/{order}', [AReturnController::class, 'store'])->name('store');
+    Route::get('/{id}', [AReturnController::class, 'show'])->where('id', '[0-9]+')->name('show');
+    Route::post('/{id}/cancel', [AReturnController::class, 'cancel'])->where('id', '[0-9]+')->name('cancel');
+    Route::get('/check-eligibility/{order}', [AReturnController::class, 'checkEligibility'])->name('check-eligibility');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -134,24 +114,43 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/vote', [UserReviewController::class, 'vote'])->name('reviews.vote');
     });
 
-    // Checkout & Orders Routes
+    // Checkout Routes
     Route::prefix('checkout')->group(function () {
         Route::get('/', [CheckoutController::class, 'index'])->name('checkout');
         Route::post('/', [CheckoutController::class, 'store'])->name('checkout.store');
         Route::get('/guest', [CheckoutController::class, 'guest'])->name('checkout.guest');
     });
 
+    // Order Routes
     Route::prefix('orders')->group(function () {
         Route::get('/', [CheckoutController::class, 'orders'])->name('orders');
         Route::get('/{orderNumber}', [CheckoutController::class, 'show'])->name('order-details');
         Route::get('/confirmation/{orderNumber}', [CheckoutController::class, 'confirmation'])->name('order.confirmation');
+        Route::post('/confirmation/clear-session', [CheckoutController::class, 'clearConfirmationSession'])->name('order.confirmation.clear');
     });
 
     // Payment Routes
-    Route::prefix('payment')->group(function () {
-        Route::get('/razorpay', [CheckoutController::class, 'razorpayPayment'])->name('payment.razorpay');
-        Route::post('/razorpay/callback', [CheckoutController::class, 'razorpayCallback'])->name('checkout.razorpay.callback');
-        Route::get('/failed', [CheckoutController::class, 'paymentFailed'])->name('payment.failed');
+    Route::prefix('payments')->name('payments.')->group(function () {
+        Route::get('/', [PaymentController::class, 'index'])->name('index');
+        Route::get('/{payment}', [PaymentController::class, 'show'])->name('show');
+    });
+
+    // Razorpay Payment Routes
+    Route::post('/checkout/razorpay', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::post('/razorpay/callback', [CheckoutController::class, 'razorpayCallback'])->name('razorpay.callback');
+    Route::get('/razorpay/failed', [CheckoutController::class, 'razorpayFailed'])->name('razorpay.failed');
+
+    // Wishlist Routes
+    Route::prefix('wishlist')->name('wishlist.')->group(function () {
+        Route::get('/', [WishlistController::class, 'index'])->name('index');
+        Route::get('/count', [WishlistController::class, 'count'])->name('count');
+        Route::get('/summary', [WishlistController::class, 'summary'])->name('summary');
+        Route::post('/store', [WishlistController::class, 'store'])->name('store');
+        Route::post('/toggle', [WishlistController::class, 'toggle'])->name('toggle');
+        Route::post('/clear', [WishlistController::class, 'clear'])->name('clear');
+        Route::post('/move-all-to-cart', [WishlistController::class, 'moveAllToCart'])->name('move-all-to-cart');
+        Route::post('/move-to-cart/{id}', [WishlistController::class, 'moveToCart'])->name('move-to-cart');
+        Route::delete('/{id}', [WishlistController::class, 'destroy'])->name('destroy');
     });
 });
 
@@ -160,75 +159,82 @@ Route::middleware(['auth'])->group(function () {
 | Admin Routes
 |--------------------------------------------------------------------------
 */
-Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Profile
-    Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
-    Route::post('/profile/update', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
-    Route::post('/profile/change-password', [AdminController::class, 'changePassword'])->name('admin.profile.change-password');
+    Route::get('/profile', [AdminController::class, 'profile'])->name('profile');
+    Route::post('/profile/update', [AdminController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/change-password', [AdminController::class, 'changePassword'])->name('profile.change-password');
 
     // Admin Management
-    Route::get('/admins', [AdminController::class, 'allAdmins'])->name('admin.all-admins');
+    Route::get('/admins', [AdminController::class, 'allAdmins'])->name('all-admins');
 
     // Site Settings
-    Route::get('/site-settings', [SiteController::class, 'index'])->name('admin.site-settings');
-    Route::put('/site-settings', [SiteController::class, 'update'])->name('admin.site.update');
+    Route::get('/site-settings', [SiteController::class, 'index'])->name('site-settings');
+    Route::put('/site-settings', [SiteController::class, 'update'])->name('site.update');
 
-    // Categories
+    // Categories Management
     Route::prefix('categories')->group(function () {
-        Route::get('/', [CategoryController::class, 'index'])->name('admin.categories');
-        Route::post('/store', [CategoryController::class, 'store'])->name('admin.categories.store');
-        Route::put('/update', [CategoryController::class, 'update'])->name('admin.categories.update');
-        Route::delete('/delete/{id}', [CategoryController::class, 'delete'])->name('admin.categories.delete');
+        Route::get('/', [CategoryController::class, 'index'])->name('categories');
+        Route::post('/store', [CategoryController::class, 'store'])->name('categories.store');
+        Route::put('/update', [CategoryController::class, 'update'])->name('categories.update');
+        Route::delete('/delete/{id}', [CategoryController::class, 'delete'])->name('categories.delete');
         Route::put('/{category}/status', [CategoryController::class, 'updateStatus'])->name('category.update-status');
     });
 
-    // Products
+    // Products Management
     Route::prefix('products')->group(function () {
-        Route::get('/', [AProductController::class, 'index'])->name('admin.products');
-        Route::post('/store', [AProductController::class, 'store'])->name('admin.products.store');
-        Route::put('/update', [AProductController::class, 'update'])->name('admin.products.update');
-        Route::delete('/delete/{id}', [AProductController::class, 'delete'])->name('admin.products.delete');
+        Route::get('/', [AProductController::class, 'index'])->name('products');
+        Route::post('/store', [AProductController::class, 'store'])->name('products.store');
+        Route::put('/update', [AProductController::class, 'update'])->name('products.update');
+        Route::delete('/delete/{id}', [AProductController::class, 'delete'])->name('products.delete');
         Route::put('/{product}/status', [AProductController::class, 'updateStatus'])->name('product.update-status');
     });
 
-    // Sliders
+    // Product Images Management
+    Route::prefix('product-images')->group(function () {
+        Route::get('/manager', [ProductImageController::class, 'manager'])->name('product.image.manager');
+        Route::post('/store', [ProductImageController::class, 'store'])->name('product.images.store');
+        Route::post('/{image}/delete', [ProductImageController::class, 'destroy'])->name('product.images.delete');
+    });
+
+    // Sliders Management
     Route::prefix('sliders')->group(function () {
-        Route::get('/', [ASliderController::class, 'index'])->name('admin.sliders');
-        Route::post('/store', [ASliderController::class, 'store'])->name('admin.sliders.store');
-        Route::put('/update', [ASliderController::class, 'update'])->name('admin.sliders.update');
-        Route::delete('/delete/{id}', [ASliderController::class, 'delete'])->name('admin.sliders.delete');
+        Route::get('/', [ASliderController::class, 'index'])->name('sliders');
+        Route::post('/store', [ASliderController::class, 'store'])->name('sliders.store');
+        Route::put('/update', [ASliderController::class, 'update'])->name('sliders.update');
+        Route::delete('/delete/{id}', [ASliderController::class, 'delete'])->name('sliders.delete');
         Route::put('/{slider}/status', [ASliderController::class, 'updateStatus'])->name('slider.update-status');
     });
 
-    // Contacts
+    // Contacts Management
     Route::prefix('contacts')->group(function () {
-        Route::get('/', [AContactController::class, 'index'])->name('admin.contacts');
-        Route::get('/delete/{id}', [AContactController::class, 'delete'])->name('admin.contacts.delete');
+        Route::get('/', [AContactController::class, 'index'])->name('contacts');
+        Route::get('/delete/{id}', [AContactController::class, 'delete'])->name('contacts.delete');
     });
 
-    // Users
+    // Users Management
     Route::prefix('users')->group(function () {
-        Route::get('/', [AUserController::class, 'index'])->name('admin.users');
-        Route::post('/update-role', [AUserController::class, 'updateRole'])->name('admin.users.update-role');
-        Route::get('/delete/{id}', [AUserController::class, 'delete'])->name('admin.users.delete');
+        Route::get('/', [AUserController::class, 'index'])->name('users');
+        Route::post('/update-role', [AUserController::class, 'updateRole'])->name('users.update-role');
+        Route::get('/delete/{id}', [AUserController::class, 'delete'])->name('users.delete');
     });
 
-    // Orders
+    // Orders Management
     Route::prefix('orders')->group(function () {
-        Route::get('/', [OrderController::class, 'index'])->name('admin.orders');
-        Route::get('/{id}', [OrderController::class, 'show'])->name('admin.order.details');
-        Route::put('/{id}/status', [OrderController::class, 'updateStatus'])->name('admin.order.status.update');
-        Route::post('/{id}/notify', [OrderController::class, 'sendNotification'])->name('admin.order.notify');
-        Route::get('/{id}/invoice', [OrderController::class, 'invoice'])->name('admin.order.invoice');
-        Route::put('/{order}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.update-status');
-        Route::get('/{id}/export', [OrderController::class, 'export'])->name('admin.order.export');
+        Route::get('/', [OrderController::class, 'index'])->name('orders');
+        Route::get('/{id}', [OrderController::class, 'show'])->name('order.details');
+        Route::put('/{id}/status', [OrderController::class, 'updateStatus'])->name('order.status.update');
+        Route::post('/{id}/notify', [OrderController::class, 'sendNotification'])->name('order.notify');
+        Route::get('/{id}/invoice', [OrderController::class, 'invoice'])->name('order.invoice');
+        Route::put('/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+        Route::get('/{id}/export', [OrderController::class, 'export'])->name('order.export');
     });
 
-    // Reviews
-    Route::prefix('reviews')->name('admin.reviews.')->group(function () {
+    // Reviews Management
+    Route::prefix('reviews')->name('reviews.')->group(function () {
         Route::get('/', [ReviewController::class, 'index'])->name('index');
         Route::get('/{id}', [ReviewController::class, 'show'])->name('show');
         Route::patch('/{id}/status', [ReviewController::class, 'updateStatus'])->name('update-status');
@@ -236,27 +242,22 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         Route::post('/bulk', [ReviewController::class, 'bulkAction'])->name('bulk');
         Route::delete('/{id}', [ReviewController::class, 'destroy'])->name('destroy');
     });
-});
 
-use App\Http\Controllers\Admin\CouponController;
-use App\Http\Controllers\Admin\ReturnController;
-use App\Http\Controllers\Admin\APaymentController;
+    // Coupons Management
+    Route::prefix('coupons')->name('coupons.')->group(function () {
+        Route::get('/', [CouponController::class, 'index'])->name('index');
+        Route::get('/create', [CouponController::class, 'create'])->name('create');
+        Route::post('/', [CouponController::class, 'store'])->name('store');
+        Route::get('/{coupon}', [CouponController::class, 'show'])->name('show');
+        Route::get('/{coupon}/edit', [CouponController::class, 'edit'])->name('edit');
+        Route::put('/{coupon}', [CouponController::class, 'update'])->name('update');
+        Route::delete('/{coupon}', [CouponController::class, 'destroy'])->name('destroy');
+        Route::get('/generate-code', [CouponController::class, 'generateCode'])->name('generate-code');
+        Route::post('/{coupon}/status', [CouponController::class, 'updateStatus'])->name('status');
+        Route::post('/update-expired', [CouponController::class, 'updateExpired'])->name('update-expired');
+    });
 
-// Admin Routes Group (continued)
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    // Coupon Management Routes
-    Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
-    Route::get('/coupons/create', [CouponController::class, 'create'])->name('coupons.create');
-    Route::post('/coupons', [CouponController::class, 'store'])->name('coupons.store');
-    Route::get('/coupons/{coupon}', [CouponController::class, 'show'])->name('coupons.show');
-    Route::get('/coupons/{coupon}/edit', [CouponController::class, 'edit'])->name('coupons.edit');
-    Route::put('/coupons/{coupon}', [CouponController::class, 'update'])->name('coupons.update');
-    Route::delete('/coupons/{coupon}', [CouponController::class, 'destroy'])->name('coupons.destroy');
-    Route::get('/coupons/generate-code', [CouponController::class, 'generateCode'])->name('coupons.generate-code');
-    Route::post('/coupons/{coupon}/status', [CouponController::class, 'updateStatus'])->name('coupons.status');
-    Route::post('/coupons/update-expired', [CouponController::class, 'updateExpired'])->name('coupons.update-expired');
-
-    // Return Management Routes
+    // Returns Management
     Route::prefix('returns')->name('returns.')->group(function () {
         Route::get('/', [ReturnController::class, 'index'])->name('index');
         Route::get('/{id}', [ReturnController::class, 'show'])->name('show');
@@ -277,7 +278,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/reports', [ReturnController::class, 'reports'])->name('reports');
     });
 
-    // Payment Management Routes
+    // Payments Management
     Route::prefix('payments')->name('payments.')->group(function () {
         Route::get('/', [APaymentController::class, 'index'])->name('index');
         Route::get('/dashboard', [APaymentController::class, 'dashboard'])->name('dashboard');
@@ -285,34 +286,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/{payment}', [APaymentController::class, 'show'])->name('show');
         Route::get('/customer/{user}/profile', [APaymentController::class, 'customerProfile'])->name('customer.profile');
         Route::post('/{payment}/refund', [APaymentController::class, 'processRefund'])->name('refund');
+        Route::post('/{id}/mark-cod-paid', [APaymentController::class, 'markCODPaid'])->name('payments.mark-cod-paid');
         Route::delete('/{payment}', [APaymentController::class, 'destroy'])->name('destroy');
         Route::get('/export', [APaymentController::class, 'export'])->name('export');
     });
 });
-
-
-use App\Http\Controllers\Admin\ProductImageController;
-
-// Product Images Management Routes
-Route::prefix('admin')->name('admin.')->group(function () {
-    
-    // Main Product Image Manager (One-page interface)
-    Route::get('/product-image-manager', 
-        [ProductImageController::class, 'manager']
-    )->name('product.image.manager');
-    
-    // Upload multiple images for a product
-    Route::post('/product-images/store', 
-        [ProductImageController::class, 'store']
-    )->name('product.images.store');
-    
-    // Delete a specific product image
-    Route::post('/product-images/{image}/delete', 
-        [ProductImageController::class, 'destroy']
-    )->name('product.images.delete');
-});
-
-
-// In your admin routes
-Route::post('payments/{id}/mark-cod-paid', [APaymentController::class, 'markCODPaid'])
-    ->name('admin.payments.mark-cod-paid');

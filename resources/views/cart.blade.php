@@ -333,52 +333,48 @@
                             </div>
                         </div>
                     @else
-
                         <!-- Empty Cart with Flipkart-style Animation -->
-                        <div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
-                            <div class="card rounded-3 shadow-sm border-0 text-center flipkart-empty-cart"
-                                style="max-width: 500px; width: 100%;">
-                                <div class="card-body p-5">
-                                    <!-- Animated Cart Icon -->
-                                    <div class="empty-cart-animation mb-4">
-                                        <div class="cart-container">
-                                            <div class="cart-icon-wrapper">
-                                                <i class="fas fa-shopping-cart fa-4x text-muted cart-icon"></i>
-                                                <div class="empty-indicator">
-                                                    <i class="fas fa-times"></i>
-                                                </div>
+                        <div class="d-flex justify-content-center align-items-center" style="height: 70vh;margin-right: -400px;">
+                            <div class="text-center" style="max-width: 500px; width: 100%;">
+                                <!-- Animated Cart Icon -->
+                                <div class="empty-cart-animation mb-4">
+                                    <div class="cart-container">
+                                        <div class="cart-icon-wrapper">
+                                            <i class="fas fa-shopping-cart fa-4x text-muted cart-icon"></i>
+                                            <div class="empty-indicator">
+                                                <i class="fas fa-times"></i>
                                             </div>
-                                            <div class="cart-wheels">
-                                                <div class="wheel"></div>
-                                                <div class="wheel"></div>
-                                            </div>
-                                            <div class="cart-shadow"></div>
                                         </div>
+                                        <div class="cart-wheels">
+                                            <div class="wheel"></div>
+                                            <div class="wheel"></div>
+                                        </div>
+                                        <div class="cart-shadow"></div>
                                     </div>
+                                </div>
 
-                                    <!-- Title with Typing Animation -->
-                                    <h3 class="fw-bold mb-3 title-animation">
-                                        <span class="typing-text">Your cart feels lonely! 🛒</span>
-                                    </h3>
+                                <!-- Title with Typing Animation -->
+                                <h3 class="fw-bold mb-3 title-animation">
+                                    <span class="typing-text">Your cart feels lonely! 🛒</span>
+                                </h3>
 
-                                    <!-- Subtitle with Fade-in -->
-                                    <p class="text-muted mb-4 subtitle-animation">
-                                        <span class="subtitle-text">Looks like you haven't added anything.</span>
-                                    </p>
+                                <!-- Subtitle with Fade-in -->
+                                <p class="text-muted mb-4 subtitle-animation">
+                                    <span class="subtitle-text">Looks like you haven't added anything.</span>
+                                </p>
 
-                                    <!-- Animated Shop Now Button -->
-                                    <div class="button-animation">
-                                        <a href="{{ route('products') }}"
-                                            class="btn btn-primary rounded-pill px-5 py-3 shop-now-btn">
-                                            <span class="btn-content">
-                                                <i class="fas fa-shopping-bag me-2"></i>
-                                                <span class="btn-text">Explore Products</span>
-                                            </span>
-                                            <span class="btn-arrow">
-                                                <i class="fas fa-arrow-right"></i>
-                                            </span>
-                                        </a>
-                                    </div>
+                                <!-- Animated Shop Now Button -->
+                                <div class="button-animation">
+                                    <a href="{{ route('products') }}"
+                                        class="btn btn-primary rounded-pill px-5 py-3 shop-now-btn">
+                                        <span class="btn-content">
+                                            <i class="fas fa-shopping-bag me-2"></i>
+                                            <span class="btn-text">Explore Products</span>
+                                        </span>
+                                        <span class="btn-arrow">
+                                            <i class="fas fa-arrow-right"></i>
+                                        </span>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -489,329 +485,360 @@
 @endsection
 
 @push('styles')
-<style>
-    /* Flipkart-style empty cart */
-    .flipkart-empty-cart {
-        animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        background: linear-gradient(135deg, #d5d8df 0%, #81a0d1 100%);
-    }
-
-    @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
+    <style>
+        /* Flipkart-style empty cart */
+        .flipkart-empty-cart {
+            animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #d5d8df 0%, #81a0d1 100%);
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-    }
 
-    /* Animated Cart Icon */
-    .cart-container {
-        position: relative;
-        display: inline-block;
-        animation: bounce 3s ease-in-out infinite;
-    }
-
-    @keyframes bounce {
-        0%, 100% {
-            transform: translateY(0);
+        /* Animated Cart Icon */
+        .cart-container {
+            position: relative;
+            display: inline-block;
+            animation: bounce 3s ease-in-out infinite;
         }
-        50% {
-            transform: translateY(-10px);
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
-    }
 
-    .cart-icon-wrapper {
-        position: relative;
-        display: inline-block;
-    }
-
-    .cart-icon {
-        color: #2874f0 !important;
-        animation: cartShake 4s ease-in-out infinite;
-    }
-
-    @keyframes cartShake {
-        0%, 100% {
-            transform: rotate(0deg);
+        .cart-icon-wrapper {
+            position: relative;
+            display: inline-block;
         }
-        25% {
-            transform: rotate(-5deg);
-        }
-        75% {
-            transform: rotate(5deg);
-        }
-    }
 
-    .empty-indicator {
-        position: absolute;
-        top: -8px;
-        right: -8px;
-        background: #ff6161;
-        color: white;
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        animation: pulse 2s ease-in-out infinite;
-        box-shadow: 0 4px 8px rgba(255, 97, 97, 0.3);
-    }
-
-    @keyframes pulse {
-        0%, 100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.1);
-        }
-    }
-
-    .cart-wheels {
-        position: absolute;
-        bottom: -15px;
-        left: 0;
-        right: 0;
-        display: flex;
-        justify-content: space-between;
-        padding: 0 15px;
-    }
-
-    .wheel {
-        width: 20px;
-        height: 20px;
-        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-        border-radius: 50%;
-        animation: wheelSpin 3s linear infinite;
-    }
-
-    @keyframes wheelSpin {
-        0% {
-            transform: rotate(0deg);
-        }
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-
-    .cart-shadow {
-        position: absolute;
-        bottom: -25px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80px;
-        height: 10px;
-        background: rgba(0, 0, 0, 0.1);
-        border-radius: 50%;
-        filter: blur(5px);
-        animation: shadowPulse 3s ease-in-out infinite;
-    }
-
-    @keyframes shadowPulse {
-        0%, 100% {
-            width: 80px;
-            opacity: 0.1;
-        }
-        50% {
-            width: 100px;
-            opacity: 0.15;
-        }
-    }
-
-    /* Typing Animation for Title */
-    .typing-text {
-        display: inline-block;
-        overflow: hidden;
-        border-right: 3px solid #2874f0;
-        white-space: nowrap;
-        animation: typing 3.5s steps(30, end), blink-caret 0.75s step-end infinite;
-    }
-
-    @keyframes typing {
-        from { width: 0 }
-        to { width: 100% }
-    }
-
-    @keyframes blink-caret {
-        from, to { border-color: transparent }
-        50% { border-color: #2874f0 }
-    }
-
-    /* Subtitle Animation */
-    .subtitle-animation {
-        animation: fadeIn 1s ease-out 1s both;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Shop Now Button Animation */
-    .shop-now-btn {
-        position: relative;
-        overflow: hidden;
-        background: linear-gradient(135deg, #2874f0 0%, #1a5fd8 100%);
-        border: none;
-        font-weight: 600;
-        padding: 12px 32px;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .shop-now-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 25px rgba(40, 116, 240, 0.3);
-        padding-right: 45px;
-    }
-
-    .shop-now-btn:hover .btn-arrow {
-        opacity: 1;
-        transform: translateX(0);
-    }
-
-    .btn-content {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btn-arrow {
-        opacity: 0;
-        transform: translateX(-10px);
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-    }
-
-    .shop-now-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.6s ease;
-    }
-
-    .shop-now-btn:hover::before {
-        left: 100%;
-    }
-
-    .button-animation {
-        animation: slideIn 0.8s ease-out 0.5s both;
-    }
-
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Guest Message Animation */
-    .guest-message {
-        animation: fadeInUp 0.8s ease-out 0.8s both;
-    }
-
-    .fade-in-up {
-        animation: fadeInUp 0.8s ease-out 1s both;
-    }
-
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes badgePop {
-        from {
-            opacity: 0;
-            transform: scale(0.8) translateY(10px);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
         .cart-icon {
-            font-size: 3rem;
+            color: #2874f0 !important;
+            animation: cartShake 4s ease-in-out infinite;
         }
-        
+
+        @keyframes cartShake {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(-5deg);
+            }
+
+            75% {
+                transform: rotate(5deg);
+            }
+        }
+
+        .empty-indicator {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff6161;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 4px 8px rgba(255, 97, 97, 0.3);
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .cart-wheels {
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 15px;
+        }
+
+        .wheel {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            border-radius: 50%;
+            animation: wheelSpin 3s linear infinite;
+        }
+
+        @keyframes wheelSpin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .cart-shadow {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            filter: blur(5px);
+            animation: shadowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes shadowPulse {
+
+            0%,
+            100% {
+                width: 80px;
+                opacity: 0.1;
+            }
+
+            50% {
+                width: 100px;
+                opacity: 0.15;
+            }
+        }
+
+        /* Typing Animation for Title */
+        .typing-text {
+            display: inline-block;
+            overflow: hidden;
+            border-right: 3px solid #2874f0;
+            white-space: nowrap;
+            animation: typing 3.5s steps(30, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0
+            }
+
+            to {
+                width: 100%
+            }
+        }
+
+        @keyframes blink-caret {
+
+            from,
+            to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: #2874f0
+            }
+        }
+
+        /* Subtitle Animation */
+        .subtitle-animation {
+            animation: fadeIn 1s ease-out 1s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Shop Now Button Animation */
         .shop-now-btn {
-            padding: 10px 24px;
-            font-size: 0.9rem;
-        }
-        
-        .d-flex.justify-content-center.gap-3 {
-            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #2874f0 0%, #1a5fd8 100%);
+            border: none;
+            font-weight: 600;
+            padding: 12px 32px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             gap: 10px;
         }
-        
-        .flipkart-empty-cart {
-            margin: 0 15px;
-        }
-    }
 
-    @media (max-width: 576px) {
-        .card-body {
-            padding: 2rem !important;
+        .shop-now-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(40, 116, 240, 0.3);
+            padding-right: 45px;
         }
-        
-        .cart-icon {
-            font-size: 2.5rem;
+
+        .shop-now-btn:hover .btn-arrow {
+            opacity: 1;
+            transform: translateX(0);
         }
-    }
-</style>
+
+        .btn-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-arrow {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .shop-now-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .shop-now-btn:hover::before {
+            left: 100%;
+        }
+
+        .button-animation {
+            animation: slideIn 0.8s ease-out 0.5s both;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Guest Message Animation */
+        .guest-message {
+            animation: fadeInUp 0.8s ease-out 0.8s both;
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out 1s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes badgePop {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .cart-icon {
+                font-size: 3rem;
+            }
+
+            .shop-now-btn {
+                padding: 10px 24px;
+                font-size: 0.9rem;
+            }
+
+            .d-flex.justify-content-center.gap-3 {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .flipkart-empty-cart {
+                margin: 0 15px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .card-body {
+                padding: 2rem !important;
+            }
+
+            .cart-icon {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
 @endpush
 
 @push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Add staggered animation delays for category badges
-        const categoryBadges = document.querySelectorAll('.category-badge');
-        categoryBadges.forEach((badge, index) => {
-            badge.style.setProperty('--badge-index', index + 1);
-        });
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add staggered animation delays for category badges
+            const categoryBadges = document.querySelectorAll('.category-badge');
+            categoryBadges.forEach((badge, index) => {
+                badge.style.setProperty('--badge-index', index + 1);
+            });
 
-        // Add ripple effect to shop now button
-        const shopNowBtn = document.querySelector('.shop-now-btn');
-        if (shopNowBtn) {
-            shopNowBtn.addEventListener('click', function(e) {
-                // Create ripple element
-                const ripple = document.createElement('span');
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                const x = e.clientX - rect.left - size / 2;
-                const y = e.clientY - rect.top - size / 2;
-                
-                ripple.style.cssText = `
+            // Add ripple effect to shop now button
+            const shopNowBtn = document.querySelector('.shop-now-btn');
+            if (shopNowBtn) {
+                shopNowBtn.addEventListener('click', function(e) {
+                    // Create ripple element
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+
+                    ripple.style.cssText = `
                     position: absolute;
                     border-radius: 50%;
                     background: rgba(255, 255, 255, 0.6);
@@ -823,17 +850,17 @@
                     left: ${x}px;
                     pointer-events: none;
                 `;
-                
-                this.appendChild(ripple);
-                
-                // Remove ripple after animation
-                setTimeout(() => ripple.remove(), 600);
-            });
-        }
 
-        // Add CSS for ripple animation
-        const style = document.createElement('style');
-        style.textContent = `
+                    this.appendChild(ripple);
+
+                    // Remove ripple after animation
+                    setTimeout(() => ripple.remove(), 600);
+                });
+            }
+
+            // Add CSS for ripple animation
+            const style = document.createElement('style');
+            style.textContent = `
             @keyframes ripple-animation {
                 to {
                     transform: scale(4);
@@ -841,21 +868,21 @@
                 }
             }
         `;
-        document.head.appendChild(style);
+            document.head.appendChild(style);
 
-        // Add hover effect to cart icon
-        const cartIcon = document.querySelector('.cart-icon');
-        if (cartIcon) {
-            cartIcon.addEventListener('mouseenter', function() {
-                this.style.animation = 'cartShake 0.5s ease-in-out';
-            });
-            
-            cartIcon.addEventListener('animationend', function() {
-                this.style.animation = 'cartShake 4s ease-in-out infinite';
-            });
-        }
-    });
-</script>
+            // Add hover effect to cart icon
+            const cartIcon = document.querySelector('.cart-icon');
+            if (cartIcon) {
+                cartIcon.addEventListener('mouseenter', function() {
+                    this.style.animation = 'cartShake 0.5s ease-in-out';
+                });
+
+                cartIcon.addEventListener('animationend', function() {
+                    this.style.animation = 'cartShake 4s ease-in-out infinite';
+                });
+            }
+        });
+    </script>
 @endpush
 
 @push('styles')
